@@ -1,0 +1,24 @@
+{
+  "name": "domo",
+  "version": "0.1.0",
+  "description": "A minimal declarative DOM builder and lightweight router",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"no tests yet\"",
+    "build": "echo \"no build step yet\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/domo.git"
+  },
+  "keywords": [
+    "dom",
+    "declarative",
+    "builder",
+    "vanilla-js",
+    "router"
+  ],
+  "author": "Zura",
+  "license": "MIT"
+}
