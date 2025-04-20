@@ -220,7 +220,7 @@ class Domo {
    * Appends children (can be nested arrays, strings, numbers, fragments, elements).
    * @param {any[]} children
    */
-  append(children = []) {
+  child(children = []) {
     const flattenedChildren = children.flat();
     flattenedChildren.forEach((child) => {
       this.element.appendChild(this._handleElementInstance(child));
