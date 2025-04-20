@@ -1,0 +1,22 @@
+# Contributing to Domo
+
+First off—thanks for stopping by.
+
+Domo is a personal, no-dependency DOM helper and router combo, built to be simple, intuitive, and fast. It wasn’t made for everyone—but if it resonates with you, I’d love your input.
+
+## How to Contribute
+
+- Ideas — Got a feature you’d love to see? Open an issue or drop a suggestion.
+- Bugs — If something breaks, let me know. Even better: fix it and make a PR.
+- Improvements — Cleaner logic, smarter APIs, or better naming? I’m all ears.
+
+## Ground Rules
+
+- No dependencies.
+- No build steps.
+- Keep it simple, keep it readable.
+- Only touch what you understand.
+
+#### There’s no checklist, no CI, and no heavy review process. Just open communication and shared curiosity. If you want to experiment, fork it and go wild. If it fits the spirit of the project, I’ll likely merge it.
+
+### Thanks for taking the time.
