@@ -141,7 +141,7 @@ Check the /examples folder for practical use cases including:
 - .on(event, callback)
 - .onMatch(event, { selector: callback })
 - .onClosest(event, { selector: callback })
-- .append([children])
+- .child([children])
 - .clear()
 - .replace(child, newChild)
 - .show(bool, display?)
