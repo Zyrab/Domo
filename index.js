@@ -1,4 +1,4 @@
 import Domo from "./src/core/Domo.js";
-import InitDomo from "./src/core/InitDomo.js";
+import Router from "./src/core/Router.js";
 
-export { Domo, InitDomo };
+export { Domo, Router };
