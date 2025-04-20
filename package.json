@@ -1,24 +1,35 @@
 {
-  "name": "domo",
-  "version": "0.1.0",
-  "description": "A minimal declarative DOM builder and lightweight router",
-  "main": "src/index.js",
+  "name": "@zyrab/domo",
+  "version": "1.0.0",
+  "description": "Minimalist DOM builder and chaining-friendly micro-framework with router support.",
+  "main": "index.js",
   "type": "module",
-  "scripts": {
-    "test": "echo \"no tests yet\"",
-    "build": "echo \"no build step yet\""
+  "exports": {
+    ".": "./index.js"
   },
+  "files": [
+    "index.js",
+    "src/"
+  ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/domo.git"
+    "url": "https://github.com/zyrab/domo.git"
   },
   "keywords": [
     "dom",
-    "declarative",
     "builder",
+    "declarative",
+    "chaining",
     "vanilla-js",
-    "router"
+    "router",
+    "components",
+    "event-delegation",
+    "zyrab"
   ],
-  "author": "Zura",
-  "license": "MIT"
+  "author": "Zyrab",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zyrab/domo/issues"
+  },
+  "homepage": "https://github.com/zyrab/domo#readme"
 }
