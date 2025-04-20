@@ -31,5 +31,6 @@
   "bugs": {
     "url": "https://github.com/zyrab/domo/issues"
   },
-  "homepage": "https://github.com/zyrab/domo#readme"
+  "homepage": "https://github.com/zyrab/domo#readme",
+  "logo": "https://github.com/zyrab/domo/blob/main/assets/logo.png"
 }
