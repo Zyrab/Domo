@@ -1,5 +1,7 @@
 # Domo
 
+![Domo Logo](./assets/logo.png)
+
 **Domo** is a tiny fluent helper for creating and working with DOM elements.  
 It simplifies native APIs with a chainable, intuitive interface.
 
@@ -126,7 +128,7 @@ Full reference:
 Suggestions, fixes, or features are welcome.
 This is a small project made for personal use — but if you see something worth improving, feel free to help.
 
-→ [Read the Contributing Guide](CONTRIBUTING.md)
+→ [Read the Contributing Guide](CONTRIBUTING)
 
 ---
 
