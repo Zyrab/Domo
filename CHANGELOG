@@ -1,0 +1,10 @@
+# Changelog
+
+## [1.0.0] - 2025-04-21
+
+### Added
+
+- Initial release of `@zyrab/domo`
+- DOM builder with chainable syntax
+- Lightweight router with nested routes and history API support
+- MIT license
