@@ -1,6 +1,8 @@
-# Domo
+<p align="center">
+  <img src="assets/logo.png" alt="Domo Logo" width="300"/>
+</p>
 
-![Domo Logo](./assets/logo.png)
+# Domo
 
 **Domo** is a tiny fluent helper for creating and working with DOM elements.  
 It simplifies native APIs with a chainable, intuitive interface.
