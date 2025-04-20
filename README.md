@@ -1,49 +1,39 @@
 # Domo
 
-**Domo** is a lightweight fluent helper class for creating and manipulating DOM elements. It simplifies native DOM APIs with a chainable interface, making UI building more intuitive. It’s minimal, flexible, and designed to evolve into a full client-side UI toolkit, including a router, component system, and personal-styled prebuilt components.
+**Domo** is a tiny fluent helper for creating and working with DOM elements.  
+It simplifies native APIs with a chainable, intuitive interface.
 
----
-
-## Table of Contents
-
-- [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Router](#router)
-- [Components (Planned)](#components-planned)
-- [Examples (Planned)](#examples)
-- [API Reference](#api-reference)
-- [Contributing](#contributing)
-- [License](#license)
+Originally built for personal use, it's growing into a lightweight UI toolkit with a router, planned components, and scoped styles.  
+No dependencies. No build step. Just clean, direct DOM manipulation.
 
 ---
 
 ## Features
 
-- Fluent, chainable API for building elements
-- ID, value, text, class, style, and attribute setters
-- Declarative `if()` rendering and conditional visibility
-- Event binding and delegation with `on`, `onClosest`, `onMatch`
-- DOM manipulation: `append`, `clear`, `replace`, `show`
-- Built-in client-side Router
-  - History API support
-  - Nested & dynamic routes (/blog/:slug)
-  - Scroll restoration and metadata updates
-  - Route listeners and navigation helpers
-- Future: Prebuilt components and scoped styling system
+- Fluent, chainable DOM API
+- Set ID, text, value, class, style, data, attributes
+- Conditional rendering with `.if()` and `.show()`
+- Event handling: `.on`, `.onClosest`, `.onMatch`
+- Simple DOM ops: `.append`, `.clear`, `.replace`
+- Built-in router:
+  - History API, nested/dynamic routes
+  - Scroll and metadata handling
+  - Route info and listeners
 
 ---
 
 ## Installation
 
 ```bash
-npm install @zyrab/domino-dom
+npm install @zyrab/domo
 ```
+
+---
 
 ## Usage
 
 ```js
-import Domo from " @zyrab/domino-dom";
+import Domo from " @zyrab/domo";
 
 const btn = Domo("button")
   .id("submit-btn")
@@ -55,75 +45,51 @@ const btn = Domo("button")
 document.body.appendChild(btn);
 ```
 
+---
+
 ## Router
 
 The built-in router enables history-based navigation with a simple nested config structure.
 
 ```js
-import { Router } from "@zyrab/domino-dom";
+import { Router } from "@zyrab/domo";
 
 Router.routes({
-  "/": {
-    component: Home,
-    meta: { title: "Home", description: "home page" },
-  },
-  "/about": {
-    component: About,
-    meta: { title: "About" },
-  },
+  "/": { component: Home, meta: { title: "Home" } },
+  "/about": { component: About, meta: { title: "About" } },
   "/blog": {
     children: {
-      "/:slug": {
-        component: BlogPost,
-        meta: { title: "Blog Post", description: "blog" },
-      },
-      "/": {
-        component: Blog,
-        meta: { title: "Blog", description: "Blog page" },
-      },
+      "/": { component: Blog, meta: { title: "Blog" } },
+      "/:slug": { component: BlogPost, meta: { title: "Post" } },
     },
   },
-  "*": {
-    component: Error,
-    meta: { title: "Not Found" },
-  },
+  "*": { component: Error, meta: { title: "404" } },
 });
 
 document.body.appendChild(Router.mount());
 Router.init();
-```
 
-# Navigation
-
-```js
 Router.goTo("/about");
+
 Router.back();
 
 Router.listen(({ meta, params }) => {
   console.log("Route changed:", meta.title, params);
 });
-```
 
-# Router Info
-
-```js
 const { meta, params, segments } = Router.info();
 ```
 
-## Components (Planned)
+---
 
-- Domo-based reusable UI elements
-- Scoped CSS via your custom style system
-- Easily composable into views and apps
+## Planned
 
-## Examples (Soon)
+- DOM-based components
+- Custom scoped style system
+- Prebuilt reusable elements
+- Examples folder with real use cases
 
-Check the /examples folder for practical use cases including:
-
-- Basic UI creation
-- Event delegation
-- Simple conditional rendering
-- Router demo
+---
 
 ## API Reference
 
@@ -149,14 +115,21 @@ Check the /examples folder for practical use cases including:
 - .ref(callback) — Callback access to raw element
 - .build() — Returns the constructed HTMLElement
 
-Full reference: docs/API.md
+Full reference:
+[Domo](docs/Domo.md)
+[Router](docs/Router.md)
+
+---
 
 ## Contributing
 
-Contributions are welcome. Open issues, suggest features, or submit pull requests.
+Suggestions, fixes, or features are welcome.
+This is a small project made for personal use — but if you see something worth improving, feel free to help.
 
-See CONTRIBUTING.md for more info.
+→ [Read the Contributing Guide](CONTRIBUTING.md)
+
+---
 
 ## License
 
-MIT License
+[MIT License](LICENSE)
