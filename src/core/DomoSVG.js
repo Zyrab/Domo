@@ -1,3 +1,4 @@
+import Domo from "./Domo.js";
 class DomoSVG extends Domo {
   constructor(tag = "svg") {
     super(tag); // Call Domo constructor with tag

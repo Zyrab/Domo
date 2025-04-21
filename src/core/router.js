@@ -125,7 +125,7 @@ function restoreScroll() {
   window.scrollTo(0, pos || 0);
 }
 
-export const Router = {
+const Router = {
   /**
    * Mount point of the router, where components will be rendered.
    * @returns {HTMLElement} The root DOM element used by the router.
@@ -201,3 +201,5 @@ export const Router = {
     if (typeof fn === "function") _listeners.push(fn);
   },
 };
+
+export default Router;

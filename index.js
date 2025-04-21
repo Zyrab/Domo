@@ -1,7 +1,7 @@
 // @ts-check
 
 import DomoClass from "./src/core/Domo.js";
-import { Router } from "./src/core/Router.js";
+import Router from "./src/core/Router.js";
 import DomoSVGClass from "./src/core/DomoSVG.js";
 
 /**
