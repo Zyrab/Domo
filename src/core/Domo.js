@@ -1,5 +1,6 @@
 /**
  * Domo - Lightweight helper class for creating and manipulating DOM elements fluently.
+ * @typedef {import('./Domo').default} Domo
  */
 class Domo {
   /**
@@ -69,6 +70,9 @@ class Domo {
 
   /**
    * Adds classes
+   * accepted types:
+   *  string
+   *  string[]
    *  @param {string|string[]} classes
    */
   cls(classes) {
@@ -80,6 +84,9 @@ class Domo {
 
   /**
    * Removes classes
+   *  accepted types:
+   *  string
+   *  string[]
    *   @param {string|string[]} classes
    */
   rmvCls(classes) {
@@ -160,13 +167,34 @@ class Domo {
   }
 
   /**
-   * Adds an event listener.
-   * @param {string} event
-   * @param {EventListenerOrEventListenerObject} callback
-   * @param {AddEventListenerOptions} [options]
+   * Adds one or multiple event listeners to the element.
+   *
+   * Supports both:
+   * - A single event: `on('click', handler, options)`
+   * - Multiple events via object map: `on({ click: handler, mouseenter: [handler, options] })`
+   *
+   * @param {string | Record<string, Function | [Function, AddEventListenerOptions]>} eventMapOrName
+   *   Either an event name string, or an object mapping event names to handlers (or [handler, options] tuples).
+   * @param {EventListenerOrEventListenerObject} [callback]
+   *   Callback to execute when the event is triggered (used when first param is a string).
+   * @param {AddEventListenerOptions} [options={}]
+   *   Options for `addEventListener` (used when first param is a string).
+   * @returns {this} The current instance for chaining.
    */
-  on(event, callback, options = {}) {
-    this.element.addEventListener(event, callback, options);
+
+  on(eventMapOrName, callback, options = {}) {
+    if (typeof eventMapOrName === "object" && eventMapOrName !== null) {
+      for (const [event, value] of Object.entries(eventMapOrName)) {
+        if (typeof value === "function") {
+          this.element.addEventListener(event, value);
+        } else if (Array.isArray(value)) {
+          const [cb, opts] = value;
+          this.element.addEventListener(event, cb, opts);
+        }
+      }
+    } else {
+      this.element.addEventListener(eventMapOrName, callback, options);
+    }
     return this;
   }
 
@@ -180,6 +208,7 @@ class Domo {
 
   /**
    * Delegates events to closest matching ancestor.
+   * accepts a map of selectors to event handlers
    * @param {string} event
    * @param {Record<string, (e: Event, target: Element) => void>} selectors
    * @param {AddEventListenerOptions} [options]
@@ -197,6 +226,7 @@ class Domo {
 
   /**
    * Delegates events using element.matches.
+   * accepts a map of selectors to event handlers
    * @param {string} event
    * @param {Record<string, (e: Event, target: Element) => void>} selectors
    * @param {AddEventListenerOptions} [options]
@@ -217,8 +247,15 @@ class Domo {
   }
 
   /**
-   * Appends children (can be nested arrays, strings, numbers, fragments, elements).
-   * @param {any[]} children
+   * Appends children to the element.
+   * Accepts:
+   * - DOM nodes
+   * - Domo instances
+   * - DocumentFragments
+   * - Primitive strings/numbers (as text nodes)
+   * - Nested arrays of above
+   * @param {(Node|string|number|Domo|DocumentFragment|Array<any>)[]} children
+   * @returns {Domo}
    */
   child(children = []) {
     const flattenedChildren = children.flat();
@@ -238,8 +275,15 @@ class Domo {
 
   /**
    * Replaces a child element or self with a new one.
+   * * Accepts:
+   * - DOM nodes
+   * - Domo instances
+   * - DocumentFragments
+   * - Primitive strings/numbers (as text nodes)
+   * - Nested arrays of above
+   *
    * @param {Node} child
-   * @param {any} newChild
+   * @param {(Node|string|number|Domo|DocumentFragment|Array<any>)[]} newChild
    */
   replace(child, newChild) {
     const instance = this._handleElementInstance(newChild);
