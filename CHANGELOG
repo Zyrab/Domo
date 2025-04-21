@@ -8,3 +8,19 @@
 - DOM builder with chainable syntax
 - Lightweight router with nested routes and history API support
 - MIT license
+
+## [1.0.1] - 2025-04-21
+
+### Added
+
+- `DSVG` factory function for creating and manipulating SVG elements
+  - Internally extends `Domo` to support SVG-specific behavior
+- `Domo` and `DSVG` now expose their underlying classes via `.Class` (e.g. `Domo.Class`, `DSVG.Class`) for easy extension
+- Type definitions and JSDoc annotations improved for better IntelliSense and TypeScript compatibility
+  - Parameters now correctly typed
+  - Factory functions properly infer return types
+- `.on()` now supports objects too for multiple eventlisteners adding once
+
+### Changed
+
+- `Domo` is now officially a factory function (no need to use `new`) while remaining extendable via `Domo.Class` or `DomoClass` if prefered using Class directly
