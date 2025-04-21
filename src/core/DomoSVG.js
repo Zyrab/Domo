@@ -61,3 +61,4 @@ class DomoSVG extends Domo {
     return this;
   }
 }
+export default DomoSVG;
