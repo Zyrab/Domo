@@ -42,7 +42,7 @@ npm install @zyrab/domo
 ## Usage
 
 ```js
-import Domo from " @zyrab/domo";
+import { Domo } from " @zyrab/domo";
 
 const btn = Domo("button")
   .id("submit-btn")
