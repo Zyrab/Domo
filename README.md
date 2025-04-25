@@ -8,6 +8,13 @@ It simplifies native APIs with a chainable, intuitive interface.
 Originally built for personal use, it's growing into a lightweight UI toolkit with a router, planned components, and scoped styles.  
 No dependencies. No build step. Just clean, direct DOM manipulation.
 
+### Size
+
+- Minified: 5120 bytes
+- Gzipped: 2054 bytes
+
+Domo is highly optimized for performance, ensuring fast load times even in constrained environments.
+
 ---
 
 ## Features
