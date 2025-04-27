@@ -24,3 +24,9 @@
 ### Changed
 
 - `Domo` is now officially a factory function (no need to use `new`) while remaining extendable via `Domo.Class` or `DomoClass` if prefered using Class directly
+
+## [1.0.2] (2025-04-27)
+
+### Bug Fixes:
+
+Fixed filename casing issues on GitHub and npm: Ensured that all file names are correctly cased to prevent bundling issues in case-sensitive environments (e.g., npm, GitHub, production builds).
