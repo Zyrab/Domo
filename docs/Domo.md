@@ -388,13 +388,13 @@ const buttonElement = Domo("button").txt("Submit").cls("btn").build();
 document.body.appendChild(buttonElement);
 ```
 
-### `.el`
+### `.element`
 
 Provides direct access to the underlying HTMLElement or SVGElement property at any point in the chain. Useful if you need the element before the chain is fully built.
 
 ```js
 const form = Domo("form");
-const inputEl = Domo("input").el; // Get the raw input element
+const inputEl = Domo("input").element; // Get the raw input element
 
 form.attr({ method: "post" }).child([inputEl]).build();
 ```
