@@ -40,7 +40,7 @@ async function render({ component, meta }, params) {
     }
   } catch (error) {
     console.error("Rendering error:", error);
-    const fallback = _routes["*"]?.component?.({ error: err.message });
+    const fallback = _routes["*"]?.component?.({ error: error.message });
     if (fallback) {
       _root.replaceChildren();
       _root.appendChild(fallback);

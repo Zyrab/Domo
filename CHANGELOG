@@ -30,3 +30,9 @@
 ### Bug Fixes:
 
 Fixed filename casing issues on GitHub and npm: Ensured that all file names are correctly cased to prevent bundling issues in case-sensitive environments (e.g., npm, GitHub, production builds).
+
+## [1.0.3] (2025-05-04)
+
+### Bug Fixes:
+
+Fixed typo in router, where instead of error.message was written err.message that prevented loging an actual error on routing issues.
