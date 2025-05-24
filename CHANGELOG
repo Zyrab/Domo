@@ -36,3 +36,10 @@ Fixed filename casing issues on GitHub and npm: Ensured that all file names are 
 ### Bug Fixes:
 
 Fixed typo in router, where instead of error.message was written err.message that prevented loging an actual error on routing issues.
+
+## [1.0.4] - 2025-05-24
+
+### Changed
+
+- Deferred `<main>` element creation until `router.mount()` is called.  
+  This avoids `document is not defined` errors during SSR or SSG environments like `jsdom`.

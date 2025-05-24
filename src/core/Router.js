@@ -3,8 +3,7 @@ let _listeners = [];
 const _scrollPositions = {};
 let _previousUrl = "";
 
-let _root = document.createElement("main");
-_root.id = "main";
+let _root;
 
 function init() {
   ["DOMContentLoaded", "popstate"].forEach((event) =>
@@ -130,7 +129,11 @@ const Router = {
    * Mount point of the router, where components will be rendered.
    * @returns {HTMLElement} The root DOM element used by the router.
    */
-  mount: () => _root,
+  mount: () => {
+    _root = document.createElement("main");
+    _root.id = "main";
+    return _root;
+  },
 
   /**
    * Initializes the router by setting up event listeners and loading the initial route.
