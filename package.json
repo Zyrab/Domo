@@ -1,6 +1,6 @@
 {
   "name": "@zyrab/domo",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Minimalist DOM builder and chaining-friendly micro-framework with router support.",
   "main": "index.js",
   "type": "module",
