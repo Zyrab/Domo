@@ -8,6 +8,10 @@ let _root;
 function init() {
   ["DOMContentLoaded", "popstate"].forEach((event) =>
     window.addEventListener(event, async () => {
+      if (!_root) {
+        _root = document.createElement("main");
+        _root.id = "main";
+      }
       saveScroll(_previousUrl);
       const url = path();
       load(url);
@@ -20,7 +24,7 @@ function init() {
 async function render({ component, meta }, params) {
   try {
     const content = await component(params);
-    _root.replaceChildren();
+    _root?.replaceChildren();
 
     if (content instanceof HTMLElement) {
       _root.appendChild(content);
@@ -33,9 +37,7 @@ async function render({ component, meta }, params) {
     }
     if (meta) {
       document.title = meta?.title;
-      document
-        .querySelector("meta[name='description']")
-        .setAttribute("content", meta?.description);
+      document.querySelector("meta[name='description']").setAttribute("content", meta?.description);
     }
   } catch (error) {
     console.error("Rendering error:", error);
@@ -115,13 +117,13 @@ async function load(url) {
 function notify(info) {
   _listeners.forEach((cb) => cb(info));
 }
-function saveScroll(path = window.location.pathname) {
-  _scrollPositions[path] = window.scrollY;
+function saveScroll(path = window?.location?.pathname) {
+  _scrollPositions[path] = window?.scrollY;
 }
 
 function restoreScroll() {
-  const pos = _scrollPositions[window.location.pathname];
-  window.scrollTo(0, pos || 0);
+  const pos = _scrollPositions[window?.location?.pathname];
+  window?.scrollTo(0, pos || 0);
 }
 
 const Router = {
@@ -129,11 +131,7 @@ const Router = {
    * Mount point of the router, where components will be rendered.
    * @returns {HTMLElement} The root DOM element used by the router.
    */
-  mount: () => {
-    _root = document.createElement("main");
-    _root.id = "main";
-    return _root;
-  },
+  mount: () => _root,
 
   /**
    * Initializes the router by setting up event listeners and loading the initial route.
