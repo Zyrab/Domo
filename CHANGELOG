@@ -65,3 +65,9 @@ Refactored internal .parent() method to be consistent with chaining behavior.
 .append() is now a direct alias for .child() with no functional difference, improving semantic clarity.
 
 \_root document.create method call now happens inside init() previously called in the direct file caused jsdom to throw error when tried to genrate static html files.
+
+## [1.1.1] - 2025-06-08
+
+### Fixed
+
+- Fixed `replace(child, newChild)` method crashing due to duplicate `const` declarations. Now correctly handles both arguments using separate internal variables.

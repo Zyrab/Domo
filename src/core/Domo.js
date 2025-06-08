@@ -326,14 +326,14 @@ class Domo {
    * @param {(Node|string|number|Domo|DocumentFragment|Array<any>)[]} newChild
    */
   replace(child, newChild) {
-    const newChild = this._handleElementInstance(newChild);
-    const child = this._handleElementInstance(child);
+    const resolvedNew = this._handleElementInstance(newChild);
+    const resolvedOld = this._handleElementInstance(child);
 
-    if (child === this.element) {
-      this.element.replaceWith(newChild);
-      this.element = newChild;
-    } else if (this.element.contains(child)) {
-      child.replaceWith(newChild);
+    if (resolvedOld === this.element) {
+      this.element.replaceWith(resolvedNew);
+      this.element = resolvedNew;
+    } else if (this.element.contains(resolvedOld)) {
+      resolvedOld.replaceWith(resolvedNew);
     }
 
     return this;
