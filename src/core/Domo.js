@@ -63,9 +63,7 @@ class Domo {
    * @returns {string[]}
    */
   _parseClassList(input) {
-    return Array.isArray(input)
-      ? input.filter(Boolean)
-      : String(input).split(" ").filter(Boolean);
+    return Array.isArray(input) ? input.filter(Boolean) : String(input).split(" ").filter(Boolean);
   }
 
   /**
@@ -264,7 +262,49 @@ class Domo {
     });
     return this;
   }
+  /**
+   * Appends children to the element.
+   * Alias for `child`.
+   * Accepts:
+   * - DOM nodes
+   * - Domo instances
+   * - DocumentFragments
+   * - Primitive strings/numbers (as text nodes)
+   * - Nested arrays of above
+   * @param {(Node|string|number|Domo|DocumentFragment|Array<any>)[]} children
+   * @returns {Domo}
+   */
+  append(children = []) {
+    return this.child(children);
+  }
 
+  /**
+   * Appends the current element to a target parent.
+   * Accepts:
+   * - HTMLElement
+   * - Domo instance
+   * - DocumentFragment
+   * @param {HTMLElement|Domo|DocumentFragment} target
+   * @returns {Domo}
+   */
+  appendTo(target) {
+    if (_handleElementInstance(target)) parent.appendChild(this.element);
+    return this;
+  }
+
+  /**
+   * Appends the current element to a target parent.
+   * Alias for `appendTo`.
+   * @param {HTMLElement|Domo|DocumentFragment} target
+   * @returns {Domo}
+   */
+  parent(target) {
+    return this.appendTo(target);
+  }
+
+  parent(parent) {
+    parent.appendChild(this.element);
+  }
   /**
    * Removes all children.
    */
@@ -286,13 +326,14 @@ class Domo {
    * @param {(Node|string|number|Domo|DocumentFragment|Array<any>)[]} newChild
    */
   replace(child, newChild) {
-    const instance = this._handleElementInstance(newChild);
+    const newChild = this._handleElementInstance(newChild);
+    const child = this._handleElementInstance(child);
 
     if (child === this.element) {
-      this.element.replaceWith(instance);
-      this.element = instance;
+      this.element.replaceWith(newChild);
+      this.element = newChild;
     } else if (this.element.contains(child)) {
-      child.replaceWith(instance);
+      child.replaceWith(newChild);
     }
 
     return this;
@@ -315,9 +356,7 @@ class Domo {
    */
   if(condition) {
     if (!condition) {
-      return new Domo("if")
-        .attr({ hidden: true })
-        .data({ if: this.element.tagName.toLowerCase() });
+      return new Domo("if").attr({ hidden: true }).data({ if: this.element.tagName.toLowerCase() });
     }
     return this;
   }

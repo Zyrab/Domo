@@ -244,8 +244,7 @@ Attaches a delegated event listener using Element.closest(). Listens on the curr
 ```js
 Domo("ul")
   .onClosest("click", {
-    "li.item": (e, matchedLi) =>
-      console.log("Clicked item:", matchedLi.textContent),
+    "li.item": (e, matchedLi) => console.log("Clicked item:", matchedLi.textContent),
     "button.delete": (e, btn) => btn.closest("li")?.remove(),
   })
   .build();
@@ -263,8 +262,7 @@ Attaches a delegated event listener using Element.matches(). Listens on the curr
 Domo("div")
   .cls("container")
   .onMatch("click", {
-    "button.action": (e, btn) =>
-      console.log("Action button clicked:", btn.dataset.action),
+    "button.action": (e, btn) => console.log("Action button clicked:", btn.dataset.action),
   })
   .build();
 ```
@@ -296,6 +294,30 @@ Domo()
     [Domo("p").txt("Paragraph 1"), Domo("p").txt("Paragraph 2")], // Flattened
   ])
   .build();
+```
+
+### `.append(children)`
+
+Alias for .child(children).
+
+### `.appendTo(target)`
+
+Appends the current element to a specified target parent.
+
+`target`: `HTMLElement | SVGElement | DocumentFragment | Domo `— The parent to append this element to. If a Domo instance is passed, its .build() result is used.
+
+```js
+const parent = Domo("div");
+const child = Domo("p").txt("I am a child");
+child.appendTo(parent); // appends <p> to the <div>
+```
+
+### `.parent(target)`
+
+Alias for .appendTo(target). Useful for fluent chaining where you want to set the parent of an element.
+
+```js
+Domo("span").txt("Notice").parent(Domo("footer"));
 ```
 
 ### `.clear()`
