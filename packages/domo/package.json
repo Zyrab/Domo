@@ -1,0 +1,39 @@
+{
+  "name": "@zyrab/domo",
+  "version": "1.1.1",
+  "description": "Minimalist DOM builder and chaining-friendly micro-framework with router support.",
+  "main": "./src/Domo.js",
+  "type": "module",
+  "exports": {
+    "import": "./src/Domo.js",
+    "default": "./src/Domo.js"
+  },
+  "author": "Zyrab",
+  "license": "MIT",
+  "files": [
+    "src/"
+  ],
+  "keywords": [
+    "dom",
+    "builder",
+    "declarative",
+    "chaining",
+    "vanilla-js",
+    "router",
+    "components",
+    "event-delegation",
+    "zyrab"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zyrab/domo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zyrab/domo/issues"
+  },
+  "homepage": "https://github.com/zyrab/domo#readme",
+  "logo": "https://github.com/zyrab/domo/blob/main/assets/logo.png",
+  "publishConfig": {
+    "access": "public"
+  }
+}
