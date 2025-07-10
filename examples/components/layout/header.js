@@ -4,7 +4,7 @@ import Router from "../../../packages/domo-router/src/core.js";
 export default function createHeader() {
   return Domo("header")
     .css({
-      with: "100%",
+      width: "100%",
       height: "40px",
       backgroundColor: "whitesmoke",
     })
@@ -20,9 +20,24 @@ export default function createHeader() {
           color: "brown",
         })
         .child([
-          Domo("a").css({ cursor: "pointer" }).cls("nav-link").txt("Home").data({ link: "/" }),
-          Domo("a").css({ cursor: "pointer" }).cls("nav-link").txt("about").data({ link: "/about" }),
-          Domo("a").css({ cursor: "pointer" }).cls("nav-link").txt("contact").data({ link: "/contacts" }),
+          Domo("a")
+            .css({ cursor: "pointer", textDecoration: "none" })
+            .cls("nav-link")
+            .txt("Home")
+            .data({ link: "/" })
+            .attr({ href: "/dist" }),
+          Domo("a")
+            .css({ cursor: "pointer", textDecoration: "none" })
+            .cls("nav-link")
+            .txt("about")
+            .data({ link: "/about" })
+            .attr({ href: "/dist/about" }),
+          Domo("a")
+            .css({ cursor: "pointer", textDecoration: "none" })
+            .cls("nav-link")
+            .txt("contact")
+            .data({ link: "/contacts" })
+            .attr({ href: "/dist/contacts" }),
         ]),
     ])
     .on("click", (e) => {
