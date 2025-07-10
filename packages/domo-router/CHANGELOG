@@ -1,0 +1,8 @@
+# Changelog – @zyrab/domo-router
+
+## 0.1.0 – Initial Modular Release
+
+- Extracted router from `@zyrab/domo` into a separate package
+- SPA routing support using history-based path tracking
+- Works with `@zyrab/domo-ssg` for precompiled static builds
+- Supports route metadata, async rendering, and 404 fallback

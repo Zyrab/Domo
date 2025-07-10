@@ -1,0 +1,37 @@
+{
+  "name": "@zyrab/domo-router",
+  "version": "0.1.0",
+  "description": "History-based SPA router for Domo. Supports nested routes, navigation guards, and SSG-friendly behavior.",
+  "main": "./src/core.js",
+  "type": "module",
+  "exports": {
+    "import": "./src/core.js",
+    "default": "./src/core.js"
+  },
+  "author": "Zyrab",
+  "license": "MIT",
+  "files": [
+    "src/"
+  ],
+  "keywords": [
+    "domo",
+    "router",
+    "spa",
+    "ssg",
+    "history-api",
+    "routing",
+    "nested-routes",
+    "zyrab"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zyrab/domo"
+  },
+  "bugs": {
+    "url": "https://github.com/zyrab/domo/issues"
+  },
+  "homepage": "https://github.com/zyrab/domo/tree/main/packages/domo-router",
+  "publishConfig": {
+    "access": "public"
+  }
+}

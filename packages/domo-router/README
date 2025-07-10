@@ -1,0 +1,30 @@
+# @zyrab/domo-router
+
+Minimal SPA router built for [`@zyrab/domo`](https://www.npmjs.com/package/@zyrab/domo).  
+Supports client-side navigation and static site generation (SSG).
+
+---
+
+## Features
+
+- Lightweight, history-based router
+- Nested routes
+- Route metadata hooks
+- Works with both SPA and SSG setups
+
+---
+
+## Usage
+
+```js
+import Router from "@zyrab/domo-router";
+
+Router.routes({
+  "/":{ component : Home , meta : { title: "Home"}}
+  "/about":{ component : About , meta : { title: "About"}}
+  "*":{ component : Error , meta : { title: "404 Error"}}
+});
+
+Router.init();
+app.appendChild(Router.mount())
+```
