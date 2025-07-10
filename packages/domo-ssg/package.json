@@ -1,0 +1,35 @@
+{
+  "name": "@zyrab/domo-ssg",
+  "version": "1.0.0",
+  "description": "A Static Site Generator (SSG) for Domo-based projects.",
+  "main": "src/index.js",
+  "type": "module",
+  "bin": {
+    "domo-ssg": "src/index.js"
+  },
+  "scripts": {
+    "build": "node src/index.js",
+    "dev": "node src/index.js --watch",
+    "clean": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true }); console.log('Cleaned dist folder');\""
+  },
+  "keywords": [
+    "domo",
+    "ssg",
+    "static site generator",
+    "build tool",
+    "frontend"
+  ],
+  "author": "Zyrab",
+  "license": "MIT",
+  "dependencies": {
+    "@zyrab/domo": "workspace:^1.2.0",
+    "@zyrab/domo-router": "workspace:^0.1.0"
+  },
+  "devDependencies": {},
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "src/"
+  ]
+}
