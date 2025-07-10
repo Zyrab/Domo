@@ -1,4 +1,4 @@
-import { DomoClass } from "./Domo.js";
+import { DomoClass } from "./domo.js";
 
 class Children {
   /**
