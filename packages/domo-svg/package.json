@@ -32,7 +32,7 @@
   },
   "homepage": "https://github.com/zyrab/domo/tree/main/packages/domo-svg",
   "peerDependencies": {
-    "@zyrab/domo": "^1.2.0"
+    "@zyrab/domo": "workspace:*"
   },
   "publishConfig": {
     "access": "public"
