@@ -1,5 +1,6 @@
 import Domo from "../../packages/domo/src/domo.js";
 import Router from "../../packages/domo-router/src/core.js";
+import createSvgIcons from "../components/svg-icons.js";
 
 export default function Home() {
   const box = Domo("p").txt("Hello, user!").css({
@@ -42,7 +43,7 @@ export default function Home() {
         color: "#333",
         fontSize: "20px",
       }),
-
+      createSvgIcons("heart"),
       Domo("button").txt("Toggle Message").on("click", handleClick).css({
         padding: "10px 16px",
         backgroundColor: "#007acc",
