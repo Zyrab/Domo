@@ -19,8 +19,9 @@ class Builder {
 
     const tag = this.element._tag;
     const cls = this.element._cls.join(" ");
+    const toKebab = (s) => s.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
     const css = Object.entries(this.element._css)
-      .map(([k, v]) => `${k}:${v}`)
+      .map(([k, v]) => `${toKebab(k)}:${v}`)
       .join(";");
 
     const attrs = Object.entries(this.element._attr).map(([k, v]) =>

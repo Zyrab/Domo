@@ -44,7 +44,7 @@ class Children {
       if (this._virtual) {
         // In virtual mode, store Domo instances or their string representation
         // @ts-ignore - Ignore potential 'Domo is not defined' for JSDoc tool
-        this.element._child.push(child instanceof Domo ? child : String(child));
+        this.element._child.push(child instanceof DomoClass ? child : String(child));
       } else this.element.appendChild(this._handleElementInstance(child));
     });
     return this;
