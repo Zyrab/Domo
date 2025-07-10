@@ -1,0 +1,8 @@
+# Changelog
+
+## 0.1.0
+
+- Initial release of `@zyrab/domo-svg`.
+- Adds SVG tag validation.
+- Uses correct namespace for SVG creation.
+- Supports both browser and virtual DOM environments.

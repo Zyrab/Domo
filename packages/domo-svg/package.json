@@ -1,36 +1,40 @@
 {
-  "name": "@zyrab/domo",
-  "version": "1.1.1",
-  "description": "Minimalist DOM builder and chaining-friendly micro-framework with router support.",
-  "main": "index.js",
+  "name": "@zyrab/domo-svg",
+  "version": "0.1.0",
+  "description": "SVG-aware DOM builder for Domo. Provides correct namespace handling and fluent chaining for SVG elements.",
+  "main": "./domo-svg.js",
   "type": "module",
   "exports": {
-    ".": "./index.js"
+    "import": "./domo-svg.js",
+    "default": "./domo-svg.js"
   },
+  "author": "Zyrab",
+  "license": "MIT",
   "files": [
-    "index.js",
-    "src/"
+    "./domo-svg.js"
+  ],
+  "keywords": [
+    "domo",
+    "svg",
+    "builder",
+    "dom",
+    "namespace",
+    "zyrab",
+    "ssg",
+    "virtual-dom"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zyrab/domo.git"
+    "url": "https://github.com/zyrab/domo"
   },
-  "keywords": [
-    "dom",
-    "builder",
-    "declarative",
-    "chaining",
-    "vanilla-js",
-    "router",
-    "components",
-    "event-delegation",
-    "zyrab"
-  ],
-  "author": "Zyrab",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/zyrab/domo/issues"
   },
-  "homepage": "https://github.com/zyrab/domo#readme",
-  "logo": "https://github.com/zyrab/domo/blob/main/assets/logo.png"
+  "homepage": "https://github.com/zyrab/domo/tree/main/packages/domo-svg",
+  "peerDependencies": {
+    "@zyrab/domo": "^1.2.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }

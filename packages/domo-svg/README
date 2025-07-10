@@ -1,0 +1,16 @@
+# @zyrab/domo-svg
+
+Extends [`@zyrab/domo`](https://npmjs.com/package/@zyrab/domo) with SVG tag support and proper namespace handling.
+
+## Features
+
+- SVG tag validation (`circle`, `rect`, `path`, etc.)
+- Correct `createElementNS` usage
+- Compatible with virtual DOM mode (SSG)
+- Fully chainable like `Domo`
+
+## Install
+
+```bash
+pnpm add @zyrab/domo-svg
+```
