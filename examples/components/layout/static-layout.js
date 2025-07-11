@@ -40,7 +40,7 @@ export async function renderLayout(content, { title, description, script, baseDe
     <body>
     ${createHeader()}
       <main>
-        ${content}
+        ${content.build()}
       </main>
     </body>
     <script defer src="${prefix}js/theme-toggle.js"></script>

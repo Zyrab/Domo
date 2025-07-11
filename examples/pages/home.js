@@ -44,7 +44,7 @@ export default function Home() {
         fontSize: "20px",
       }),
       createSvgIcons("heart"),
-      Domo("button").txt("Toggle Message").on("click", handleClick).css({
+      Domo("button").id("home-button-1").txt("Toggle Message").on("click", handleClick).css({
         padding: "10px 16px",
         backgroundColor: "#007acc",
         color: "#fff",
@@ -67,7 +67,7 @@ export default function Home() {
           justifyContent: "center",
         })
         .child([box]),
-      Domo("button").txt("Wrong Button").on("click", handleError).css({
+      Domo("button").id("home-button").txt("Wrong Button").on("click", handleError).css({
         padding: "10px 16px",
         margin: "50px auto",
 
@@ -78,6 +78,5 @@ export default function Home() {
         cursor: "pointer",
         marginBottom: "20px",
       }),
-    ])
-    .build();
+    ]);
 }

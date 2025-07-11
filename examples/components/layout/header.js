@@ -2,6 +2,15 @@ import Domo from "../../../packages/domo/src/domo.js";
 import Router from "../../../packages/domo-router/src/core.js";
 
 export default function createHeader() {
+  const routes = [
+    { label: "Home", link: "/" },
+    { label: "About", link: "/about" },
+    { label: "Contact", link: "/contacts" },
+    { label: "Projects", link: "/projects" },
+  ];
+
+  const current = Router.base();
+  console.log(current);
   return Domo("header")
     .css({
       width: "100%",
@@ -19,32 +28,30 @@ export default function createHeader() {
           fontSize: "1.2rem",
           color: "brown",
         })
-        .child([
-          Domo("a")
-            .css({ cursor: "pointer", textDecoration: "none" })
-            .cls("nav-link")
-            .txt("Home")
-            .data({ link: "/" })
-            .attr({ href: "/dist" }),
-          Domo("a")
-            .css({ cursor: "pointer", textDecoration: "none" })
-            .cls("nav-link")
-            .txt("about")
-            .data({ link: "/about" })
-            .attr({ href: "/dist/about" }),
-          Domo("a")
-            .css({ cursor: "pointer", textDecoration: "none" })
-            .cls("nav-link")
-            .txt("contact")
-            .data({ link: "/contacts" })
-            .attr({ href: "/dist/contacts" }),
-        ]),
+        .child(
+          routes.map(({ label, link }) =>
+            Domo("a")
+              .css({
+                cursor: "pointer",
+                textDecoration: "none",
+                color: current === link ? "red" : "inherit",
+              })
+              .cls("nav-link")
+              .txt(label)
+              .data({ link })
+              .attr({ href: `/dist${link}` })
+          )
+        ),
     ])
-    .on("click", (e) => {
-      e.preventDefault();
-      const link = e.target.closest(".nav-link");
-      if (!link) return;
-      Router.goTo(link.dataset.link);
-    })
+    .on(
+      "click",
+      (e) => {
+        e.preventDefault();
+        const link = e.target.closest(".nav-link");
+        if (!link) return;
+        Router.goTo(link.dataset.link);
+      },
+      { ssg: false }
+    )
     .build();
 }

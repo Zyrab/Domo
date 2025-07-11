@@ -30,6 +30,5 @@ export default function Error({ error }) {
 
   return Domo("div")
     .css(styles.container)
-    .child([Domo("h2").txt("Error").css({ marginBottom: "10px" }), message])
-    .build();
+    .child([Domo("h2").txt("Error").css({ marginBottom: "10px" }), message]);
 }
