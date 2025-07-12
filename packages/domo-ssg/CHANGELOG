@@ -1,0 +1,32 @@
+# Changelog
+
+## [0.1.0] - 2025-07-07
+
+### ✨ Added
+
+- Initial release of `@zyrab/domo-ssg`, a simple static site generator designed for Domo-based virtual DOM.
+- Support for custom layout rendering via `renderLayout()` function.
+- Recursive route tree traversal using a virtual DOM structure.
+- Automatic generation of `sitemap.xml` with support for `baseUrl` and `exclude` filters.
+- Optional `domo.config.js` for user-defined config overrides (`outDir`, `routesFile`, `layout`, etc).
+- Filesystem-safe output path handling for route-based pages.
+- Clean output directory before build.
+- Auto-injection of client-side JavaScript per page via extracted `on(...)` event metadata from virtual DOM.
+
+### 🧠 Server-side event delegation support
+
+- Virtual `.on(...)`, `.onClosest(...)`, `.onMatch(...)` handlers now capture metadata during SSG.
+- `event-utils.js` extracts and serializes event listeners for runtime hydration:
+  - Supports event type `direct`, `closest`, and `match`.
+  - Functions can expose variables using `// @ssg-let` and `// @ssg-const` to ensure availability in hydrated JS.
+  - Closure support and selector-aware event bindings.
+
+### 📦 Monorepo & Build
+
+- Designed to work inside monorepos via `pnpm workspaces`.
+- CLI support via `node src/index.js` for both root and filtered workspace usage.
+- Package is `type: module` and compatible with ESM.
+
+---
+
+Let me know if you want to split it into smaller versions (like `0.0.1`, `0.0.2`, etc.) to reflect earlier development stages before `0.1.0`.

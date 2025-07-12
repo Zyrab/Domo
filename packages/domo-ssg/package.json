@@ -1,11 +1,11 @@
 {
   "name": "@zyrab/domo-ssg",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "A Static Site Generator (SSG) for Domo-based projects.",
   "main": "src/index.js",
   "type": "module",
   "bin": {
-    "domo-ssg": "src/index.js"
+    "domo-ssg-init": "./scripts/init.js"
   },
   "scripts": {
     "build": "node src/index.js",
