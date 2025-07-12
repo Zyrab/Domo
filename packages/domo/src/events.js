@@ -1,4 +1,14 @@
 class Events {
+  _pushVirtualHandler(id, event, entry) {
+    const evArr = (this.element._events ??= []);
+    const existing = evArr.find((e) => e.id === id && e.event === event);
+    if (existing) {
+      existing.handlers.push(entry);
+    } else {
+      evArr.push({ id, event, handlers: [entry] });
+    }
+  }
+
   /**
    * Adds one or multiple event listeners to the element.
    *
@@ -23,9 +33,22 @@ class Events {
    * blur: [() => console.log('Input blurred'), { once: true }]
    * });
    */
+
   on(eventMapOrName, callback, options = {}) {
     if (this._virtual && eventMapOrName !== null) {
-      console.log(eventMapOrName, callback.toString()); // For server-side, just log the event
+      if (options.ssg === false) return this;
+      const elId = this.element._attr?.id;
+      if (!elId) throw new Error(`[Domo.on] .id() must be called before .on(...) in SSG mode`);
+
+      if (typeof eventMapOrName === "object") {
+        for (const [event, value] of Object.entries(eventMapOrName)) {
+          const handler = Array.isArray(value) ? value[0] : value;
+          this._pushVirtualHandler(elId, event, { type: "direct", handler });
+        }
+      } else {
+        this._pushVirtualHandler(elId, eventMapOrName, { type: "direct", handler: callback });
+      }
+
       return this;
     }
     if (typeof eventMapOrName === "object" && eventMapOrName !== null) {
@@ -72,10 +95,22 @@ class Events {
    * });
    */
   onClosest(event, selectors = {}, options = {}) {
-    if (this._virtual) {
-      console.log(`Virtual onClosest event: ${event}`); // For server-side, just log
+    if (this._virtual && event !== null) {
+      if (options.ssg === false) return this;
+      const elId = this.element._attr?.id;
+      if (!elId) throw new Error(`[Domo.onClosest] .id() must be called before .onClosest(...) in SSG mode`);
+
+      for (const [selector, handler] of Object.entries(selectors)) {
+        this._pushVirtualHandler(elId, event, {
+          type: "closest",
+          selector,
+          handler,
+        });
+      }
+
       return this;
     }
+
     return this.on(event, (e) => this._handleClosest(e, selectors), options);
   }
 
@@ -107,10 +142,22 @@ class Events {
    * });
    */
   onMatch(event, selectors = {}, options = {}) {
-    if (this._virtual) {
-      console.log(`Virtual onMatch event: ${event}`); // For server-side, just log
+    if (this._virtual && event !== null) {
+      if (options.ssg === false) return this;
+      const elId = this.element._attr?.id;
+      if (!elId) throw new Error(`[Domo.onMatch] .id() must be called before .onMatch(...) in SSG mode`);
+
+      for (const [selector, handler] of Object.entries(selectors)) {
+        this._pushVirtualHandler(elId, event, {
+          type: "match",
+          selector,
+          handler,
+        });
+      }
+
       return this;
     }
+
     return this.on(event, (e) => this._handleMatches(e, selectors), options);
   }
 }

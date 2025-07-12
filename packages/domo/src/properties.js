@@ -10,16 +10,23 @@ class Properties {
    */
   _set(key, val, type = "_attr") {
     if (val === undefined) return this;
+    if (this._isLockedAttr(key)) return this;
     if (this._virtual) {
       if (type === "txt") {
         this.element._child.push(String(val));
       } else {
+        this.element[type] ??= {};
         this.element[type][key] = val;
       }
     } else {
       this.element[key] = val;
     }
+
     return this;
+  }
+
+  _isLockedAttr(key) {
+    return key === "id" && this._refLocked;
   }
 
   /**
@@ -68,16 +75,20 @@ class Properties {
    * });
    */
   attr(attributes = {}) {
-    Object.entries(attributes).forEach(([key, value]) => {
-      if (key.startsWith("on")) return; // Skip event attributes, handled separately
-      if (this._virtual) this.element._attr[key] = value;
-      else if (typeof value === "boolean") {
-        if (value) this.element.setAttribute(key, "");
-        else this.element.removeAttribute(key);
-      } else if (value != null) {
-        this.element.setAttribute(key, value);
+    for (const [key, value] of Object.entries(attributes)) {
+      if (key.startsWith("on")) continue;
+      if (this._isLockedAttr(key)) continue;
+
+      if (this._virtual) {
+        this.element._attr[key] = value;
+      } else {
+        if (typeof value === "boolean") {
+          value ? this.element.setAttribute(key, "") : this.element.removeAttribute(key);
+        } else if (value != null) {
+          this.element.setAttribute(key, value);
+        }
       }
-    });
+    }
     return this;
   }
 

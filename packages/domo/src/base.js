@@ -61,21 +61,18 @@ class Base {
   }
 
   /**
-   * Provides a direct reference to the underlying DOM element or its virtual representation.
-   * Useful for directly interacting with the native element if needed.
-   * @param {function(HTMLElement|object): void} callBack - A function that receives the element as its argument.
+   * In browser context, passes the actual DOM element to the callback.
+   *
+   * @param {function(HTMLElement|string): void} callback -
+   *        Receives  the actual DOM element (in browser).
+   *
    * @returns {this} The current Domo instance for chaining.
-   * @example
-   * Domo('button')
-   * .txt('Click Me')
-   * .ref(buttonElement => {
-   * console.log(buttonElement.tagName); // Logs: BUTTON (in browser)
-   * });
-   */
-  ref(callBack) {
-    if (typeof callBack === "function") {
-      callBack(this.element);
-    }
+
+  **/
+  ref(callback) {
+    if (this._virtual) return this;
+    if (typeof callback === "function") callback(this.element);
+
     return this;
   }
 }
