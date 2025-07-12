@@ -2,15 +2,7 @@ import Domo from "../../../packages/domo/src/domo.js";
 import Router from "../../../packages/domo-router/src/core.js";
 
 export default function createHeader() {
-  const routes = [
-    { label: "Home", link: "/" },
-    { label: "About", link: "/about" },
-    { label: "Contact", link: "/contacts" },
-    { label: "Projects", link: "/projects" },
-  ];
-
   const current = Router.base();
-  console.log(current);
   return Domo("header")
     .css({
       width: "100%",
@@ -47,6 +39,7 @@ export default function createHeader() {
       "click",
       (e) => {
         e.preventDefault();
+
         const link = e.target.closest(".nav-link");
         if (!link) return;
         Router.goTo(link.dataset.link);
@@ -55,3 +48,10 @@ export default function createHeader() {
     )
     .build();
 }
+
+const routes = [
+  { label: "Home", link: "/" },
+  { label: "About", link: "/about" },
+  { label: "Contact", link: "/contacts" },
+  { label: "Projects", link: "/projects" },
+];

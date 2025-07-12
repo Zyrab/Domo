@@ -1,8 +1,6 @@
 import Domo from "../../packages/domo/src/domo.js";
 
 export default function Contacts() {
-  let inputRef = null;
-  let previewRef = null;
   return Domo("section")
     .css(styles.container)
     .child([
@@ -12,25 +10,22 @@ export default function Contacts() {
         .child([
           Domo("input")
             .id("contact-input")
-            .ref((el) => (inputRef = el))
             .attr({ type: "text", name: "username", placeholder: "Enter your name" })
             .css(styles.input)
             .on("input", (e) => {
               const val = e.target.value.trim();
-              previewRef.textContent = val ? `Hello, ${val}!` : "Your name will appear here.";
+              document.getElementById("contact-preview").textContent = val
+                ? `Hello, ${val}!`
+                : "Your name will appear here.";
             }),
           Domo("button").txt("Submit").attr({ type: "submit" }).css(styles.button),
         ])
         .on("submit", (e) => {
           e.preventDefault();
-          const name = inputRef.value.trim();
+          const name = document.getElementById("contact-input").value.trim();
           if (name) alert(`Submitted name: ${name}`);
         }),
-      Domo("p")
-        .id("contact-preview")
-        .ref((el) => (previewRef = el))
-        .css(styles.preview)
-        .txt("Your name will appear here."),
+      Domo("p").id("contact-preview").css(styles.preview).txt("Your name will appear here."),
     ]);
 }
 

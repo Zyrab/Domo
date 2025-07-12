@@ -4,11 +4,7 @@ export async function renderLayout(content, { title, description, script, baseDe
   const prefix = "../".repeat(baseDepth);
   const routeInfo = Router.info();
   const fullUrl = "https://zyrab.dev" + routeInfo.base;
-  const scriptTags = Array.isArray(script)
-    ? script.map((file) => `<script defer src="${prefix}js/${file}"></script>`).join("\n")
-    : script
-    ? `<script defer src="${prefix}js/${script}"></script>`
-    : "";
+  const scriptTags = script.map((file) => `<script defer src="${prefix}${file}"></script>`).join("\n");
   return `
   <!DOCTYPE html>
     <html lang="en">
@@ -31,10 +27,7 @@ export async function renderLayout(content, { title, description, script, baseDe
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
       <link href="https://fonts.googleapis.com/css2?family=Cutive+Mono&family=VT323&display=swap" rel="stylesheet" />
-      
-      <link rel="stylesheet" href="${prefix}css/base.css" media="print" onload="this.media='all'" />
-      <link rel="stylesheet" href="${prefix}css/utils.css" media="print" onload="this.media='all'" />
-      
+            
       <meta http-equiv="Permissions-Policy" content="interest-cohort=()" />
     </head>
     <body>
@@ -43,7 +36,6 @@ export async function renderLayout(content, { title, description, script, baseDe
         ${content.build()}
       </main>
     </body>
-    <script defer src="${prefix}js/theme-toggle.js"></script>
     ${scriptTags}
   </html>
   `;
