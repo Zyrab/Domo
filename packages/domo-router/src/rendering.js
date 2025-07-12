@@ -12,7 +12,8 @@ import { info, match, notify, parseUrl, path } from "./utils.js";
  */
 export async function render({ component, meta }, params) {
   try {
-    const content = await component(params);
+    const comp = await component(params);
+    const content = comp.build();
     _root?.replaceChildren();
 
     if (content instanceof HTMLElement) {

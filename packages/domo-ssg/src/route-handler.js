@@ -1,6 +1,7 @@
 // src/route-handler.js
 import Router from "@zyrab/domo-router";
 import { writeHTML } from "./file-utils.js";
+import { writeJs } from "./event-utils.js";
 
 /**
  * Helper to join URL path segments correctly.
@@ -10,8 +11,9 @@ import { writeHTML } from "./file-utils.js";
 export function joinPaths(...segments) {
   let pathStr = segments
     .filter(Boolean)
-    .map((s) => s.replace(/(^\/+|\/+$)/g, ""))
+    .map((s) => String(s).replace(/(^\/+|\/+$)/g, ""))
     .join("/");
+
   return "/" + pathStr.replace(/\/+/g, "/");
 }
 
@@ -27,6 +29,7 @@ export function joinPaths(...segments) {
  * @param {string} outputDir - The base output directory for generated files.
  * @returns {Promise<void>}
  */
+
 export async function handleRoute({ path, props, component, script, meta = {} }, renderLayout, outputDir) {
   try {
     // Set router info for server-side context
@@ -38,11 +41,21 @@ export async function handleRoute({ path, props, component, script, meta = {} },
     // Render the component content
     const content = await component(props);
 
+    // --- Write JS file ---
+    const eScript = writeJs(content, outputDir, path);
+    let allScript = [];
+    if (Array.isArray(script) && script.length > 0) {
+      allScript.push(...script);
+    }
+    if (eScript && typeof eScript === "string" && eScript.trim() !== "") {
+      allScript.push(eScript);
+    }
+
     // Render the full HTML layout
     const html = await renderLayout(content, {
       title: meta.title || "",
       description: meta.description || "",
-      script,
+      script: allScript,
       baseDepth,
     });
 
