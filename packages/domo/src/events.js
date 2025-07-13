@@ -35,7 +35,8 @@ class Events {
    */
 
   on(eventMapOrName, callback, options = {}) {
-    if (this._virtual && eventMapOrName !== null) {
+    if (!eventMapOrName || !callback) return this;
+    if (this._virtual) {
       if (options.ssg === false) return this;
       const elId = this.element._attr?.id;
       if (!elId) throw new Error(`[Domo.on] .id() must be called before .on(...) in SSG mode`);

@@ -173,7 +173,7 @@ class Children {
   if(condition) {
     // @ts-ignore - Ignore potential 'Domo is not defined' for JSDoc tool
     if (!condition) {
-      return new Domo("if")
+      return new DomoClass("if")
         .attr({
           hidden: true,
         })
