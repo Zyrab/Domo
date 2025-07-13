@@ -2,6 +2,7 @@
 
 import { writeFileSync, mkdirSync, existsSync } from "fs";
 import { join } from "path";
+import { createHash } from "crypto";
 
 export function generateScriptContent(events) {
   return events
@@ -70,19 +71,6 @@ export function collectEvents(node, out = []) {
   return out;
 }
 
-export function writeJs(constent, outputDir, path) {
-  const events = collectEvents(constent);
-  if (events.length <= 0) return;
-  const jsDir = join(outputDir, "js");
-  if (!existsSync(jsDir)) mkdirSync(jsDir);
-
-  const fileName = path === "/" ? "index.js" : path.replace(/^\/|\/$/g, "").replace(/\//g, "-") + ".js";
-  const jsContent = generateScriptContent(events);
-  writeFileSync(join(jsDir, fileName), jsContent, "utf8");
-
-  return join("js", fileName);
-}
-
 function extractExposedVariables(source) {
   const lines = source.split("\n");
   const injected = [];
@@ -127,4 +115,63 @@ function indent(str, level = 1) {
     .split("\n")
     .map((line) => pad + line)
     .join("\n");
+}
+
+function normalizeEventLogic(events) {
+  const blocks = [];
+
+  for (const { handlers } of events) {
+    for (const { handler } of handlers) {
+      const fnSource = handler.toString();
+      const { body } = destructureFunction(fnSource);
+      const injected = extractExposedVariables(body);
+
+      blocks.push({
+        injected: injected.join("\n"),
+        body: normalizeCode(body),
+      });
+    }
+  }
+
+  // Sort to make sure logic is order-independent
+  blocks.sort((a, b) => (a.body + a.injected).localeCompare(b.body + b.injected));
+
+  return blocks.map(({ injected, body }) => `${injected}\n${body}`).join("\n");
+}
+
+function normalizeCode(code) {
+  return code
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line && !line.startsWith("//"))
+    .join("\n");
+}
+
+function hashContent(content) {
+  return createHash("sha1").update(content).digest("hex").slice(0, 8); // short hash like '2fa4b1ab'
+}
+
+const generatedCache = new Map(); // hash → filename
+
+export function writeJs(constent, outputDir) {
+  const events = collectEvents(constent);
+  if (events.length <= 0) return;
+
+  const jsDir = join(outputDir, "js");
+  if (!existsSync(jsDir)) mkdirSync(jsDir);
+
+  const normalized = normalizeEventLogic(events);
+  const hash = hashContent(normalized);
+
+  let fileName;
+  if (generatedCache.has(hash)) {
+    fileName = generatedCache.get(hash);
+  } else {
+    fileName = `${hash}.js`;
+    const jsContent = generateScriptContent(events);
+    writeFileSync(join(jsDir, fileName), jsContent, "utf8");
+    generatedCache.set(hash, fileName);
+  }
+
+  return join(fileName);
 }
