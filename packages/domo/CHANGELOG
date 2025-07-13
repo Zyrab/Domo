@@ -93,3 +93,10 @@ Refactored internal .parent() method to be consistent with chaining behavior.
 - JSDoc Enhancements: Further improvements to JSDoc annotations across all methods for better clarity, examples, and type safety, leveraging the new modular structure.
 
 - Internal \_vel Method: Renamed for consistency and clarity in the virtual DOM creation process.
+
+## [1.2.1] - 2025-07-13
+
+### Fidex
+
+- `.if()` was using Domo instead of DomoClass for creatng an dummy component when used on site.
+- `.on()` now return if either function or event is not defined

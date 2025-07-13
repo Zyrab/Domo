@@ -2,7 +2,7 @@
 
 ## [0.1.0] - 2025-07-07
 
-### ✨ Added
+### Added
 
 - Initial release of `@zyrab/domo-ssg`, a simple static site generator designed for Domo-based virtual DOM.
 - Support for custom layout rendering via `renderLayout()` function.
@@ -13,7 +13,7 @@
 - Clean output directory before build.
 - Auto-injection of client-side JavaScript per page via extracted `on(...)` event metadata from virtual DOM.
 
-### 🧠 Server-side event delegation support
+### Server-side event delegation support
 
 - Virtual `.on(...)`, `.onClosest(...)`, `.onMatch(...)` handlers now capture metadata during SSG.
 - `event-utils.js` extracts and serializes event listeners for runtime hydration:
@@ -21,7 +21,7 @@
   - Functions can expose variables using `// @ssg-let` and `// @ssg-const` to ensure availability in hydrated JS.
   - Closure support and selector-aware event bindings.
 
-### 📦 Monorepo & Build
+### Monorepo & Build
 
 - Designed to work inside monorepos via `pnpm workspaces`.
 - CLI support via `node src/index.js` for both root and filtered workspace usage.
@@ -29,4 +29,15 @@
 
 ---
 
-Let me know if you want to split it into smaller versions (like `0.0.1`, `0.0.2`, etc.) to reflect earlier development stages before `0.1.0`.
+## [0.2.0] - 2025-07-01
+
+### Changed
+
+- Refactored JS file generation to avoid duplication across dynamic pages.
+- Event handler logic is now normalized and hashed to detect identical scripts reused across different pages.
+- Script filenames are derived from content hashes (sha1) instead of page paths (/user/1 → user-1.js), improving browser cache effectiveness.
+
+### Internal
+
+- Added `normalizeEventLogic()` and `hashContent()` to stabilize and deduplicate logic across builds.
+- Introduced a temporary in-memory Map cache to track already-generated scripts.
