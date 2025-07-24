@@ -13,17 +13,27 @@ export const routes = {
   },
   "/about": {
     component: About,
+    script: ["test.js", { href: "js-with-props.js", preload: true }],
+    style: ["test.css", { href: "css-with-props.css", preload: true }],
+    font: ["test.woff2", { href: "font-with-props.woff2", preload: true }],
     meta: { title: "About" },
   },
   "/contacts": {
     component: Contacts,
-    meta: { title: "contacts" },
+    meta: {
+      title: "contacts",
+      description: "page description",
+      descriptionOG: "Learn more about our mission and values.",
+      canonical: "/test/canonical",
+      ogImage: "/test/image.png",
+      type: "product",
+    },
   },
   "/projects": {
     children: {
       "/": { component: createProjects, meta: { title: "contacts" } },
       "/:id": {
-        getDinamicList: async () => await loadJson("dist/data/projects.json"),
+        routeParams: async (parentRouteName) => await loadJson("dist/data/projects.json"),
         component: createProjectPage,
         meta: { title: "test page" },
       },

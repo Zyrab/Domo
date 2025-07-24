@@ -1,42 +1,95 @@
-import Router from "../../domo-router/src/core.js";
+import Router from "../../../packages/domo-router/src/core.js";
 import createHeader from "./header.js";
-export async function renderLayout(content, { title, description, script, baseDepth = 0 }) {
-  const prefix = "../".repeat(baseDepth);
-  const routeInfo = Router.info();
-  const fullUrl = "https://zyrab.dev" + routeInfo.base;
-  const scriptTags = script.map((file) => `<script defer src="${prefix}${file}"></script>`).join("\n");
-  return `
-  <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>${title}</title>
-      <meta name="description" content="${description}" />
+export async function renderLayout(
+  content,
+  {
+    title,
+    description,
+    descriptionOG,
+    scripts,
+    styles,
+    fonts,
+    favicon,
+    baseUrl,
+    canonical,
+    lang,
+    author,
+    type,
+    ogImage,
+  }
+) {
+  const canonicalUrl = baseUrl + (canonical || Router.path());
+  const scriptTags = scripts.map((file) => `<script defer src="/js/${file}"></script>`).join("\n");
 
-      <meta name="robots" content="index, follow" />
-      
-      <meta property="og:title" content="${title}" />
-      <meta property="og:description" content="Explore the work of Zyrab - tools, apps, and ideas, all in one place." />
-      <meta property="og:image" content="https://zyrab.dev/assets/og-image.png" />
-      <meta property="og:url" content="https://zyrab.dev" />
-      <meta name="twitter:card" content="summary_large_image" />
-      
-      <link rel="icon" href="https://zyrab.dev/assets/favicon.ico" type="image/x-icon" />
-      
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-      <link href="https://fonts.googleapis.com/css2?family=Cutive+Mono&family=VT323&display=swap" rel="stylesheet" />
-            
-      <meta http-equiv="Permissions-Policy" content="interest-cohort=()" />
-    </head>
-    <body>
-    ${createHeader()}
-      <main>
-        ${content.build()}
-      </main>
-    </body>
-    ${scriptTags}
-  </html>
-  `;
+  const styleTags = styles
+    .map((style) =>
+      style.preload
+        ? `<link rel="preload" href="/css/${style.href}" as="style" onload="this.rel='stylesheet'">`
+        : `<link rel="stylesheet" href="/${style.href || style}">`
+    )
+    .join("\n");
+
+  const fontTags = fonts
+    .map((font) =>
+      font.preload
+        ? `<link rel="preload" href="/assets/fonts/${font.href}" as="font" type="font/woff2" crossorigin="anonymous">`
+        : `<link rel="stylesheet" href="/${font.href || font}">`
+    )
+    .join("\n");
+
+  return `<!DOCTYPE html>
+<html lang="${lang}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${title}</title>
+  <meta name="description" content="${description}">
+  <meta name="author" content="${author}">
+  <meta name="robots" content="index, follow">
+  
+  <!-- Canonical -->
+  <link rel="canonical" href="${canonicalUrl}">
+
+  <!-- Social: OpenGraph -->
+  <meta property="og:title" content="${title}">
+  <meta property="og:description" content="${descriptionOG || description}">
+  <meta property="og:image" content="${ogImage}">
+  <meta property="og:url" content="${baseUrl}${Router.path()}">
+  <meta property="og:type" content="${type || "website"}">
+
+  <!-- Social: Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="${title}">
+  <meta name="twitter:description" content="${descriptionOG || description}">
+  <meta name="twitter:image" content="${ogImage}">
+
+  <!-- Favicon and Touch Icon -->
+  <link rel="icon" href="/assets/${favicon}" type="image/x-icon">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+
+  <!-- Theme Colors -->
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#fff444" media="(prefers-color-scheme: dark)">
+  <meta name="color-scheme" content="light dark">
+
+  <!-- Performance -->
+  ${fontTags}
+  ${styleTags}
+
+  <!-- Privacy & Security -->
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
+  
+  <!-- Optional: preload theme script (small + used before paint) -->
+  <link rel="preload" as="script" href="/js/theme-loader.js">
+  <script defer src="/js/theme-loader.js"></script>
+</head>
+<body>
+  ${createHeader()}
+  <main>
+    ${content.build()}
+  </main>
+  ${scriptTags}
+</body>
+</html>`;
 }

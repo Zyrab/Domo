@@ -1,0 +1,245 @@
+# 🛠️ Domo Static Layout – TODO List (Theme, Assets, Meta, and Improvements)
+
+This document tracks the features and improvements to be made in the `renderLayout` system, specifically for better theme handling, script preloading, meta extensibility, and cleaner route-config integration.
+
+---
+
+## ✅ 1. Theme Handling System
+
+### 🎯 Goal
+
+Support dark/light/auto theming with:
+
+- Configurable defaults
+- Optional per-route override
+- JS-free mode (system auto-detect)
+- Optional user toggle (future-ready)
+
+### 📌 Why
+
+Modern users expect websites to respect their system's color preference. Some also want to override it. You prefer dark mode by default — which should be respected unless the user wants otherwise.
+
+### ✅ Tasks
+
+- [ ] Add `theme` key to global config: `"dark"`, `"light"`, or `"auto"`
+- [ ] Allow per-route `meta.theme` to override it
+- [ ] Generate `theme-loader.js` script that sets `<html class="dark">` or `<html class="light">`
+- [ ] Preload this script only when required (e.g., when theme is `"auto"` or route wants override)
+- [ ] Consider adding theme toggle support in the UI (future feature)
+
+### 🧪 Examples
+
+**In `domo.config.js`:**
+
+```js
+export default {
+  theme: "dark", // or "light" or "auto"
+  ...
+};
+```
+
+**In a route:**
+
+```js
+"/contacts": {
+  component: Contacts,
+  meta: {
+    title: "Contacts",
+    description: "Get in touch",
+    theme: "light" // forces light mode for this page
+  }
+}
+```
+
+## ✅ 2. Preloading JS Scripts
+
+### 🎯 Goal
+
+Support `<link rel="preload" as="script">` for important JS files.
+
+### 📌 Why
+
+Preloading critical scripts (e.g., small utility or theme-setting code) helps eliminate delays and layout flashes. It also aligns with how fonts and CSS are preloaded.
+
+### ✅ Tasks
+
+- [ ] Allow scripts to accept both string and object format
+- [ ] Handle preload: true flag and output both preload <link> and <script> tags
+
+### 🧪 Examples
+
+**In domo.config.js:**
+
+```js
+assets: {
+  scripts: [{ src: "theme-loader.js", preload: true }, "main.js"];
+}
+```
+
+**In a route:**
+
+```js
+"/contacts": {
+...
+scripts: [
+{ src: "contact-utils.js", preload: true }
+]
+}
+```
+
+✅ 3. Meta Tag Extensibility
+
+### 🎯 Goal
+
+Allow arbitrary `<meta>` tags to be added via route definitions.
+
+### 📌 Why
+
+Some pages may need extra metadata like:
+
+- keywords
+- article:published_time
+- product:price
+- twitter:creator
+
+Instead of hardcoding all these, it's better to provide a flexible way to define them in `meta.metaTags`.
+
+### ✅ Tasks
+
+- [ ] Add support for `meta.metaTags` array
+- [ ] Detect if tag is using `name` or pr`operty, and render accordingly
+
+### 🧪 Example
+
+**In a route:**
+
+```js
+"/blog/my-post": {
+  meta: {
+    title: "How to Build Domo",
+    description: "In-depth look at Domo router and static layout.",
+    metaTags: [
+      { name: "keywords", content: "domo, router, layout, blog" },
+      { property: "article:published_time", content: "2025-07-23" }
+    ]
+}
+}
+```
+
+✅ 4. Asset Merging & Deduplication
+
+### 🎯 Goal
+
+Ensure consistent merging of:
+
+- `scripts`, `styles`, `fonts` from config and route
+- No duplication of assets
+
+### 📌 Why
+
+If both global config and route include the same font or script, it should not be rendered twice. Routes should override or extend assets cleanly.
+
+### ✅ Tasks
+
+- [ ] Deep-merge route-level and config-level asset arrays
+- [ ] Deduplicate styles and fonts by href or filename
+- [ ] Allow route to override global fonts/scripts selectively
+
+### 🧪 Example
+
+**Config:**
+
+```js
+fonts: [{ href: "Inter.woff2", preload: true }];
+```
+
+**Route adds a new font:**
+
+```js
+"/projects": {
+fonts: [
+{ href: "Mono.woff2", preload: true }
+]
+}
+```
+
+Result: Both `Inter.woff2` and `Mono.woff2` loaded, with preload as needed, and no duplication.
+
+✅ 5. Canonical URL & og:url Cleanup
+
+### 🎯 Goal
+
+Ensure that canonical and og:url are correct and clean.
+
+### 📌 Why
+
+Avoid double slashes, query strings, or hash fragments in canonical and OG URLs to prevent SEO penalties and inconsistent indexing.
+
+### ✅ Tasks
+
+Ensure no double / between baseUrl and path
+
+Strip query (?) and hash (#) from the URL before injecting into canonical and og:url
+
+### 🧪 Before:
+
+```js
+baseUrl: "https://zyrab.dev/"
+Router.path(): "/projects/?ref=home#top"
+```
+
+**Bad:**
+
+```js
+https://zyrab.dev//projects/?ref=home#top
+```
+
+### ✅ After:
+
+```js
+https://zyrab.dev/projects
+```
+
+✅ Optional Future Features
+These are not urgent but worth tracking:
+
+### 🔁 Alternate Language Support
+
+Add `<link rel="alternate" hreflang="xx" href="...">` to support future multi-language versions of your site.
+
+### 🛡️ Structured Data Injection
+
+Allow route meta to define structured JSON-LD blocks for search engines:
+
+```js
+meta: {
+  structuredData: {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "How to Build Static Layouts",
+    ...
+  }
+}
+```
+
+**Rendered into layout:**
+
+```html
+<script type="application/ld+json">
+  ...
+</script>
+```
+
+### 📭 `<noscript>` Fallbacks
+
+If some critical scripts are used, you can inject a `<noscript>` warning or fallback content block.
+
+# 🧩 Summary
+
+This system is on track to be a flexible, highly configurable static site renderer. Completing these tasks will give:
+
+- 🔥 Fully dynamic theme control
+- 🚀 Faster loading via preloading assets
+- 🧠 Semantic and extensible metadata
+- 🧹 Clean, correct asset and URL handling
+- ⚡ A base that can be adapted for personal sites, blogs, or even docs
