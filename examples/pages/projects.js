@@ -18,7 +18,7 @@ export default async function createProjects() {
         Domo("a")
           .cls("nav-link")
           .data({ link: i.id })
-          .attr({ href: `/dist/projects/${i.id}` })
+          .attr({ href: `/projects/${i.id}` })
           .css({
             cursor: "pointer",
             width: "220px",

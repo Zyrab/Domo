@@ -31,7 +31,7 @@ export default function createHeader() {
               .cls("nav-link")
               .txt(label)
               .data({ link })
-              .attr({ href: `/dist${link}` })
+              .attr({ href: link })
           )
         ),
     ])
