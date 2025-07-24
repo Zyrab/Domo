@@ -1,19 +1,12 @@
-// src/index.js (formerly build.mjs)
+// src/index.js
 import { pathToFileURL } from "url";
-import path from "path";
 import { loadConfig } from "./config.js";
 import { cleanOutputDir } from "./file-utils.js";
 import { generateSitemap } from "./sitemap.js";
 import { buildRoutes } from "./route-traversal.js";
 
-// __filename and __dirname equivalents for ES Modules
-
 async function main() {
-  // Determine where the user's config file should be
-  // Assumes config is at the root of the project where the script is run
-  const userConfigPath = path.resolve(process.cwd(), "domo.config.js");
-
-  const config = await loadConfig(pathToFileURL(userConfigPath).href);
+  const config = await loadConfig();
 
   // Import layout and route tree using pathToFileURL and .href for dynamic imports
   const { routes } = await import(pathToFileURL(config.routesFile).href);
@@ -28,7 +21,7 @@ async function main() {
   cleanOutputDir(config.outDir, config.exclude);
 
   // 2. Build all routes recursively
-  await buildRoutes(routes, "", {}, renderLayout, config.outDir);
+  await buildRoutes(routes, renderLayout);
 
   // 3. Generate sitemap
   generateSitemap(config.outDir, config.baseUrl, config.exclude);
