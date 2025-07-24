@@ -1,37 +1,44 @@
 // src/config.js
 import path from "path";
+import { pathToFileURL } from "url";
 
-/**
- * Loads and processes the SSG configuration.
- * @param {string} configFilePath - Absolute path to the user's config file.
- * @returns {Promise<object>} The resolved configuration object.
- */
-export async function loadConfig(configFilePath) {
+let mergedConfig = null;
+
+export async function loadConfig() {
+  if (mergedConfig) return mergedConfig;
+  const userConfigPath = path.resolve(process.cwd(), "domo.config.js");
+
   // Default configuration values
   const defaultConfig = {
     outDir: "./dist",
-    routesFile: "./routes.js", // Assuming a common name for routes
-    layout: "./layout.js", // Assuming a common name for layout
+    routesFile: "./routes.js",
+    layout: "./layout.js",
+    lang: "en",
+    author: "Domo",
     exclude: ["css", "js", "assets", "robots.txt", "admin"],
-    baseUrl: "http://localhost:3000", // Default base URL for sitemap
+    baseUrl: "http://localhost:3000",
   };
 
   let userConfig = {};
   try {
-    const importedConfig = await import(configFilePath);
+    const importedConfig = await import(pathToFileURL(userConfigPath).href);
     userConfig = importedConfig.default || importedConfig;
   } catch (error) {
     console.warn(`⚠️  No custom config file found at ${configFilePath}. Using default settings.`);
   }
+  mergedConfig = {
+    ...defaultConfig,
+    ...userConfig,
+    outDir: path.resolve(process.cwd(), userConfig.outDir || defaultConfig.outDir),
+    routesFile: path.resolve(process.cwd(), userConfig.routesFile || defaultConfig.routesFile),
+    layout: path.resolve(process.cwd(), userConfig.layout || defaultConfig.layout),
+  };
+  return mergedConfig;
+}
 
-  // Merge user config with defaults
-  const mergedConfig = { ...defaultConfig, ...userConfig };
-
-  // Resolve paths relative to the current working directory of the build script
-  // This assumes the config file itself specifies paths relative to its own location
-  mergedConfig.outDir = path.resolve(process.cwd(), mergedConfig.outDir);
-  mergedConfig.routesFile = path.resolve(process.cwd(), mergedConfig.routesFile);
-  mergedConfig.layout = path.resolve(process.cwd(), mergedConfig.layout);
-
+export function getConfig() {
+  if (!mergedConfig) {
+    throw new Error("Config has not been loaded yet. Call loadConfig() first.");
+  }
   return mergedConfig;
 }
