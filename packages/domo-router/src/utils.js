@@ -65,9 +65,10 @@ export function match(segments) {
  */
 export function info() {
   if (_currentInfo) return _currentInfo;
-  const { segments } = parseUrl(path());
+  const path = path();
+  const { segments } = parseUrl(path);
   const { routeData, params } = match(segments);
-  return { meta: routeData.meta || {}, params, segments };
+  return { meta: routeData.meta || {}, params, segments, path };
 }
 
 /**

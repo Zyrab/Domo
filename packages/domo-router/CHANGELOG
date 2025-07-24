@@ -6,3 +6,9 @@
 - SPA routing support using history-based path tracking
 - Works with `@zyrab/domo-ssg` for precompiled static builds
 - Supports route metadata, async rendering, and 404 fallback
+
+## 0.1.1 - Changed `.info()`
+
+`.info()` now includes path that provides full curent page path
+
+example:`/projects/rock-star/detals`
