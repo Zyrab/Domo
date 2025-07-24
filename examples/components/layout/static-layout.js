@@ -16,10 +16,19 @@ export async function renderLayout(
     author,
     type,
     ogImage,
+    theme,
   }
 ) {
   const canonicalUrl = baseUrl + (canonical || Router.path());
-  const scriptTags = scripts.map((file) => `<script defer src="/js/${file}"></script>`).join("\n");
+
+  const scriptTags = scripts
+    .map((file) =>
+      file.preload
+        ? `<link rel="preload" as="script" href="/js/${file.href}">
+          <script defer src="/js/${file.href}"></script>`
+        : `<script defer src="/js/${file}"></script>`
+    )
+    .join("\n");
 
   const styleTags = styles
     .map((style) =>
@@ -36,6 +45,14 @@ export async function renderLayout(
         : `<link rel="stylesheet" href="/${font.href || font}">`
     )
     .join("\n");
+
+  const themeColor =
+    theme === "auto" || theme === "toggle"
+      ? ` <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+          <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+          <meta name="color-scheme" content="light dark">`
+      : ` <meta name="theme-color" content="${theme === "dark" ? "#000000" : "#ffffff"}">
+          <meta name="color-scheme" content="${theme}">`;
 
   return `<!DOCTYPE html>
 <html lang="${lang}">
@@ -68,9 +85,7 @@ export async function renderLayout(
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 
   <!-- Theme Colors -->
-  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#fff444" media="(prefers-color-scheme: dark)">
-  <meta name="color-scheme" content="light dark">
+  ${themeColor}
 
   <!-- Performance -->
   ${fontTags}
@@ -79,17 +94,18 @@ export async function renderLayout(
   <!-- Privacy & Security -->
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self'">
+
   
-  <!-- Optional: preload theme script (small + used before paint) -->
-  <link rel="preload" as="script" href="/js/theme-loader.js">
-  <script defer src="/js/theme-loader.js"></script>
+  <!-- Scripts: preload or noraml injection -->
+  ${scriptTags}
+  
 </head>
 <body>
   ${createHeader()}
   <main>
     ${content.build()}
   </main>
-  ${scriptTags}
 </body>
 </html>`;
 }

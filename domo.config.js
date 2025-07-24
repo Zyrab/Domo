@@ -6,10 +6,11 @@ export default {
   baseUrl: "www.zyrab.dev",
   author: "Zyrab this works",
   lang: "en",
+  theme: "auto",
   exclude: ["js", "css", "app-ads.txt", "assets", "data"],
   assets: {
-    scripts: ["test.js", "global.js"],
-    styles: [{ href: "main.css", preload: false }, "hoora.css"],
+    scripts: ["test.js", "global.js", { href: "theme-toggle.js", preload: true }],
+    styles: [{ href: "main.css", prefetch: false }, "hoora.css"],
     fonts: [{ href: "wohaha.woff2", preload: true }, "yasWemadeIt.woff2"],
     favicon: "path/to/fivicon.ico",
   },

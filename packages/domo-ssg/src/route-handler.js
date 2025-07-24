@@ -58,6 +58,7 @@ export async function handleRoute({ path, props, component, scripts, styles, fon
       baseUrl: config?.baseUrl,
       lang: config?.lang,
       author: config?.author,
+      theme: config?.theme,
     });
 
     // Write the generated HTML to a file
