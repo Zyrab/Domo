@@ -41,3 +41,32 @@
 
 - Added `normalizeEventLogic()` and `hashContent()` to stabilize and deduplicate logic across builds.
 - Introduced a temporary in-memory Map cache to track already-generated scripts.
+
+---
+
+## [0.3.0] - 2025-07-25
+
+### Added
+
+- Global asset support in config:
+  - `js`, `css`, `fonts`, `favicon` can be declared globally.
+  - Each asset can have `preload: true` to emit `<link rel="preload">`.
+  - Set `lang`, `author`, and `theme` types for semantic markup.
+
+-Per-route metadata support:
+
+- `description`, `ogDescription`, `ogImage`, `type` (e.g. for Twitter cards), and `canonical` URL handling.
+
+- Route-level asset and metadata overrides.
+- Favicon support via config.
+
+### Changed
+
+- Improved HTML layout and semantics for better accessibility.
+- Now use `routProps` for dynamic props:
+  - Example: for a route `/blog/:slug`, pass an array of objects with matching keys (`slug`, etc.) to generate individual pages.
+
+### Internal
+
+- Refactored internal functions for cleaner config parsing and asset injection.
+- Dynamic route rendering enhanced to handle prop arrays directly.
