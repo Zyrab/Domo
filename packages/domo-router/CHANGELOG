@@ -9,6 +9,4 @@
 
 ## 0.1.1 - Changed `.info()`
 
-`.info()` now includes path that provides full curent page path
-
-example:`/projects/rock-star/detals`
+`.info()` now includes `path` that provides full curent page url
