@@ -5,7 +5,7 @@ export async function renderLayout(
   {
     title,
     description,
-    descriptionOG,
+    ogDescription,
     scripts,
     styles,
     fonts,
@@ -69,7 +69,7 @@ export async function renderLayout(
 
   <!-- Social: OpenGraph -->
   <meta property="og:title" content="${title}">
-  <meta property="og:description" content="${descriptionOG || description}">
+  <meta property="og:description" content="${ogDescription || description}">
   <meta property="og:image" content="${ogImage}">
   <meta property="og:url" content="${baseUrl}${Router.path()}">
   <meta property="og:type" content="${type || "website"}">
@@ -77,7 +77,7 @@ export async function renderLayout(
   <!-- Social: Twitter -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${title}">
-  <meta name="twitter:description" content="${descriptionOG || description}">
+  <meta name="twitter:description" content="${ogDescription || description}">
   <meta name="twitter:image" content="${ogImage}">
 
   <!-- Favicon and Touch Icon -->

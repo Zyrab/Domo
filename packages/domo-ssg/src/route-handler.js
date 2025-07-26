@@ -48,7 +48,8 @@ export async function handleRoute({ path, props, component, scripts, styles, fon
     const html = await renderLayout(content, {
       title: meta.title || "",
       description: meta.description || "",
-      descriptionOG: meta.descriptionOG,
+      ogDescription: meta.ogDescription,
+      ogImage: meta.ogImage || "",
       canonical: meta.canonical,
       type: meta.type,
       scripts: scriptPaths,

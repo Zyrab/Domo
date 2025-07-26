@@ -70,3 +70,9 @@
 
 - Refactored internal functions for cleaner config parsing and asset injection.
 - Dynamic route rendering enhanced to handle prop arrays directly.
+
+## [0.3.1] - 2025-07-25
+
+### Fix
+
+- Fixed `ogDescription` desclaration and handlin in layout.
