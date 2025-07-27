@@ -21,8 +21,8 @@ Modern users expect websites to respect their system's color preference. Some al
 
 ### ✅ Tasks
 
-- [ ] Add `theme` key to global config: `"dark"`, `"light"`, or `"auto"`
-- [ ] Allow per-route `meta.theme` to override it
+- [x] Add `theme` key to global config: `"dark"`, `"light"`, or `"auto"`
+- [x] Allow per-route `meta.theme` to override it
 - [ ] Generate `theme-loader.js` script that sets `<html class="dark">` or `<html class="light">`
 - [ ] Preload this script only when required (e.g., when theme is `"auto"` or route wants override)
 - [ ] Consider adding theme toggle support in the UI (future feature)
@@ -63,8 +63,8 @@ Preloading critical scripts (e.g., small utility or theme-setting code) helps el
 
 ### ✅ Tasks
 
-- [ ] Allow scripts to accept both string and object format
-- [ ] Handle preload: true flag and output both preload <link> and <script> tags
+- [x] Allow scripts to accept both string and object format
+- [x] Handle preload: true flag and output both preload <link> and <script> tags
 
 ### 🧪 Examples
 
@@ -107,7 +107,7 @@ Instead of hardcoding all these, it's better to provide a flexible way to define
 ### ✅ Tasks
 
 - [ ] Add support for `meta.metaTags` array
-- [ ] Detect if tag is using `name` or pr`operty, and render accordingly
+- [ ] Detect if tag is using `name` or property, and render accordingly
 
 ### 🧪 Example
 
