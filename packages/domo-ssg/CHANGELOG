@@ -76,3 +76,27 @@
 ### Fix
 
 - Fixed `ogDescription` desclaration and handlin in layout.
+
+## [0.4.1] - 2025-07-27
+
+### Added
+
+- Sitemap generation Now includes more automatic metadata. Manual configuration for certain metadata fields is planned for future updates.
+
+### Changed
+
+- In Route object structure Removed the `children` key from route definitions.
+
+### Internal
+
+- Refactored `buildRoutes()`:
+
+  - Removed handling of the `children` key.
+  - Skips irrelevant keys.
+  - Enhanced error detection:
+    - Detects when metadata is provided but no component is present.
+    - Flags inaccessible `routeParams` in dynamic routes.
+    - Validates incorrect dynamic parameters.
+  - Improved readability and performance.
+
+- Optimized `routeHandler` Refactored for better clarity and speed.
