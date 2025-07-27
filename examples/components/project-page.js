@@ -2,7 +2,7 @@ import Domo from "../../packages/domo/src/domo.js";
 import { loadJson } from "../load-json.js";
 
 export default async function createProjectPage(params) {
-  const data = await loadJson(`/dist/data/${params.id}.json`);
+  const data = (await loadJson(`/dist/data/${params.id}.json`)) || {};
 
   return Domo()
     .css({
@@ -16,22 +16,34 @@ export default async function createProjectPage(params) {
       boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
     })
     .child([
-      Domo("h1").txt(data.title).css({
+      Domo("h1").txt(data?.title).css({
         fontSize: "28px",
         marginBottom: "16px",
         color: "#333",
       }),
-      Domo("p").txt(data.description).css({
+      Domo("p").txt(data?.description).css({
         fontSize: "16px",
         color: "#666",
         marginBottom: "20px",
       }),
-      Domo("div").txt(data.content).css({
+      Domo("div").txt(data?.content).css({
         fontSize: "15px",
         lineHeight: "1.6",
         color: "#444",
       }),
-      Domo("div").txt(`Last updated: ${data.updated}`).css({
+      Domo("a")
+        .attr({ href: `/projects/${params.id}/run` })
+        .txt("test page"),
+      Domo("a")
+        .attr({ href: `/projects/${params.id}/go` })
+        .txt("test page"),
+      Domo("a")
+        .attr({ href: `/projects/${params.id}/why` })
+        .txt("test page"),
+      Domo("a")
+        .attr({ href: `/projects/${params.id}/because` })
+        .txt("test page"),
+      Domo("div").txt(`Last updated: ${data?.updated}`).css({
         marginTop: "30px",
         fontSize: "13px",
         color: "#999",

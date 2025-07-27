@@ -1,8 +1,7 @@
 import Router from "../../../packages/domo-router/src/core.js";
 import createHeader from "./header.js";
-export async function renderLayout(
-  content,
-  {
+export async function renderLayout(content, data) {
+  const {
     title,
     description,
     descriptionOG,
@@ -17,8 +16,8 @@ export async function renderLayout(
     type,
     ogImage,
     theme,
-  }
-) {
+  } = data;
+
   const canonicalUrl = baseUrl + (canonical || Router.path());
 
   const scriptTags = scripts
@@ -26,7 +25,7 @@ export async function renderLayout(
       file.preload
         ? `<link rel="preload" as="script" href="/js/${file.href}">
           <script defer src="/js/${file.href}"></script>`
-        : `<script defer src="/js/${file}"></script>`
+        : `<script defer src="/js/${file.href || file}"></script>`
     )
     .join("\n");
 
@@ -34,7 +33,7 @@ export async function renderLayout(
     .map((style) =>
       style.preload
         ? `<link rel="preload" href="/css/${style.href}" as="style" onload="this.rel='stylesheet'">`
-        : `<link rel="stylesheet" href="/${style.href || style}">`
+        : `<link rel="stylesheet" href="/css/${style.href || style}">`
     )
     .join("\n");
 
@@ -42,7 +41,7 @@ export async function renderLayout(
     .map((font) =>
       font.preload
         ? `<link rel="preload" href="/assets/fonts/${font.href}" as="font" type="font/woff2" crossorigin="anonymous">`
-        : `<link rel="stylesheet" href="/${font.href || font}">`
+        : `<link rel="stylesheet" href="assets/fonts/${font.href || font}">`
     )
     .join("\n");
 
