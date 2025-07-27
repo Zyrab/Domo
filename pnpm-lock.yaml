@@ -15,10 +15,10 @@ importers:
   packages/domo-ssg:
     dependencies:
       '@zyrab/domo':
-        specifier: workspace:^1.2.0
+        specifier: workspace:^
         version: link:../domo
       '@zyrab/domo-router':
-        specifier: workspace:^0.1.0
+        specifier: workspace:^
         version: link:../domo-router
 
   packages/domo-svg:

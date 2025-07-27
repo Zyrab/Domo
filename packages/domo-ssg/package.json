@@ -22,10 +22,9 @@
   "author": "Zyrab",
   "license": "MIT",
   "dependencies": {
-    "@zyrab/domo": "workspace:^1.2.0",
-    "@zyrab/domo-router": "workspace:^0.1.0"
+    "@zyrab/domo": "workspace:^",
+    "@zyrab/domo-router": "workspace:^"
   },
-  "devDependencies": {},
   "publishConfig": {
     "access": "public"
   },
