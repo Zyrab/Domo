@@ -6,3 +6,7 @@
 - Adds SVG tag validation.
 - Uses correct namespace for SVG creation.
 - Supports both browser and virtual DOM environments.
+
+## [0.0.1] 27.07.2025
+
+- updated to match new Domo version 1.2.1
