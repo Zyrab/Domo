@@ -32,9 +32,12 @@ class Builder {
 
     if (cls) attrs.push(`class="${cls}"`);
     if (css) attrs.push(`style="${css}"`);
+    const escapeHTML = (str) => String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
     const attrStr = attrs.concat(data).join(" ");
-    const children = this.element._child.map((c) => (typeof c === "string" ? c : c.build?.() || "")).join("");
+    const children = this.element._child
+      .map((c) => (typeof c === "string" ? escapeHTML(c) : c.build?.() || ""))
+      .join("");
 
     return `<${tag}${attrStr ? " " + attrStr : ""}>${children}</${tag}>`;
   }

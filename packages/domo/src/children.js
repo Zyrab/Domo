@@ -10,10 +10,6 @@ class Children {
    * a string for virtual children, or a Domo instance for virtual children.
    */
   _handleElementInstance(element) {
-    // Check if Domo class exists (it's imported in main.domo.js for final class)
-    // To avoid circular dependency in JSDoc parsing, we'll check runtime type.
-    // For JSDoc type checking, we assume Domo is available in the context of main.domo.js.
-    // @ts-ignore - Ignore potential 'Domo is not defined' for JSDoc tool
     if (element instanceof DomoClass) return element.build();
 
     if (element instanceof DocumentFragment) return element;

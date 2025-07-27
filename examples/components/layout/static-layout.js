@@ -41,7 +41,7 @@ export async function renderLayout(content, data) {
     .map((font) =>
       font.preload
         ? `<link rel="preload" href="/assets/fonts/${font.href}" as="font" type="font/woff2" crossorigin="anonymous">`
-        : `<link rel="stylesheet" href="assets/fonts/${font.href || font}">`
+        : `<link rel="stylesheet" href="/assets/fonts/${font.href || font}">`
     )
     .join("\n");
 
