@@ -24,19 +24,18 @@ export const routes = {
       title: "contacts",
       description: "page description",
       descriptionOG: "Learn more about our mission and values.",
-      canonical: "/test/canonical",
+      canonical: "/test/canonical", //u will need this if u have highly duplicated pages. good for SEO,
       ogImage: "/test/image.png",
-      type: "product",
+      type: "product", // this is for twitter cards to define what type of content is on page, default is webste
     },
   },
   "/projects": {
-    children: {
-      "/": { component: createProjects, meta: { title: "contacts" } },
-      "/:id": {
-        routeParams: async (parentRouteName) => await loadJson("dist/data/projects.json"),
-        component: createProjectPage,
-        meta: { title: "test page" },
-      },
+    component: createProjects,
+    meta: { title: "contacts" },
+    "/:id": {
+      routeParams: async (parentRouteName) => await loadJson(parentRouteName), // parentRouteName = projects, this is usfull in deeply nested dinmic routs
+      component: createProjectPage,
+      meta: { title: "test page" },
     },
   },
   "*": {
