@@ -1,7 +1,6 @@
 // src/config.js
 import path from "path";
 import { pathToFileURL } from "url";
-import { normalizeAssets } from "./utils.js";
 
 let mergedConfig = null;
 
@@ -18,12 +17,6 @@ export async function loadConfig() {
     author: "Domo",
     exclude: ["css", "js", "assets", "robots.txt", "admin"],
     baseUrl: "http://localhost:3000",
-    assets: {
-      styles: [],
-      scripts: [],
-      fonts: [],
-      favicon: "",
-    },
   };
 
   let userConfig = {};
@@ -39,12 +32,6 @@ export async function loadConfig() {
     outDir: path.resolve(process.cwd(), userConfig.outDir || defaultConfig.outDir),
     routesFile: path.resolve(process.cwd(), userConfig.routesFile || defaultConfig.routesFile),
     layout: path.resolve(process.cwd(), userConfig.layout || defaultConfig.layout),
-    assets: {
-      ...userConfig?.assets,
-      styles: normalizeAssets(userConfig.assets?.styles || defaultConfig.assets.styles),
-      scripts: normalizeAssets(userConfig.assets?.scripts || defaultConfig.assets.scripts),
-      fonts: normalizeAssets(userConfig.assets?.fonts || defaultConfig.assets.fonts),
-    },
   };
   return mergedConfig;
 }
