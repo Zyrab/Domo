@@ -1,6 +1,6 @@
 {
   "name": "@zyrab/domo-svg",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "SVG-aware DOM builder for Domo. Provides correct namespace handling and fluent chaining for SVG elements.",
   "main": "./domo-svg.js",
   "type": "module",

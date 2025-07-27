@@ -100,3 +100,9 @@ Refactored internal .parent() method to be consistent with chaining behavior.
 
 - `.if()` was using Domo instead of DomoClass for creatng an dummy component when used on site.
 - `.on()` now return if either function or event is not defined
+
+## [1.3.0] - 2025-07-27
+
+### Fidex
+
+- `.build()` Text content where html symbols where present was renderin html tags. fixed that by adding `escapeHTML()` function taht replacec native html symbols </> with safe alternatives
