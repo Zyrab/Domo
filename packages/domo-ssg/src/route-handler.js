@@ -3,6 +3,7 @@ import Router from "@zyrab/domo-router";
 import { getConfig } from "./config.js";
 import { writeHTML } from "./file-utils.js";
 import { writeJs } from "./event-utils.js";
+import { normalizeAssets } from "./utils.js";
 
 /**
  * Helper to join URL path segments correctly.
@@ -29,8 +30,9 @@ export function joinPaths(...segments) {
  * @returns {Promise<void>}
  */
 
-export async function handleRoute({ path, props, component, scripts, styles, fonts, meta = {} }, renderLayout) {
-  const config = getConfig();
+export async function handleRoute(params, renderLayout) {
+  const { outDir, baseUrl, lang, author, theme, assets } = getConfig();
+  const { path, props = {}, component, scripts = [], styles = [], fonts = [], meta = {} } = params;
   try {
     // Set router info for server-side context
     Router.setInfo(path, props);
@@ -39,43 +41,27 @@ export async function handleRoute({ path, props, component, scripts, styles, fon
     const content = await component(props);
 
     // --- Write JS file ---
-    const embededScript = writeJs(content, config.outDir, path);
-
-    const fontPaths = normalizeAssets([fonts, config.assets.fonts]);
-    const stylePaths = normalizeAssets([styles, config.assets.styles]);
-    const scriptPaths = normalizeAssets([embededScript, scripts, config.assets.scripts]);
+    const embededScript = writeJs(content, outDir, path);
+    // console.log([...styles, ...assets.styles]);
+    const fontPaths = normalizeAssets([fonts, assets.fonts]);
+    const stylePaths = normalizeAssets([styles, assets.styles]);
+    const scriptPaths = normalizeAssets([embededScript, scripts, assets.scripts]);
     // Render the full HTML layout
     const html = await renderLayout(content, {
-      title: meta.title || "",
-      description: meta.description || "",
-      ogDescription: meta.ogDescription,
-      ogImage: meta.ogImage || "",
-      canonical: meta.canonical,
-      type: meta.type,
       scripts: scriptPaths,
       styles: stylePaths,
       fonts: fontPaths,
-      favicon: config?.assets?.favicon,
-      baseUrl: config?.baseUrl,
-      lang: config?.lang,
-      author: config?.author,
-      theme: config?.theme,
+      favicon: assets?.favicon,
+      baseUrl,
+      lang,
+      author,
+      theme,
+      ...meta,
     });
 
     // Write the generated HTML to a file
-    writeHTML(config.outDir, path, html);
+    writeHTML(outDir, path, html);
   } catch (e) {
     console.warn(`⚠️  Error rendering ${path}:\n${e.stack}`);
   }
-}
-function normalizeAssets(arr) {
-  let result = [];
-  for (const el of arr) {
-    if (Array.isArray(el) && el.length > 0) {
-      result.push(...el);
-    } else if (typeof el === "string" && el.trim() !== "") {
-      result.push(el);
-    }
-  }
-  return result;
 }
