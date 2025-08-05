@@ -1,6 +1,5 @@
 // src/route-traversal.js
 import { handleRoute, joinPaths } from "./route-handler.js";
-import { normalizeAssets } from "./utils.js";
 
 /**
  * Recursively builds HTML files for all defined routes, including nested and dynamic routes.

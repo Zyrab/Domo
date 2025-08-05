@@ -3,7 +3,7 @@ import Router from "@zyrab/domo-router";
 import { getConfig } from "./config.js";
 import { writeHTML } from "./file-utils.js";
 import { writeJs } from "./event-utils.js";
-import { normalizeAssets } from "./utils.js";
+import { normalizeAssets, tryGenerateOgImage } from "./utils.js";
 
 /**
  * Helper to join URL path segments correctly.
@@ -34,19 +34,19 @@ export async function handleRoute(params, renderLayout) {
   const { outDir, baseUrl, lang, author, theme, assets } = getConfig();
   const { path, props = {}, component, scripts = [], styles = [], fonts = [], meta = {} } = params;
   try {
-    // Set router info for server-side context
     Router.setInfo(path, props);
 
     // Render the component content
     const content = await component(props);
 
-    // --- Write JS file ---
     const embededScript = writeJs(content, outDir, path);
-    // console.log([...styles, ...assets.styles]);
+
+    const ogImage = await tryGenerateOgImage(meta, outDir);
+
     const fontPaths = normalizeAssets([fonts, assets.fonts]);
     const stylePaths = normalizeAssets([styles, assets.styles]);
     const scriptPaths = normalizeAssets([embededScript, scripts, assets.scripts]);
-    // Render the full HTML layout
+
     const html = await renderLayout(content, {
       scripts: scriptPaths,
       styles: stylePaths,
@@ -57,6 +57,7 @@ export async function handleRoute(params, renderLayout) {
       author,
       theme,
       ...meta,
+      ogImage: ogImage || meta.ogImage,
     });
 
     // Write the generated HTML to a file

@@ -23,6 +23,7 @@
   "license": "MIT",
   "dependencies": {
     "@zyrab/domo": "workspace:^",
+    "@zyrab/domo-og": "workspace:*",
     "@zyrab/domo-router": "workspace:^"
   },
   "publishConfig": {
