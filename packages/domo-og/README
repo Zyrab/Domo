@@ -1,0 +1,39 @@
+# @zyrab/domo-og
+
+Dynamic Open Graph image generator for use with [domo-ssg](https://github.com/Zyrab/Domo/tree/main/packages/domo-ssg). It takes an SVG template, replaces template variables (like `{{title}}`), and converts the result into a PNG using `resvg`.
+
+## Features
+
+- Simple `{{title}}` substitution in SVG templates
+- Converts SVG to PNG using fast and accurate `resvg` binary
+- Uses platform-specific `resvg` binaries (v0.45.1)
+- Stores temp SVGs in OS-level temporary directory
+
+## Usage
+
+```js
+import { generateOgImage } from "@zyrab/domo-og";
+
+await generateOgImage({
+  slug: "my-blog-post", // Used for filename
+  outputDir: "./public/og/", // PNG destination
+  svgTemplate: "./assets/og-template.svg",
+  title: "My Blog Post Title",
+});
+```
+
+Ensure your SVG template has a placeholder like:
+
+```xml
+<text>{{title}}</text>
+```
+
+## Notes
+
+- Only `{{title}}` replacement is supported for now.
+- Resvg binaries are bundled under bin/{linux,darwin,win32}/.
+
+License
+MIT © Zyrab
+This project bundles the [resvg](https://github.com/linebender/resvg) binary, which is dual-licensed under MIT and Apache-2.0.  
+We distribute it under the terms of the MIT license. See [RESVG-LICENSE](https://github.com/linebender/resvg/blob/main/LICENSE-MIT) for details.

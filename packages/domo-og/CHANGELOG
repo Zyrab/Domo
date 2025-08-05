@@ -1,0 +1,10 @@
+# Changelog
+
+## 0.1.0 - Initial Release
+
+- Added `generateOgImage` function
+- Supports:
+  - Dynamic `title` injection into SVG templates
+  - Conversion to PNG using `resvg` v0.45.1
+  - OS temp file usage for intermediate SVGs
+  - Bundled binaries for Windows, macOS, Linux
