@@ -26,7 +26,8 @@
   },
   "files": [
     "src/",
-    "bin/"
+    "bin/",
+    "README"
   ],
   "os": [
     "darwin",

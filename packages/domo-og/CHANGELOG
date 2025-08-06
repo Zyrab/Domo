@@ -5,6 +5,9 @@
 - Added `generateOgImage` function
 - Supports:
   - Dynamic `title` injection into SVG templates
+  - Line-wrapping for long titles using `<tspan>`
+  - Optional control via `ogImageOptions` (e.g. `x`, `maxLength`, `lineHeight`)
   - Conversion to PNG using `resvg` v0.45.1
-  - OS temp file usage for intermediate SVGs
-  - Bundled binaries for Windows, macOS, Linux
+  - Uses temp directory for intermediate SVGs
+  - Cross-platform binary support (Windows, macOS, Linux)
+  - Cache manifest file to skip redundant image generation
