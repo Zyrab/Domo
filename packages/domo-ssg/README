@@ -5,18 +5,18 @@ Write JavaScript templates using [@zyrab/domo](https://www.npmjs.com/package/@zy
 
 ---
 
-## ✨ Features
+## Features
 
-- 🧱 Declarative page structure with `Domo` and `DomoSVG`
-- 🗺️ Simple nested route tree (`routes.js`)
-- 🎨 Custom layout wrapper (`layout.js`)
-- ⚡ Virtual DOM-like output (no DOM dependency during build)
-- 🧠 Hydration-ready: automatic inline scripts for events
-- 🧹 Built-in cleanup and sitemap generation
+- Declarative page structure with `Domo` and `DomoSVG`
+- Simple nested route tree (`routes.js`)
+- Custom layout wrapper (`layout.js`)
+- Virtual DOM-like output (no DOM dependency during build)
+- Hydration-ready: automatic inline scripts for events
+- Built-in cleanup and sitemap generation
 
 ---
 
-## 📦 Installation
+## Installation
 
 ```bash
 pnpm add -D @zyrab/domo-ssg
@@ -24,7 +24,7 @@ pnpm add -D @zyrab/domo-ssg
 
 Note: Use in a pnpm monorepo if you're working with other Domo packages like @zyrab/domo or @zyrab/domo-router.
 
-## 🛠 Usage
+## Usage
 
 ### 1. Scaffold basic structure
 
@@ -56,7 +56,7 @@ layout.js;
 pnpm build
 ```
 
-# 🧩 Project Structure
+# Project Structure
 
 | File             | Purpose                             |
 | ---------------- | ----------------------------------- |
@@ -64,10 +64,10 @@ pnpm build
 | `layout.js`      | Optional layout wrapper             |
 | `domo.config.js` | Customize output dir, base URL, etc |
 
-# 🧪 Example Route File
+# Example Route File
 
 ```js
-import { Domo } from "@zyrab/domo";
+import Domo from "@zyrab/domo";
 
 export const routes = {
   "/": () => Domo("div").txt("Hello Home"),
@@ -75,7 +75,7 @@ export const routes = {
 };
 ```
 
-# ⚙️ Configuration (domo.config.js)
+# Configuration (domo.config.js)
 
 ```js
 export default {
@@ -87,6 +87,6 @@ export default {
 };
 ```
 
-# 📜 License
+# License
 
 MIT — © Zyrab

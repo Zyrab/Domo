@@ -1,6 +1,6 @@
 {
   "name": "@zyrab/domo-ssg",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "A Static Site Generator (SSG) for Domo-based projects.",
   "main": "src/index.js",
   "type": "module",
@@ -30,6 +30,7 @@
     "access": "public"
   },
   "files": [
-    "src/"
+    "src/",
+    "README"
   ]
 }

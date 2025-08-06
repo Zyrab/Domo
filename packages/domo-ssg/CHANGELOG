@@ -1,46 +1,62 @@
 # Changelog
 
-## [0.1.0] - 2025-07-07
+---
+
+## [0.5.0] - 2025-08-06
 
 ### Added
 
-- Initial release of `@zyrab/domo-ssg`, a simple static site generator designed for Domo-based virtual DOM.
-- Support for custom layout rendering via `renderLayout()` function.
-- Recursive route tree traversal using a virtual DOM structure.
-- Automatic generation of `sitemap.xml` with support for `baseUrl` and `exclude` filters.
-- Optional `domo.config.js` for user-defined config overrides (`outDir`, `routesFile`, `layout`, etc).
-- Filesystem-safe output path handling for route-based pages.
-- Clean output directory before build.
-- Auto-injection of client-side JavaScript per page via extracted `on(...)` event metadata from virtual DOM.
+- Added support for automatic OG image generation via `generateOgImage` flag in route meta.
+- Uses the `@zyrab/domo-og` package (must be installed separately).
+- SVG templates with a `{{title}}` placeholder can be used to create custom OG images.
+- Output PNGs are saved under `assets/og-images/`.
+- Caching prevents regeneration when titles or templates haven’t changed.
+- Feature is non-breaking and opt-in — no changes required for existing routes.
 
-### Server-side event delegation support
+### Example usage:
 
-- Virtual `.on(...)`, `.onClosest(...)`, `.onMatch(...)` handlers now capture metadata during SSG.
-- `event-utils.js` extracts and serializes event listeners for runtime hydration:
-  - Supports event type `direct`, `closest`, and `match`.
-  - Functions can expose variables using `// @ssg-let` and `// @ssg-const` to ensure availability in hydrated JS.
-  - Closure support and selector-aware event bindings.
-
-### Monorepo & Build
-
-- Designed to work inside monorepos via `pnpm workspaces`.
-- CLI support via `node src/index.js` for both root and filtered workspace usage.
-- Package is `type: module` and compatible with ESM.
+```js
+meta: {
+  title: "Post Title",
+  generateOgImage: true,
+  svgTemplate: myTemplate,
+  templateId: "blog-v1"
+}
+```
 
 ---
 
-## [0.2.0] - 2025-07-01
+## [0.4.0] - 2025-07-27
+
+### Added
+
+- Sitemap generation Now includes more automatic metadata. Manual configuration for certain metadata fields is planned for future updates.
 
 ### Changed
 
-- Refactored JS file generation to avoid duplication across dynamic pages.
-- Event handler logic is now normalized and hashed to detect identical scripts reused across different pages.
-- Script filenames are derived from content hashes (sha1) instead of page paths (/user/1 → user-1.js), improving browser cache effectiveness.
+- In Route object structure Removed the `children` key from route definitions.
 
 ### Internal
 
-- Added `normalizeEventLogic()` and `hashContent()` to stabilize and deduplicate logic across builds.
-- Introduced a temporary in-memory Map cache to track already-generated scripts.
+- Refactored `buildRoutes()`:
+
+  - Removed handling of the `children` key.
+  - Skips irrelevant keys.
+  - Enhanced error detection:
+    - Detects when metadata is provided but no component is present.
+    - Flags inaccessible `routeParams` in dynamic routes.
+    - Validates incorrect dynamic parameters.
+  - Improved readability and performance.
+
+- Optimized `routeHandler` Refactored for better clarity and speed.
+
+---
+
+## [0.3.1] - 2025-07-25
+
+### Fix
+
+- Fixed `ogDescription` desclaration and handlin in layout.
 
 ---
 
@@ -71,32 +87,46 @@
 - Refactored internal functions for cleaner config parsing and asset injection.
 - Dynamic route rendering enhanced to handle prop arrays directly.
 
-## [0.3.1] - 2025-07-25
+---
 
-### Fix
-
-- Fixed `ogDescription` desclaration and handlin in layout.
-
-## [0.4.0] - 2025-07-27
-
-### Added
-
-- Sitemap generation Now includes more automatic metadata. Manual configuration for certain metadata fields is planned for future updates.
+## [0.2.0] - 2025-07-01
 
 ### Changed
 
-- In Route object structure Removed the `children` key from route definitions.
+- Refactored JS file generation to avoid duplication across dynamic pages.
+- Event handler logic is now normalized and hashed to detect identical scripts reused across different pages.
+- Script filenames are derived from content hashes (sha1) instead of page paths (/user/1 → user-1.js), improving browser cache effectiveness.
 
 ### Internal
 
-- Refactored `buildRoutes()`:
+- Added `normalizeEventLogic()` and `hashContent()` to stabilize and deduplicate logic across builds.
+- Introduced a temporary in-memory Map cache to track already-generated scripts.
 
-  - Removed handling of the `children` key.
-  - Skips irrelevant keys.
-  - Enhanced error detection:
-    - Detects when metadata is provided but no component is present.
-    - Flags inaccessible `routeParams` in dynamic routes.
-    - Validates incorrect dynamic parameters.
-  - Improved readability and performance.
+---
 
-- Optimized `routeHandler` Refactored for better clarity and speed.
+## [0.1.0] - 2025-07-07
+
+### Added
+
+- Initial release of `@zyrab/domo-ssg`, a simple static site generator designed for Domo-based virtual DOM.
+- Support for custom layout rendering via `renderLayout()` function.
+- Recursive route tree traversal using a virtual DOM structure.
+- Automatic generation of `sitemap.xml` with support for `baseUrl` and `exclude` filters.
+- Optional `domo.config.js` for user-defined config overrides (`outDir`, `routesFile`, `layout`, etc).
+- Filesystem-safe output path handling for route-based pages.
+- Clean output directory before build.
+- Auto-injection of client-side JavaScript per page via extracted `on(...)` event metadata from virtual DOM.
+
+### Server-side event delegation support
+
+- Virtual `.on(...)`, `.onClosest(...)`, `.onMatch(...)` handlers now capture metadata during SSG.
+- `event-utils.js` extracts and serializes event listeners for runtime hydration:
+  - Supports event type `direct`, `closest`, and `match`.
+  - Functions can expose variables using `// @ssg-let` and `// @ssg-const` to ensure availability in hydrated JS.
+  - Closure support and selector-aware event bindings.
+
+### Monorepo & Build
+
+- Designed to work inside monorepos via `pnpm workspaces`.
+- CLI support via `node src/index.js` for both root and filtered workspace usage.
+- Package is `type: module` and compatible with ESM.
