@@ -76,5 +76,5 @@ ${urls
 </urlset>`;
 
   fs.writeFileSync(path.join(outputDir, "sitemap.xml"), xml, "utf8");
-  console.log(`Generated sitemap.xml at: ${path.join(outputDir, "sitemap.xml")}`);
+  console.log(`🧭 Generated sitemap.xml at: ${path.join(outputDir, "sitemap.xml")}`);
 }

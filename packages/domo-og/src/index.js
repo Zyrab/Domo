@@ -43,7 +43,6 @@ function ensureDir(dir) {
  */
 export function generateOgImage(oprions) {
   const { slug, title, svgTemplate, templateId, outputDir, routeKey, ogImageOptions = {} } = oprions;
-  console.log(ogImageOptions);
   const key = routeKey || slug;
 
   // Determine template key: prefer stable templateId if given,

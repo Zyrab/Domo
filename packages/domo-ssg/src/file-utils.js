@@ -25,7 +25,7 @@ export function writeHTML(outputDir, routePath, html) {
   const outPath = path.join(outputDir, fileName, "index.html");
   ensureDir(outPath);
   fs.writeFileSync(outPath, html, "utf8");
-  console.log(`Generated: ${path.relative(outputDir, outPath)}`);
+  // console.log(`Generated: ${path.relative(outputDir, outPath)}`);
 }
 
 /**
