@@ -7,7 +7,7 @@ export default {
   baseUrl: "https://www.zyrab.dev",
   lang: "en",
   theme: "auto",
-  exclude: ["js", "css", "app-ads.txt", "assets", "data"],
+  exclude: ["js", "css", "app-ads.txt", "assets", "data", "og-cache.json"],
 
   assets: {
     scripts: ["test.js", "global.js", { href: "theme-toggle.js", preload: true }],

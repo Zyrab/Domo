@@ -69,7 +69,17 @@ export const routes = {
     "/:id": {
       routeParams: async () => await loadJson("dist/data/projects.json"), // Array of { id, title, ... }
       component: createProjectPage,
-      meta: { title: "Project Detail", generateOgImage: true, svgTemplate: svg },
+      meta: {
+        title: "Project Detail",
+        generateOgImage: true,
+        svgTemplate: svg,
+        templateId: "v2",
+        ogImageOptions: {
+          maxLength: 28,
+          lineHeight: 1.4,
+          x: 580,
+        },
+      },
 
       // Second-level dynamic route
       "/:item": {
