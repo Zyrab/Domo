@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.2 - 25-08-06 Patch
+
+### Fixed
+
+- Prevented crash when ogImageOptions is undefined by ensuring default values are applied correctly during formatTitleLines call.
+
+---
+
 ## 0.1.1 - 25-08-06 Cleanup
 
 - Removed incorrect `dependencies` from `package.json`

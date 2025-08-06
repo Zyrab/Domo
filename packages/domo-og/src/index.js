@@ -83,7 +83,7 @@ export function generateOgImage(oprions) {
 
   // Prepare SVG content
   const svgContent = svgTemplate
-    ? svgTemplate.replace("{{title}}", formatTitleLines(title, { ...ogImageOptions }))
+    ? svgTemplate.replace("{{title}}", formatTitleLines(title, { ...(ogImageOptions || {}) }))
     : getDefaultSvg(title);
 
   ensureDir(pngPath);
