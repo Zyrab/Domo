@@ -41,7 +41,7 @@ export async function handleRoute(params, renderLayout) {
 
     const embededScript = writeJs(content, outDir, path);
 
-    const ogImage = await tryGenerateOgImage(meta, outDir);
+    const ogImage = await tryGenerateOgImage(meta, outDir, path);
 
     const fontPaths = normalizeAssets([fonts, assets.fonts]);
     const stylePaths = normalizeAssets([styles, assets.styles]);
