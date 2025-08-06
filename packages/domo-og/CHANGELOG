@@ -1,6 +1,12 @@
 # Changelog
 
-## 0.1.0 - Initial Release
+## 0.1.1 - 25-08-06 Cleanup
+
+- Removed incorrect `dependencies` from `package.json`
+
+---
+
+## 0.1.0 - 25-08-06 Initial Release
 
 - Added `generateOgImage` function
 - Supports:

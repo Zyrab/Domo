@@ -1,6 +1,6 @@
 {
   "name": "@zyrab/domo-og",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "An OG (Open Graph) image generator with SVG templates.",
   "main": "src/index.js",
   "type": "module",
@@ -17,10 +17,6 @@
   ],
   "author": "Zyrab",
   "license": "MIT",
-  "dependencies": {
-    "@zyrab/domo": "workspace:^",
-    "@zyrab/domo-router": "workspace:^"
-  },
   "publishConfig": {
     "access": "public"
   },
