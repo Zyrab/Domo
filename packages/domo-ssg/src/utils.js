@@ -19,17 +19,18 @@ export function normalizeAssets(arr) {
   return result;
 }
 
-export async function tryGenerateOgImage(routeMeta, outputDir) {
+export async function tryGenerateOgImage(routeMeta, outputDir, path) {
   if (!routeMeta.generateOgImage) return;
   const slug = Router.info().segments.at(-1).slice(1);
 
   try {
     const { generateOgImage: generate } = await import("@zyrab/domo-og");
 
-    const ogPath = await generate({
+    const ogPath = generate({
       ...routeMeta,
       outputDir,
       slug,
+      routeKey: path,
     });
 
     return ogPath;
