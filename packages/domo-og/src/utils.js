@@ -39,7 +39,8 @@ function splitTitle(title, maxLength) {
   return lines;
 }
 
-export function formatTitleLines(title, { maxLength = 25, x = 600, lineHeightEm = 1.5 }) {
+export function formatTitleLines(title, ogImageOptions) {
+  const { maxLength = 25, x = 600, lineHeightEm = 1.5 } = ogImageOptions;
   const lines = splitTitle(title, maxLength);
   const totalHeight = (lines.length - 1) * lineHeightEm;
   const firstDy = `-${(totalHeight / 2).toFixed(2)}em`;

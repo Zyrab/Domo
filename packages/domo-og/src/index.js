@@ -74,7 +74,7 @@ export function generateOgImage(oprions) {
     return manifest[key].path;
   }
 
-  // Generate unique ID for file naming using routeKey + contentHash
+  // Generate unique ID for file naming using routeKey
   const uniqueId = hash(routeKey);
   const hashedPath = `${slug}-${uniqueId}`;
   const tempSvgPath = path.join(os.tmpdir(), `${hashedPath}.svg`);
@@ -83,10 +83,10 @@ export function generateOgImage(oprions) {
 
   // Prepare SVG content
   const svgContent = svgTemplate
-    ? svgTemplate.replace("{{title}}", formatTitleLines(title, { ...(ogImageOptions || {}) }))
+    ? svgTemplate.replace("{{title}}", formatTitleLines(title, ogImageOptions))
     : getDefaultSvg(title);
 
-  ensureDir(pngPath);
+  ensureDir(path.join(outputDir, "assets/og-images"));
   fs.writeFileSync(tempSvgPath, svgContent);
 
   // Render PNG from SVG

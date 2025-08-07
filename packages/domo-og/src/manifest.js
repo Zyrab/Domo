@@ -4,7 +4,7 @@ export function loadManifest(manifestPath) {
   try {
     return fs.existsSync(manifestPath) ? JSON.parse(fs.readFileSync(manifestPath, "utf8")) : {};
   } catch (err) {
-    console.error("Failed to load cache manifest:", err);
+    console.error("❌ Failed to load cache manifest");
     return {};
   }
 }

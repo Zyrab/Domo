@@ -13,7 +13,7 @@ export function getDefaultSvg(title) {
     <ellipse id="Ellipse 22" cx="1137.5" cy="23.5" rx="11.232" ry="10.53" fill="#FFFF00"/>
     <ellipse id="Ellipse 23" cx="1179.17" cy="23.5" rx="11.232" ry="10.53" fill="#008000"/>
     <text x="600" y="300" text-anchor="middle" dominant-baseline="middle" fill="#F5BC00" font-family="Cutive Mono" font-size="76" letter-spacing="0.04em" >
-      ${formatTitleLines(title)}
+      ${formatTitleLines(title, {})}
     </text>  
   </svg>
 `;
