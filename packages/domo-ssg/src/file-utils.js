@@ -42,9 +42,9 @@ export function cleanOutputDir(outputDir, exclude) {
       const entryPath = path.join(outputDir, entry);
       fs.rmSync(entryPath, { recursive: true, force: true });
     }
-    console.log(`Cleaned output directory: ${outputDir}`);
+    console.log(`📁 Cleaned output directory: ${outputDir}`);
   } else {
     fs.mkdirSync(outputDir, { recursive: true });
-    console.log(`Created output directory: ${outputDir}`);
+    console.log(`📁 Created output directory: ${outputDir}`);
   }
 }

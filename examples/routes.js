@@ -63,6 +63,8 @@ export const routes = {
       title: "Projects",
       description: "List of projects",
       canonical: "/projects-heyyeh",
+      generateOgImage: true,
+      templateId: "prjwwsc",
     },
 
     // First-level dynamic route
@@ -73,11 +75,11 @@ export const routes = {
         title: "Project Detail",
         generateOgImage: true,
         svgTemplate: svg,
-        templateId: "v2",
+        templateId: "v3",
         ogImageOptions: {
-          maxLength: 28,
-          lineHeight: 1.4,
-          x: 580,
+          maxLength: 50,
+          lineHeight: 5,
+          x: 20,
         },
       },
 
@@ -85,7 +87,7 @@ export const routes = {
       "/:item": {
         routeParams: async (parent) => await loadJson(`dist/data/${parent}-item.json`), // Array of { item, title, ... }
         component: createProjectPage,
-        meta: { title: "Project Item Detail", generateOgImage: true },
+        meta: { title: "Project Item Detail", generateOgImage: true, svgTemplate: svg, templateId: "v1" },
       },
     },
   },

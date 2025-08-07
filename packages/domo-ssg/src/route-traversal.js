@@ -56,7 +56,7 @@ export async function buildRoutes(routes, renderLayout, parentPath = "", props =
       await buildRoutes(routeNode, renderLayout, currentRoute, { ...props });
     }
     if (!routeNode.component && Object.keys(routeNode).length > 0) {
-      console.warn(`⚠️ Route "${currentRoute}" has no component but contains other data.`);
+      console.warn(`⚠️  Route "${currentRoute}" has no component but contains other data.`);
     }
   }
 }
