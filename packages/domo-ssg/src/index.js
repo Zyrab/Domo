@@ -15,7 +15,7 @@ async function main() {
   console.log("🚀 Starting Domo SSG build...");
   console.log(`📁 Output directory: ${config.outDir}`);
   console.log(`🗺️  Routes file: ${config.routesFile}`);
-  console.log(`🧩  Layout file: ${config.layout}`);
+  console.log(`🧩 Layout file: ${config.layout}`);
 
   // 1. Clean the output directory
   cleanOutputDir(config.outDir, config.exclude);
