@@ -1,6 +1,6 @@
 {
   "name": "@zyrab/domo-router",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "History-based SPA router for Domo. Supports nested routes, navigation guards, and SSG-friendly behavior.",
   "main": "./src/core.js",
   "type": "module",
@@ -11,7 +11,8 @@
   "author": "Zyrab",
   "license": "MIT",
   "files": [
-    "src/"
+    "src/",
+    "README"
   ],
   "keywords": [
     "domo",
