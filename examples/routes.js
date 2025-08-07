@@ -64,7 +64,7 @@ export const routes = {
       description: "List of projects",
       canonical: "/projects-heyyeh",
       generateOgImage: true,
-      templateId: "prjwwsc",
+      templateId: "prjwws5c",
     },
 
     // First-level dynamic route

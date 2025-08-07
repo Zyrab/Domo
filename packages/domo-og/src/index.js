@@ -6,7 +6,7 @@ import { fileURLToPath } from "url";
 
 import { getDefaultSvg } from "./svg-template.js";
 import { logOnce, getTemplateHash, hash, formatTitleLines } from "./utils.js";
-import { loadManifest, saveManifest } from "./manifest.js";
+import { getManifest, requestManifestWrite, flushManifestImmediately } from "./manifest.js";
 
 const _filename = fileURLToPath(import.meta.url);
 const _dirname = path.dirname(_filename);
@@ -14,6 +14,8 @@ const _dirname = path.dirname(_filename);
 const platform = os.platform();
 const binary = platform === "win32" ? "resvg.exe" : "resvg";
 const rsvgPath = path.join(_dirname, `../bin/${platform}/${binary}`);
+let outputDirEnsured = false;
+
 function ensureDir(dir) {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 }
@@ -62,7 +64,7 @@ export function generateOgImage(oprions) {
 
   // Load manifest for caching info
   const manifestPath = path.join(outputDir, "og-cache.json");
-  const manifest = loadManifest(manifestPath);
+  const manifest = getManifest(manifestPath);
 
   // Return cached path if content hash matches
   if (manifest[key]?.hash === contentHash) {
@@ -86,20 +88,24 @@ export function generateOgImage(oprions) {
     ? svgTemplate.replace("{{title}}", formatTitleLines(title, ogImageOptions))
     : getDefaultSvg(title);
 
-  ensureDir(path.join(outputDir, "assets/og-images"));
+  if (!outputDirEnsured) {
+    ensureDir(path.join(outputDir, "assets/og-images"));
+    outputDirEnsured = true;
+  }
   fs.writeFileSync(tempSvgPath, svgContent);
 
   // Render PNG from SVG
   execFileSync(rsvgPath, [tempSvgPath, pngPath]);
   fs.unlinkSync(tempSvgPath);
 
-  // Update manifest cache
   manifest[key] = {
     path: pngRelativePath,
     hash: contentHash,
     title,
     templateId,
   };
-  saveManifest(manifestPath, manifest);
+  requestManifestWrite();
   return pngRelativePath;
 }
+
+export { flushManifestImmediately };

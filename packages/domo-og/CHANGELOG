@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.1.3 - 25-08-08
+
+### Fixed
+
+- `formatTitleLines()` now correctly applies default values when `ogImageOptions` is missing, preventing a subtle `undefined` error that previously occurred when used with default templates.
+- Fixed a bug in `ensureDir()` where a PNG file path was mistakenly passed instead of a directory path, causing permission errors on Windows due to invalid directory creation attempts.
+
+### Changed
+
+- `ensureDir()` is now guarded and only called once per build to reduce redundant filesystem operations.
+- Manifest is now loaded once and cached in memory across all image generations to prevent unnecessary reads.
+- Manifest writes are now **debounced**: changes are persisted to disk only once after a 500ms idle period. This prevents excessive writes during batch builds and avoids blocking the main process.
+- Introduced `flushManifestImmediately()` for controlled environments where a forced sync to disk is required (e.g. before exiting or after batch generation).
+
+### Internal
+
+- Manifest cache and write state are tracked via module-scoped variables (`manifestCache`, `manifestLoaded`, `debounceTimer`, etc.), scoped to the build process lifecycle.
+- Debounce is implemented via `setTimeout` and clears/reset per mutation to guarantee eventual consistency with minimal I/O.
+- This refactor supports long-running processes (e.g. SSGs, dev watchers) where image generation is triggered repeatedly without process termination.
+
+---
+
 ## 0.1.2 - 25-08-06 Patch
 
 ### Fixed
