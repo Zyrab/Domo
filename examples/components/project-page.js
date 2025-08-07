@@ -1,10 +1,21 @@
 import Domo from "../../packages/domo/src/domo.js";
+import Router from "../../packages/domo-router/src/core.js";
 import { loadJson } from "../load-json.js";
 
 export default async function createProjectPage(params) {
   const data = (await loadJson(`/dist/data/${params.id}.json`)) || {};
-
+  const testPAges = ["run", "go", "why", "because"];
   return Domo()
+    .on(
+      "click",
+      (e) => {
+        e.preventDefault();
+        const link = e.target.closest(".nav-link");
+        if (!link) return;
+        Router.goTo(`/projects/${params.id}/` + link.dataset.link);
+      },
+      { ssg: false }
+    )
     .css({
       maxWidth: "800px",
       margin: "40px auto",
@@ -31,18 +42,18 @@ export default async function createProjectPage(params) {
         lineHeight: "1.6",
         color: "#444",
       }),
-      Domo("a")
-        .attr({ href: `/projects/${params.id}/run` })
-        .txt("test page"),
-      Domo("a")
-        .attr({ href: `/projects/${params.id}/go` })
-        .txt("test page"),
-      Domo("a")
-        .attr({ href: `/projects/${params.id}/why` })
-        .txt("test page"),
-      Domo("a")
-        .attr({ href: `/projects/${params.id}/because` })
-        .txt("test page"),
+      testPAges.map((page) =>
+        Domo("a")
+          .css({
+            display: "felx",
+            gap: "0.5rem",
+            padding: "0.8rem",
+          })
+          .cls("nav-link")
+          .data({ link: page })
+          .attr({ href: `/projects/${params.id}/${page}` })
+          .txt("test page")
+      ),
       Domo("div").txt(`Last updated: ${data?.updated}`).css({
         marginTop: "30px",
         fontSize: "13px",

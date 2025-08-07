@@ -23,7 +23,7 @@ export async function render({ component, meta }, params) {
       wrapper.textContent = content;
       _root.appendChild(wrapper);
     } else {
-      throw new Error("Unsupported component output type. Component must return an HTMLElement or a string.");
+      throw new Error("❌ Unsupported component output type. Component must return an HTMLElement or a string.");
     }
 
     if (meta.title) {
@@ -34,7 +34,7 @@ export async function render({ component, meta }, params) {
       descriptionMeta.setAttribute("content", meta.description);
     }
   } catch (error) {
-    console.error("Router rendering error:", error);
+    console.error("❌ Router rendering error:", error);
     // Fallback to a 404/error component if defined
     const fallbackRoute = await _routes["*"]?.component({
       error: error.message,

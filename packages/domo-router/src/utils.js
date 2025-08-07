@@ -5,12 +5,12 @@ import { _routes, _currentInfo, setCurrentInfo, _listeners, _previousUrl } from 
  * Gets the current full path from the browser's location, including the hash.
  * @returns {string} The current URL path.
  */
-export const path = () => {
+export function path() {
   if (typeof window === "undefined") {
     return _currentInfo.path;
   }
   return window.location.pathname + window.location.hash;
-};
+}
 
 /**
  * Parses a URL into segments and a pure URL without the hash.
@@ -42,7 +42,7 @@ export function match(segments) {
   for (const segment of segments) {
     if (current[segment]) {
       // exact match found, go deeper
-      current = current[segment].children || current[segment];
+      current = current[segment];
     } else {
       // look for dynamic route (e.g., '/:id')
       const dynamic = Object.keys(current).find((k) => k.includes(":"));
@@ -50,11 +50,11 @@ export function match(segments) {
 
       const paramName = dynamic.split(":")[1];
       params = { ...params, [paramName]: segment.split("/")[1] };
-      current = current[dynamic].children || current[dynamic];
+      current = current[dynamic];
     }
   }
   // We send for rendering default child if component doesn't exist at the final segment
-  const final = current.component ? current : current["/"] || _routes["*"];
+  const final = current.component ? current : _routes["*"];
 
   return { params, routeData: final };
 }
@@ -65,10 +65,10 @@ export function match(segments) {
  */
 export function info() {
   if (_currentInfo) return _currentInfo;
-  const path = path();
-  const { segments } = parseUrl(path);
+  const newPath = path();
+  const { segments } = parseUrl(newPath);
   const { routeData, params } = match(segments);
-  return { meta: routeData.meta || {}, params, segments, path };
+  return { meta: routeData.meta || {}, params, segments, path: newPath };
 }
 
 /**
