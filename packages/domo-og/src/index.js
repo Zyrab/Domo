@@ -94,8 +94,9 @@ export function generateOgImage(oprions) {
   }
   fs.writeFileSync(tempSvgPath, svgContent);
 
+  const fontDir = path.join(outputDir, "assets/fonts");
   // Render PNG from SVG
-  execFileSync(rsvgPath, [tempSvgPath, pngPath]);
+  execFileSync(rsvgPath, [tempSvgPath, pngPath, "--skip-system-fonts", "--perf", "--use-fonts-dir", fontDir]);
   fs.unlinkSync(tempSvgPath);
 
   manifest[key] = {

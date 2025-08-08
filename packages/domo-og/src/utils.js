@@ -42,12 +42,10 @@ function splitTitle(title, maxLength) {
 export function formatTitleLines(title, ogImageOptions) {
   const { maxLength = 25, x = 600, lineHeightEm = 1.5 } = ogImageOptions;
   const lines = splitTitle(title, maxLength);
-  const totalHeight = (lines.length - 1) * lineHeightEm;
-  const firstDy = `-${(totalHeight / 2).toFixed(2)}em`;
 
   return lines
     .map((line, i) => {
-      const dy = i === 0 ? firstDy : `${lineHeightEm}em`;
+      const dy = i === 0 ? 0 : `${lineHeightEm}em`;
       return `<tspan x="${x}" dy="${dy}">${line}</tspan>`;
     })
     .join("");
