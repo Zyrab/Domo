@@ -10,14 +10,7 @@ importers:
 
   packages/domo: {}
 
-  packages/domo-og:
-    dependencies:
-      '@zyrab/domo':
-        specifier: workspace:^
-        version: link:../domo
-      '@zyrab/domo-router':
-        specifier: workspace:^
-        version: link:../domo-router
+  packages/domo-og: {}
 
   packages/domo-router: {}
 
