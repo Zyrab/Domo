@@ -1,0 +1,15 @@
+{
+  "name": "__APP_NAME__",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node src/index.js",
+    "build:ssg": "node ./node_modules/@zyrab/domo-ssg/src/index.js"
+  },
+  "dependencies": {
+    "@zyrab/domo": "^1.3.0",
+    "@zyrab/domo-router": "^0.1.1",
+    "@zyrab/domo-svg": "^0.1.2",
+    "@zyrab/domo-ssg": "^0.4.0"
+  }
+}

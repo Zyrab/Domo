@@ -1,0 +1,25 @@
+{
+  "name": "domo-cli",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "link": "npm link",
+    "unlink": "npm unlink"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "commander": "^14.0.0",
+    "execa": "^9.6.0",
+    "inquirer": "^12.8.2",
+    "ora": "^8.2.0"
+  },
+  "type": "module",
+  "bin": {
+    "domo": "./bin/domo.js"
+  }
+}

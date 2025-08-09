@@ -1,0 +1,107 @@
+
+.highlight-tag{
+  color: #e9bc3f;
+  font-weight: 400;
+  font-family: "VT323", monospace;
+  font-size: 1.2em;
+}
+.brackets-highlight{
+  color: #48eb5e;
+  font-style: italic;
+}
+
+.underline-text {
+    font-feature-settings: "liga" 1, "dlig" 1;
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-color: inherit;
+    text-decoration-thickness: 0.15em;
+    text-underline-offset: 0.1em;
+    -webkit-text-decoration-thickness: 0.15em;
+    -webkit-text-underline-offset: 0.3em;
+    -webkit-text-decoration-line: underline;
+    -webkit-text-decoration-style: solid;
+    -webkit-text-decoration-color: inherit;
+    transition: all 0.2s ease-in-out;
+}
+.underline-text:hover{
+  color: greenyellow;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.inline-code{
+  background: var(--greysh);
+  color: #D9D9D9;
+  padding: 0.22rem;
+  font-size: 1rem;
+  border-radius: 3px;
+  font-family: monospace;
+}
+
+
+.md-h1 {
+  font-size: 1.75rem;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  text-align: center;
+}
+
+.md-h2 {
+  font-size: 1.35rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+
+.md-h3,
+.md-h4 {
+  font-size: 1.2rem;
+  font-weight: 500;
+  letter-spacing: 0.018em;
+}
+
+.md-p,.md-li {
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.018em;
+}
+.md-ul{
+  padding-left: 2rem;
+  list-style-type: square;
+}
+.md-ul li::marker{
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.018em;
+  color:gold;
+}
+
+.md-ol {
+  padding-left: 2rem;
+  list-style-type: decimal;
+}
+
+.md-ol li::marker {
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.018em;
+  color: violet;
+}
+.md-hr{
+  border: 0;
+  height: 1px;
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+}
+
+.sm {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.xs {
+  font-size: 0.5rem;
+  font-weight: 500;
+  letter-spacing: 0.022em;
+}
