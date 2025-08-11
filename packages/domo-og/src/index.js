@@ -55,7 +55,7 @@ export function generateOgImage(oprions) {
     logOnce(
       "no-template-id",
       "🔥 [OG IMAGE] Warning: No 'templateId' provided. Using full template hash for caching which is slower. " +
-        "To optimize builds, provide a stable 'templateId' that changes only when template changes."
+      "To optimize builds, provide a stable 'templateId' that changes only when template changes."
     );
   }
 
@@ -96,7 +96,7 @@ export function generateOgImage(oprions) {
 
   const fontDir = path.join(outputDir, "assets/fonts");
   // Render PNG from SVG
-  execFileSync(rsvgPath, [tempSvgPath, pngPath, "--skip-system-fonts", "--perf", "--use-fonts-dir", fontDir]);
+  execFileSync(rsvgPath, [tempSvgPath, pngPath, "--perf"]);
   fs.unlinkSync(tempSvgPath);
 
   manifest[key] = {
