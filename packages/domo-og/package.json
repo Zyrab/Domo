@@ -1,6 +1,6 @@
 {
   "name": "@zyrab/domo-og",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "An OG (Open Graph) image generator with SVG templates.",
   "main": "src/index.js",
   "type": "module",
