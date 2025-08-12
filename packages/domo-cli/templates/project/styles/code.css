@@ -1,0 +1,43 @@
+.keyword,
+.operator {
+  color: violet;
+}
+.doctype{
+  color: #00C9A7;
+  font-style: italic;
+}
+.entity {
+  color: #FF6F61;
+}
+.string {
+  color: #E9BC3F;
+}
+
+.number {
+  color: #C4900D;
+}
+
+.tag {
+  color: #EB4888;
+}
+
+.boolean {
+  color: #EB4888;
+  font-style: italic;
+}
+
+.function {
+  color: #10A2F5;
+  font-style: italic;
+}
+
+.comment {
+  color: #7C7C7C;
+  font-style: italic;
+}
+
+.object,
+.attribute {
+  color: aqua;
+  font-style: italic;
+}

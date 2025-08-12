@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "pnpm node packages/domo-ssg/src/index.js",
-    "serve": "pnpm node ./server.js",
+    "serve": "pnpm nodemon ./server.js",
     "dev:ssg": "pnpm --filter @zyrab/domo-ssg exec node src/index.js --watch",
     "clean:ssg": "pnpm --filter @zyrab/domo-ssg exec node -e \"require('fs').rmSync('dist', { recursive: true, force: true }); console.log('Cleaned dist folder');\""
   },
@@ -13,3 +13,4 @@
     "packages/*"
   ]
 }
+ 
