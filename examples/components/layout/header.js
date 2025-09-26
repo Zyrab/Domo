@@ -39,10 +39,12 @@ export default function createHeader() {
       "click",
       (e) => {
         e.preventDefault();
-
         const link = e.target.closest(".nav-link");
         if (!link) return;
+        const prev = document.querySelector(`[data-link="${Router.info().segments[0]}"]`);
+        prev.style.color = "inherit";
         Router.goTo(link.dataset.link);
+        link.style.color = "red";
       },
       { ssg: false }
     )
