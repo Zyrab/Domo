@@ -1,6 +1,6 @@
 // router.rendering.js
 import { _root, _routes, _listeners, _previousUrl } from "./state.js";
-import { info, match, notify, parseUrl, path } from "./utils.js";
+import { info, match, notify, parseUrl, path, resolveLayout } from "./utils.js";
 
 /**
  * Renders the component associated with a route into the root element.
@@ -10,18 +10,19 @@ import { info, match, notify, parseUrl, path } from "./utils.js";
  * @param {object} params - Parameters extracted from the URL.
  * @returns {Promise<void>}
  */
-export async function render({ component, meta }, params) {
+export async function render({ component, meta, layout }, params) {
   try {
     const comp = await component(params);
     const content = comp.build();
+    const currentLayout = resolveLayout(layout);
     _root?.replaceChildren();
 
     if (content instanceof HTMLElement) {
-      _root.appendChild(content);
+      currentLayout ? _root.appendChild(currentLayout(content)) : _root.appendChild(content);
     } else if (typeof content === "string") {
       const wrapper = document.createElement("div");
       wrapper.textContent = content;
-      _root.appendChild(wrapper);
+      currentLayout ? _root.appendChild(currentLayout(wrapper)) : _root.appendChild(wrapper);
     } else {
       throw new Error("❌ Unsupported component output type. Component must return an HTMLElement or a string.");
     }
@@ -36,12 +37,11 @@ export async function render({ component, meta }, params) {
   } catch (error) {
     console.error("❌ Router rendering error:", error);
     // Fallback to a 404/error component if defined
-    const fallbackRoute = await _routes["*"]?.component({
-      error: error.message,
-    });
+    const fallbackRoute = await _routes["*"]?.component({ error: error.message });
+    const errorLayout = resolveLayout(_routes["*"].layout);
     if (fallbackRoute) {
       _root.replaceChildren();
-      _root.appendChild(fallbackRoute);
+      errorLayout ? _root.appendChild(errorLayout(fallbackRoute.build())) : _root.appendChild(fallbackRoute.build());
     }
   }
 }
@@ -53,13 +53,13 @@ export async function render({ component, meta }, params) {
  */
 export async function load(url) {
   const { segments, pureUrl } = parseUrl(url); // Use info to get route data
-  const { routeData, params } = match(segments); // Recalculate info based on target URL
+  const { routeData, params, outlet } = match(segments); // Recalculate info based on target URL
   if (path() !== url) {
     history.pushState(null, "", pureUrl);
   }
 
   if (url === _previousUrl) return;
 
-  await render(routeData, params);
+  await render(routeData, params, outlet);
   if (_listeners.length > 0) notify(info());
 }
