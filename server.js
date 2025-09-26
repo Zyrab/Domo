@@ -91,7 +91,7 @@ async function handleStaticMode(req, res) {
     if (err?.code === "ENOENT" || err?.code === "EISDIR") {
       // File not found (ENOENT) or trying to read a directory as a file (EISDIR)
       try {
-        const errorPage = await fs.readFile(path.join(STATIC_BASE, "404.html")); // Assuming a '404.html' file in 'dist'
+        const errorPage = await fs.readFile(path.join(STATIC_BASE, "404", "index.html")); // Assuming a '404.html' file in 'dist'
         res.writeHead(404, { "Content-Type": "text/html" });
         res.end(errorPage);
       } catch {
