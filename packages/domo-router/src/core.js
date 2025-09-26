@@ -14,8 +14,7 @@ function init() {
   if (typeof window !== "undefined") {
     // Initialize _root element if it doesn't exist
     if (!_root) {
-      const mainElement = document.createElement("main");
-      mainElement.id = "main";
+      const mainElement = document.body;
       setRoot(mainElement);
       // It's up to the user to append Router.mount() to their DOM
     }
@@ -47,8 +46,7 @@ const Router = {
   mount: () => {
     // Ensure _root exists before returning it, initialize if not
     if (!_root && typeof document !== "undefined") {
-      const mainElement = document.createElement("main");
-      mainElement.id = "main";
+      const mainElement = document.body;
       setRoot(mainElement);
     }
     return _root;
