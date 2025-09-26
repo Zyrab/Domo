@@ -11,6 +11,7 @@ Supports client-side navigation and static site generation (SSG).
 - Nested routes
 - Route metadata hooks
 - Works with both SPA and SSG setups
+- Layouts & Outlets support
 
 ---
 
@@ -26,5 +27,5 @@ Router.routes({
 });
 
 Router.init();
-app.appendChild(Router.mount())
+Router.mount();
 ```

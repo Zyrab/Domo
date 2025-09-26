@@ -1,5 +1,39 @@
 # Changelog – @zyrab/domo-router
 
+--
+
+## 0.3.0 - 2025-09-26
+
+### Changed
+
+- The router's internal root (\_root) is now the `document.body` instead of a `<main>` element. This gives you full control over the top-level DOM structure.
+- You now must define all persistent components like `<header>` and `<footer>` inside your custom layout functions specified in the routes object.
+
+### Added
+
+- Layouts for defining and swapping full page structures. (Still in testing, but the syntax won't change.)
+- Outlets for nested routing. (Still in testing, will be improved.)
+
+### Tip
+
+- Use `document.createDocumentFragment()` to wrap your layout. This keeps your DOM clean and semantic by ensuring no extra wrapper `<div>` gets rendered inside the `<body>`.
+
+## Example:
+
+```js
+const layouts = {
+  default: (component) => {
+    const layout = document.createDocumentFragment();
+    layout.appendChild(createHeader());
+    layout.appendChild(component); // or your <main> wrapper
+    layout.appendChild(createFooter());
+    return layout;
+  },
+};
+```
+
+---
+
 ## 0.2.0 - 2025-08-07
 
 ### Changed
@@ -10,9 +44,13 @@
 
 - `Path()` was incorectly declared causing not declared error
 
+---
+
 ## 0.1.1 - Changed `.info()`
 
 `.info()` now includes `path` that provides full curent page url
+
+---
 
 ## 0.1.0 – Initial Modular Release
 
@@ -20,3 +58,5 @@
 - SPA routing support using history-based path tracking
 - Works with `@zyrab/domo-ssg` for precompiled static builds
 - Supports route metadata, async rendering, and 404 fallback
+
+--
