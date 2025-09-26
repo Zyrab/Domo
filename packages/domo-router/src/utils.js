@@ -37,6 +37,7 @@ export function match(segments) {
   if (!segments.length) return { routeData: _routes["/"] || _routes["*"] };
 
   let current = _routes;
+  let outlet = false;
   let params = {};
 
   for (const segment of segments) {
@@ -50,13 +51,19 @@ export function match(segments) {
 
       const paramName = dynamic.split(":")[1];
       params = { ...params, [paramName]: segment.split("/")[1] };
-      current = current[dynamic];
+      if (current[dynamic].outlet) {
+        outlet = true;
+        current;
+        params = { ...params, outlet: current[dynamic].component };
+      } else {
+        current = current[dynamic];
+      }
     }
   }
   // We send for rendering default child if component doesn't exist at the final segment
-  const final = current.component ? current : _routes["*"];
 
-  return { params, routeData: final };
+  const final = current.component ? current : _routes["*"];
+  return { params, routeData: final, outlet };
 }
 
 /**
@@ -112,4 +119,14 @@ export function getPreviousUrl() {
  */
 export function getBasePath() {
   return info().segments[0];
+}
+
+export function resolveLayout(layout) {
+  const defaultLayout = _routes?.layouts?.default;
+
+  if (layout !== undefined) {
+    return _routes?.layouts?.[layout];
+  }
+  if (defaultLayout) return defaultLayout;
+  return null;
 }
