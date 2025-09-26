@@ -1,3 +1,5 @@
+import createHeader from "./components/layout/header.js";
+
 import Home from "./pages/home.js";
 import About from "./pages/about.js";
 import Contacts from "./pages/contacts.js";
@@ -23,7 +25,22 @@ const svg = `
   </svg>
 `;
 
+const layouts = {
+  default: (component) => {
+    const layout = document.createDocumentFragment();
+    layout.appendChild(createHeader());
+    layout.appendChild(component);
+    return layout;
+  },
+  test: (component) => {
+    const layout = document.createDocumentFragment();
+    layout.appendChild(component);
+    layout.appendChild(createHeader());
+    return layout;
+  },
+};
 export const routes = {
+  layouts,
   // --- Static routes ---
   "/": {
     component: Home,
@@ -38,6 +55,7 @@ export const routes = {
   },
   "/about": {
     component: About,
+    layout: "test",
     meta: { title: "About", description: "About description" },
   },
   "/contacts": {
@@ -84,8 +102,9 @@ export const routes = {
 
       // Second-level dynamic route
       "/:item": {
+        outlet: true,
         routeParams: async (parent) => await loadJson(`dist/data/${parent}-item.json`), // Array of { item, title, ... }
-        component: createProjectPage,
+        component: testPage,
         meta: { title: "Project Item Detail", generateOgImage: true, svgTemplate: svg, templateId: "v3" },
       },
     },
@@ -121,18 +140,18 @@ export const routes = {
   // },
 
   // --- Edge case: empty routeParams ---
-  "/:empty-dynamic": {
-    routeParams: async () => [],
-    component: testPage,
-    meta: { title: "Empty Dynamic" },
-  },
+  // "/:empty-dynamic": {
+  //   routeParams: async () => [],
+  //   component: testPage,
+  //   meta: { title: "Empty Dynamic" },
+  // },
 
-  // --- Edge case: routeParams with missing keys ---
-  "/:invalid-dynamic": {
-    routeParams: async () => [{ wrongKey: "missing-id" }],
-    component: testPage,
-    meta: { title: "Invalid Dynamic" },
-  },
+  // // --- Edge case: routeParams with missing keys ---
+  // "/:invalid-dynamic": {
+  //   routeParams: async () => [{ wrongKey: "missing-id" }],
+  //   component: testPage,
+  //   meta: { title: "Invalid Dynamic" },
+  // },
 
   // --- Large dynamic dataset for stress test ---
   // "/big-dynamic": {
