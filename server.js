@@ -5,6 +5,7 @@ import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const base = path.join(__dirname, "dist");
+const indexFile = path.join(__dirname, "index.html");
 
 const types = {
   html: "text/html",
@@ -15,31 +16,30 @@ const types = {
   svg: "image/svg+xml",
   json: "application/json",
   wasm: "application/wasm",
+  woff2: "font/woff2",
 };
 
 http
   .createServer(async (req, res) => {
     try {
-      const requestedPath = decodeURIComponent(req.url);
-      let filePath = path.join(base, requestedPath);
+      const requestedPath = decodeURIComponent(req.url.split("?")[0]); // ignore query params
+      let filePath = path.join(__dirname, requestedPath);
 
-      // If path is a directory, try appending index.html
-      let stat;
+      let data;
+      let ext = path.extname(filePath).slice(1);
+
       try {
-        stat = await fs.stat(filePath);
-        if (stat.isDirectory()) filePath = path.join(filePath, "index.html");
+        data = await fs.readFile(filePath); // try serving static file
       } catch {
-        // continue — file might still be valid if not a dir
+        data = await fs.readFile(indexFile); // fallback to index.html
+        ext = "html";
       }
 
-      const data = await fs.readFile(filePath);
-      const ext = path.extname(filePath).slice(1);
       res.writeHead(200, { "Content-Type": types[ext] || "application/octet-stream" });
       res.end(data);
-    } catch {
-      const errorPage = await fs.readFile(path.join(base, "404/index.html"));
-      res.writeHead(404, { "Content-Type": "text/html" });
-      res.end(errorPage);
+    } catch (err) {
+      res.writeHead(500, { "Content-Type": "text/plain" });
+      res.end("Server error");
     }
   })
   .listen(3000, () => console.log("http://localhost:3000"));
