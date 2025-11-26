@@ -13,18 +13,17 @@ export function path() {
 }
 
 /**
- * Parses a URL into segments and a pure URL without the hash.
+ * Parses a URL into segments preservs params.
  * @param {string} url - The URL string to parse.
  * @returns {{segments: string[], pureUrl: string}} An object containing URL segments and the pure URL.
  */
 export function parseUrl(url) {
-  // Remove the hash from the URL
-  const pureUrl = url.includes("#") ? url.split("#")[0] : url;
+  const cleanUrl = url.includes("?") ? url.split("?")[0] : url;
   // Split the URL into segments keeping '/' for nested routes
-  const segments = pureUrl.split(/(?=\/)/g).filter(Boolean);
+  const segments = cleanUrl.split(/(?=\/)/g).filter(Boolean);
   return {
     segments,
-    pureUrl,
+    pureUrl: url,
   };
 }
 
