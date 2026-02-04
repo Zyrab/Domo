@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.5.3] - 2026-02-04
+
+### Changed
+
+- Added `dotenv/config` import in the build entry to automatically load environment variables from `.env` files.
+- Introduced `process.env.DOMO_SSG = true` during the build to indicate static site generation mode.
+- Updated `domo-ssg` dependencies to use `peerDependencies` for `@zyrab/domo-router` and `@zyrab/domo-og` to ensure a single shared instance and avoid router state conflicts.
+- Router singleton now works consistently between `domo-ssg` and project components, preventing null `Router.info` errors during SSG builds.
+
+---
+
 ## [0.5.2] - 2025-08-07
 
 - patch to support new domo-og
@@ -49,7 +60,6 @@ meta: {
 ### Internal
 
 - Refactored `buildRoutes()`:
-
   - Removed handling of the `children` key.
   - Skips irrelevant keys.
   - Enhanced error detection:

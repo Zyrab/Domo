@@ -4,8 +4,10 @@ import { loadConfig } from "./config.js";
 import { cleanOutputDir } from "./file-utils.js";
 import { generateSitemap } from "./sitemap.js";
 import { buildRoutes } from "./route-traversal.js";
+import "dotenv/config";
 
 async function main() {
+  process.env.DOMO_SSG = "true";
   const config = await loadConfig();
 
   // Import layout and route tree using pathToFileURL and .href for dynamic imports
