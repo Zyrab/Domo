@@ -8,15 +8,6 @@ export function logOnce(key, msg) {
     logOnceFlags.add(key);
   }
 }
-// Cache for hashing large templates to avoid repeated hashing per run
-const templateHashCache = new Map();
-
-export function getTemplateHash(template) {
-  if (!templateHashCache.has(template)) {
-    templateHashCache.set(template, hash(template));
-  }
-  return templateHashCache.get(template);
-}
 
 export function hash(input) {
   return createHash("sha256").update(input).digest("hex").slice(0, 10);
