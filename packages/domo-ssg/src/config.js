@@ -8,13 +8,12 @@ export async function loadConfig() {
   if (mergedConfig) return mergedConfig;
   const userConfigPath = path.resolve(process.cwd(), "domo.config.js");
 
-  // Default configuration values
   const defaultConfig = {
     outDir: "./dist",
     routesFile: "./routes.js",
     layout: "./layout.js",
     lang: "en",
-    author: "Domo",
+    author: "Zyrab",
     exclude: ["css", "js", "assets", "robots.txt", "admin"],
     baseUrl: "http://localhost:3000",
   };
@@ -24,7 +23,7 @@ export async function loadConfig() {
     const importedConfig = await import(pathToFileURL(userConfigPath).href);
     userConfig = importedConfig.default || importedConfig;
   } catch (error) {
-    console.warn(`⚠️  No custom config file found at ${configFilePath}. Using default settings.`);
+    console.warn(`[Domo-SSG] No custom config file found at ${configFilePath}. Using default settings.`);
   }
   mergedConfig = {
     ...defaultConfig,
@@ -38,7 +37,7 @@ export async function loadConfig() {
 
 export function getConfig() {
   if (!mergedConfig) {
-    throw new Error("Interal Error: Config has not been loaded yet. Call loadConfig() first.");
+    throw new Error("[Domo-SSG] Interal Error: Config has not been loaded yet. Call loadConfig() first.");
   }
   return mergedConfig;
 }
