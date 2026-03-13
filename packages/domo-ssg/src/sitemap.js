@@ -39,9 +39,7 @@ export function generateSitemap(outputDir, baseUrl, exclude = []) {
           let urlPath = "/" + relative.replace(/\\/g, "/");
 
           // Root correction
-          if (urlPath === "//" || urlPath === "/.") {
-            urlPath = "/";
-          }
+          if (urlPath === "//" || urlPath === "/.") urlPath = "/";
 
           const stats = fs.statSync(indexPath);
           const lastmod = stats.mtime.toISOString();
@@ -61,20 +59,21 @@ export function generateSitemap(outputDir, baseUrl, exclude = []) {
 
   walk(outputDir);
 
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls
-  .map(
-    ({ loc, lastmod, priority, changefreq }) => `  <url>
-    <loc>${loc}</loc>
-    <lastmod>${lastmod}</lastmod>
-    <changefreq>${changefreq}</changefreq>
-    <priority>${priority}</priority>
-  </url>`
-  )
-  .join("\n")}
-</urlset>`;
+  const xml = `
+  <?xml version="1.0" encoding="UTF-8"?>
+  <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    ${urls
+      .map(
+        ({ loc, lastmod, priority, changefreq }) => `  
+        <url>
+          <loc>${loc}</loc>
+          <lastmod>${lastmod}</lastmod>
+          <changefreq>${changefreq}</changefreq>
+          <priority>${priority}</priority>
+        </url>`,
+      )
+      .join("\n")}
+  </urlset>`;
 
   fs.writeFileSync(path.join(outputDir, "sitemap.xml"), xml, "utf8");
-  console.log(`🧭 Generated sitemap.xml at: ${path.join(outputDir, "sitemap.xml")}`);
 }
