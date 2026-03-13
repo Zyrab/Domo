@@ -1,17 +1,15 @@
 import Router from "@zyrab/domo-router";
+
 export function normalizeAssets(arr) {
-  if (!arr) return []; // Handle null/undefined safely
-  const flatArray = Array.isArray(arr) ? arr.flat() : [arr]; // Support single string/object
+  if (!arr) return [];
+  const flatArray = Array.isArray(arr) ? arr.flat() : [arr];
   const result = [];
 
   for (const item of flatArray) {
-    if (!item) continue; // Skip null/undefined/false
-    if (typeof item === "string") {
-      result.push({ href: item });
-    } else if (typeof item === "object" && item.href) {
-      result.push(item);
-    } else if (typeof item === "object" && !item.href) {
-      // For objects without href, attempt to normalize keys like { src: "..." }
+    if (!item) continue;
+    if (typeof item === "string") result.push({ href: item });
+    else if (typeof item === "object" && item.href) result.push(item);
+    else if (typeof item === "object" && !item.href) {
       if (item.src) result.push({ ...item, href: item.src });
     }
   }
@@ -19,7 +17,7 @@ export function normalizeAssets(arr) {
   return result;
 }
 
-export async function tryGenerateOgImage(routeMeta, outputDir, path) {
+export async function tryGenerateOgImage(routeMeta, ogOutputPath, path) {
   if (!routeMeta.generateOgImage) return;
   const slug = Router.info().segments.at(-1).slice(1);
 
@@ -28,7 +26,7 @@ export async function tryGenerateOgImage(routeMeta, outputDir, path) {
 
     const ogPath = generate({
       ...routeMeta,
-      outputDir,
+      ogOutputPath,
       slug,
       routeKey: path,
     });
@@ -36,9 +34,9 @@ export async function tryGenerateOgImage(routeMeta, outputDir, path) {
     return ogPath;
   } catch (err) {
     if (err.code === "ERR_MODULE_NOT_FOUND" || err.message.includes("Cannot find module")) {
-      console.warn(`⚠️  OG image generation skipped for "${slug}" — install 'domo-og' to enable this feature.`);
+      console.warn(`[Domo-SSG] OG image generation skipped for "${slug}" — install 'domo-og' to enable this feature.`);
     } else {
-      console.warn(`⚠️  OG image generation failed for "${slug}":\n${err.stack}`);
+      console.warn(`[Domo-SSG] OG image generation failed for "${slug}":\n${err.stack}`);
     }
   }
 }
