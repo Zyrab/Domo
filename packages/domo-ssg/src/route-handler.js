@@ -63,6 +63,6 @@ export async function handleRoute(params, renderLayout) {
     // Write the generated HTML to a file
     writeHTML(outDir, path, html);
   } catch (e) {
-    console.warn(`⚠️  Error rendering ${path}:\n${e.stack}`);
+    console.warn(`[Domo-SSG] Error rendering ${path}:\n${e.stack}`);
   }
 }
