@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.2.0] - 2026-03-13
+
+### Changed
+- **WASM Engine:** Switched from native `resvg` binaries to `@resvg/resvg-wasm` for cross-platform compatibility without OS-specific downloads.
+- **Templating:** Revamped the templating system to use config objects instead of raw string SVGs.
+- **Image Fetching:** Fetching remote images securely defaults to `Domo-OG-Builder/1.0` User-Agent. Provides clearer errors when 403/401 restrictions are encountered, instructing users to allow this User-Agent on their servers.
+- **Image Caching:** Added remote image caching to prevent DDOS.
+- **Fonts Fallback:** Implemented a default font fallback mechanism looking for `fonts/default.ttf` within the package root if no specific font is provided in the project assets.
+
+---
+
 ## 0.1.5 - 25-08-12
 
 ### Changed
