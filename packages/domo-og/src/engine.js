@@ -51,10 +51,20 @@ async function getFontBuffer(fontSource, defaultFontDir) {
     }
   }
 
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
+  const fallbackFontPath = join(__dirname, "../fonts/default.otf");
+
+  if (fs.existsSync(fallbackFontPath)) {
+    cachedFontBuffer = await readFile(fallbackFontPath);
+    return cachedFontBuffer;
+  }
+
   throw new Error(
     "[Domo-OG] Critical Error: No font file found! The WASM engine requires a .ttf, .otf, or .woff file to draw text. " +
-      "Provide a 'fontPath' URL/path, or place a font inside " +
-      defaultFontDir,
+    "Provide a 'fontPath' URL/path, place a font inside " +
+    defaultFontDir +
+    ", or ensure " + fallbackFontPath + " exists.",
   );
 }
 
