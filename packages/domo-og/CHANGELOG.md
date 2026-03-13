@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.2.0] - 2026-03-13
+## [0.2.0] - 2026-03-13 Major
 
 ### Changed
 - **WASM Engine:** Switched from native `resvg` binaries to `@resvg/resvg-wasm` for cross-platform compatibility without OS-specific downloads.
@@ -11,7 +11,7 @@
 
 ---
 
-## 0.1.5 - 25-08-12
+## [0.1.5] - 2025-08-12
 
 ### Changed
 
@@ -24,7 +24,9 @@
   - `resvg` now uses system-installed fonts when referenced in SVG/CSS templates.
   - No need to bundle the font in `outdir/assets/fonts` if the system font is available.
 
-## 0.1.4 - 25-08-09
+---
+
+## [0.1.4] - 2025-08-09
 
 ### Added
 
@@ -39,7 +41,9 @@
   Removed the old vertical-centering offset logic that caused multiple lines to appear shifted upward.  
   Lines now stack naturally from the first line downwards.
 
-## 0.1.3 - 25-08-08
+---
+
+## [0.1.3] - 2025-08-08
 
 ### Fixed
 
@@ -61,7 +65,7 @@
 
 ---
 
-## 0.1.2 - 25-08-06 Patch
+## [0.1.2] - 2025-08-06 Patch
 
 ### Fixed
 
@@ -69,13 +73,13 @@
 
 ---
 
-## 0.1.1 - 25-08-06 Cleanup
+## [0.1.1] - 2025-08-06 Cleanup
 
 - Removed incorrect `dependencies` from `package.json`
 
 ---
 
-## 0.1.0 - 25-08-06 Initial Release
+## [0.1.0] - 2025-08-06 Initial Release
 
 - Added `generateOgImage` function
 - Supports:
