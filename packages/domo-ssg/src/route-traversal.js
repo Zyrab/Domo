@@ -25,14 +25,14 @@ export async function buildRoutes(routes, renderLayout, parentPath = "", props =
         const resolvedParams = await routeNode.routeParams(parentRouteName);
 
         if (!Array.isArray(resolvedParams) || resolvedParams.length === 0) {
-          console.warn(`⚠️  No items returned for dynamic route at ${currentRoute}`);
+          console.warn(`[Domo-SSG] No items returned for dynamic route at ${currentRoute}`);
           continue;
         }
 
         for (const item of resolvedParams) {
           const segment = item[paramName];
           if (!segment) {
-            console.warn(`⚠️  Missing parameter:'${paramName}' in item for dynamic route at ${currentRoute}`);
+            console.warn(`[Domo-SSG] Missing parameter:'${paramName}' in item for dynamic route at ${currentRoute}`);
             continue;
           }
 
@@ -46,7 +46,7 @@ export async function buildRoutes(routes, renderLayout, parentPath = "", props =
           }
         }
       } catch (e) {
-        console.warn(`⚠️  Skipped dynamic route generation for ${currentRoute}: ${e.message}`);
+        console.warn(`[Domo-SSG] Skipped dynamic route generation for ${currentRoute}: ${e.message}`);
       }
       continue;
     }
@@ -56,7 +56,7 @@ export async function buildRoutes(routes, renderLayout, parentPath = "", props =
       await buildRoutes(routeNode, renderLayout, currentRoute, { ...props });
     }
     if (!routeNode.component && Object.keys(routeNode).length > 0) {
-      console.warn(`⚠️  Route "${currentRoute}" has no component but contains other data.`);
+      console.warn(`[Domo-SSG] Route "${currentRoute}" has no component but contains other data.`);
     }
   }
 }
