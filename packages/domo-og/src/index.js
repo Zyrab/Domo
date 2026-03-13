@@ -1,112 +1,69 @@
 import path from "path";
-import os from "os";
 import fs from "fs";
-import { execFileSync } from "child_process";
-import { fileURLToPath } from "url";
-
-import { getDefaultSvg } from "./svg-template.js";
-import { logOnce, getTemplateHash, hash, formatTitleLines } from "./utils.js";
+import { hash } from "./utils.js";
 import { getManifest, requestManifestWrite, flushManifestImmediately } from "./manifest.js";
+import { renderToPng } from "./engine.js";
+import { buildSvgFromConfig } from "./template-builder.js";
+import { getDefaultConfig } from "./default-config.js";
 
-const _filename = fileURLToPath(import.meta.url);
-const _dirname = path.dirname(_filename);
-
-const platform = os.platform();
-const binary = platform === "win32" ? "resvg.exe" : "resvg";
-const rsvgPath = path.join(_dirname, `../bin/${platform}/${binary}`);
 let outputDirEnsured = false;
 
 function ensureDir(dir) {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 }
 
-/**
- * Generates an Open Graph image (PNG) from a given SVG template with dynamic title injection.
- *
- * - Uses `resvg` binary to convert SVG to PNG.
- * - Caches outputs to avoid redundant rendering on unchanged content.
- * - Stores cache metadata in `og-cache.json`.
- * - Supports dynamic line-breaking via `formatTitleLines()`.
- * - Falls back to a default SVG template if none is provided.
- *
- * @function
- * @param {Object} options - OG image generation options.
- * @param {string} options.slug - Fallback filename base, not a unique identifier.
- * @param {string} options.title - Title text to insert into the SVG template.
- * @param {string} [options.svgTemplate] - SVG string containing `{{title}}` placeholder.
- * @param {string} [options.templateId] - Unique ID for the template; recommended for cache stability.
- * @param {string} options.outputDir - Absolute path to the build output directory.
- * @param {string} [options.routeKey] - Optional unique key to differentiate similar slugs.
- * @param {Object} [options.ogImageOptions] - Optional options to control line formatting.
- * @param {number} [options.ogImageOptions.x=600] - Horizontal text position (matches `x` in `<text>`).
- * @param {number} [options.ogImageOptions.maxLength=25] - Max characters per line before wrapping.
- * @param {number} [options.ogImageOptions.lineHeight=1.5] - Line spacing in `em` units.
- * @returns {string} Relative file path to the generated PNG image (e.g. `assets/og-images/slug-hash.png`)
- */
-export function generateOgImage(oprions) {
-  const { slug, title, svgTemplate, templateId, outputDir, routeKey, ogImageOptions = {} } = oprions;
+export async function generateOgImage(options) {
+  const { slug, template, ogOutputPath, routeKey, ...flatParams } = options;
+
+  if (!ogOutputPath) throw new Error("[Domo-OG] 'ogOutputPath' is required to save the generated images.");
+
   const key = routeKey || slug;
+  let finalSvgContent;
+  let fontPathToUse = null;
 
-  // Determine template key: prefer stable templateId if given,
-  // else fallback to hashed template string (cached for performance)
-  const templateKey = templateId || (svgTemplate ? getTemplateHash(svgTemplate) : "default");
+  let activeTemplate = template;
+  if (!activeTemplate) activeTemplate = getDefaultConfig();
 
-  if (!templateId && svgTemplate) {
-    logOnce(
-      "no-template-id",
-      "🔥 [OG IMAGE] Warning: No 'templateId' provided. Using full template hash for caching which is slower. " +
-      "To optimize builds, provide a stable 'templateId' that changes only when template changes."
-    );
-  }
+  fontPathToUse = activeTemplate.fontPath;
+  finalSvgContent = await buildSvgFromConfig(activeTemplate, flatParams);
 
-  // Hash to detect changes: combines title + templateKey
-  const contentHash = hash(title + templateKey);
-
-  // Load manifest for caching info
-  const manifestPath = path.join(outputDir, "og-cache.json");
+  const contentHash = hash(finalSvgContent);
+  const manifestPath = path.join(ogOutputPath, "og-cache.json");
   const manifest = getManifest(manifestPath);
 
-  // Return cached path if content hash matches
   if (manifest[key]?.hash === contentHash) {
-    if (templateId)
-      logOnce(
-        "cache-hit",
-        "🔥 [OG IMAGE] Using cached OG images. Cache invalidates if 'templateId' or content changes."
-      );
     return manifest[key].path;
   }
 
-  // Generate unique ID for file naming using routeKey
-  const uniqueId = hash(routeKey);
+  const uniqueId = hash(routeKey || slug);
   const hashedPath = `${slug}-${uniqueId}`;
-  const tempSvgPath = path.join(os.tmpdir(), `${hashedPath}.svg`);
   const pngRelativePath = `assets/og-images/${hashedPath}.png`;
-  const pngPath = path.join(outputDir, pngRelativePath);
-
-  // Prepare SVG content
-  const svgContent = svgTemplate
-    ? svgTemplate.replace("{{title}}", formatTitleLines(title, ogImageOptions))
-    : getDefaultSvg(title);
+  const pngPath = path.join(ogOutputPath, pngRelativePath);
 
   if (!outputDirEnsured) {
-    ensureDir(path.join(outputDir, "assets/og-images"));
+    ensureDir(path.join(ogOutputPath, "assets/og-images"));
     outputDirEnsured = true;
   }
-  fs.writeFileSync(tempSvgPath, svgContent);
+  const fallbackFontFolder = path.join(ogOutputPath, "assets/fonts");
+  try {
+    const pngBuffer = await renderToPng(finalSvgContent, {
+      fontPath: fontPathToUse,
+      defaultFontDir: fallbackFontFolder,
+    });
+    fs.writeFileSync(pngPath, pngBuffer);
 
-  const fontDir = path.join(outputDir, "assets/fonts");
-  // Render PNG from SVG
-  execFileSync(rsvgPath, [tempSvgPath, pngPath, "--perf"]);
-  fs.unlinkSync(tempSvgPath);
+    manifest[key] = {
+      path: pngRelativePath,
+      hash: contentHash,
+      title: flatParams.title || slug,
+    };
+    requestManifestWrite();
 
-  manifest[key] = {
-    path: pngRelativePath,
-    hash: contentHash,
-    title,
-    templateId,
-  };
-  requestManifestWrite();
-  return pngRelativePath;
+    return pngRelativePath;
+  } catch (error) {
+    console.error(`[Domo-OG] Fatal error generating image for ${key}:`, error);
+    throw error;
+  }
 }
 
 export { flushManifestImmediately };
