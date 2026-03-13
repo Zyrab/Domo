@@ -46,10 +46,18 @@ export function calculateLayout(el, canvasWidth, canvasHeight) {
   const padding = el.padding || 0;
 
   let x;
-  if (el.horizontalAlign === "left") x = padding;
-  else if (el.horizontalAlign === "center") x = canvasWidth / 2;
-  else if (el.horizontalAlign === "right") x = canvasWidth - padding;
-  else x = el.x ?? 0;
+  if (el.type === "image") {
+    const w = el.width || 100;
+    if (el.horizontalAlign === "left") x = padding;
+    else if (el.horizontalAlign === "center") x = (canvasWidth - w) / 2;
+    else if (el.horizontalAlign === "right") x = canvasWidth - w - padding;
+    else x = el.x ?? 0;
+  } else {
+    if (el.horizontalAlign === "left") x = padding;
+    else if (el.horizontalAlign === "center") x = canvasWidth / 2;
+    else if (el.horizontalAlign === "right") x = canvasWidth - padding;
+    else x = el.x ?? 0;
+  }
 
   let y;
   if (el.type === "image") {
@@ -61,8 +69,8 @@ export function calculateLayout(el, canvasWidth, canvasHeight) {
   } else if (el.type === "text") {
     const fontSize = el.fontSize || 32;
     if (el.verticalAlign === "top") y = padding + fontSize;
-    else if (el.verticalAlign === "middle") y = canvasHeight / 2;
-    else if (el.verticalAlign === "bottom") y = canvasHeight - padding;
+    else if (el.verticalAlign === "middle") y = canvasHeight / 2 + (fontSize * 0.35);
+    else if (el.verticalAlign === "bottom") y = canvasHeight - padding - (fontSize * 0.25);
     else y = el.y ?? fontSize;
   } else {
     y = el.y ?? 0;
