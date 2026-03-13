@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.5.4] - 2026-03-13
+
+### Changed
+
+- Removed `dotenv/config` import env variable should be set outside the package.
+- Removed `process.env.DOMO_SSG = true` .
+- Updated `domo-ssg` internals to make sure competance with new Domo-og versions.
+
+---
+
 ## [0.5.3] - 2026-02-04
 
 ### Changed
