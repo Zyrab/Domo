@@ -24,8 +24,6 @@
   - `resvg` now uses system-installed fonts when referenced in SVG/CSS templates.
   - No need to bundle the font in `outdir/assets/fonts` if the system font is available.
 
-# Changelog
-
 ## 0.1.4 - 25-08-09
 
 ### Added
