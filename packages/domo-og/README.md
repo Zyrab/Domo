@@ -22,6 +22,30 @@ Furthermore, instead of wrestling with messy raw SVG strings, you design your im
 - **Built-in Caching**: Prevents redundant generation with an internal `og-cache.json` manifest, drastically speeding up static site generation (SSG) builds.
 - **Remote Image Fetching**: Safely fetches and caches remote background/element images with built-in size limits (20MB) to prevent memory issues.
 
+## Performance & Benchmarks
+
+When it comes to automated Open Graph image generation, speed matters—especially for static site generators that might need to build thousands of pages.
+
+### Why is Domo-OG so fast?
+
+Other popular generation tools rely on heavy stacks:
+- **Puppeteer / Playwright**: They spin up an entire headless Chromium browser just to take a screenshot. This is infamously slow (often taking **1-3 seconds per image**), highly resource-intensive, and prone to memory leaks.
+- **Satori**: While much faster than Puppeteer, it relies on a custom React/HTML/CSS parsing engine (Yoga) in JavaScript to convert layouts into SVGs. This is heavily CPU-bound.
+
+`@zyrab/domo-og` uses a completely different approach. By taking a simple JSON config, we completely bypass HTML/CSS layout engines and DOM parsing. The JSON is instantly mapped onto a flat SVG canvas and immediately handed off to the high-performance `@resvg/resvg-wasm` Rust engine to render the PNG. 
+
+### Benchmark Results
+
+Tested on an Intel(R) Core(TM) i5-8265U CPU @ 1.60GHz (8 Cores, Node v22.19.0):
+
+| Test Condition | Iterations | Avg Time per Image | Total Time |
+| --- | --- | --- | --- |
+| **Simple Template** (Cold) | 200 | **~33 ms** | 6.7s |
+| **Complex Template** (Remote Image) | 50 | **~43 ms** | 2.1s |
+| **Simple Template** (Cache Hit) | 200 | **~29 ms** | 5.8s |
+
+*(Note: Cache hits skip rendering entirely, safely fetching from disk).*
+
 ## Installation
 
 ```bash
