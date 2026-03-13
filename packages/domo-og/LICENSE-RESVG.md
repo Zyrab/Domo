@@ -1,4 +1,4 @@
-Copyright 2017 the Resvg Authors
+Copyright 2017 the resvg-wasm Authors
 
 Permission is hereby granted, free of charge, to any
 person obtaining a copy of this software and associated
