@@ -5,13 +5,13 @@ let manifestLoaded = false;
 let manifestPathCache = null;
 
 let debounceTimer = null;
-const DEBOUNCE_DELAY = 500; // ms
+const DEBOUNCE_DELAY = 500;
 
 function loadManifest(manifestPath) {
   try {
     return fs.existsSync(manifestPath) ? JSON.parse(fs.readFileSync(manifestPath, "utf8")) : {};
   } catch (err) {
-    console.error("❌ Failed to load cache manifest");
+    console.error("[Domo-OG] Failed to load cache manifest");
     return {};
   }
 }
@@ -20,7 +20,7 @@ function saveManifest(manifestPath, manifest) {
   try {
     fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
   } catch {
-    console.error("❌ Failed to Save cache manifest");
+    console.error("Domo-OG] Failed to Save cache manifest");
   }
 }
 
@@ -52,22 +52,3 @@ export function flushManifestImmediately() {
     saveManifest(manifestPathCache, manifestCache);
   }
 }
-
-// <-- this i may add in next version keeping kere for referance
-// let staleKeys = null;
-// export function startBuildCleanup(manifest) {
-//   staleKeys = { ...manifest };
-// }
-
-//  if (staleKeys && staleKeys[key]) {
-//    delete staleKeys[key];
-//  }
-//  export function finishBuildCleanup(outputDir) {
-//    for (const key of Object.keys(staleKeys)) {
-//      const imagePath = path.join(outputDir, staleKeys[key].path);
-//      if (fs.existsSync(imagePath)) fs.unlinkSync(imagePath);
-//      delete manifest[key];
-//    }
-//    saveManifest(manifestPath, manifest); // final write after cleanup
-//    staleKeys = null;
-//  }
