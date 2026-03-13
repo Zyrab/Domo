@@ -50,8 +50,8 @@ export async function buildSvgFromConfig(config, data = {}) {
         if (el.horizontalAlign === "right") rectX = x - textWidth - bgPadding;
 
         let rectY = y - fontSize - bgPadding;
-        if (el.verticalAlign === "middle") rectY = y - textHeight / 2 - bgPadding;
-        if (el.verticalAlign === "bottom") rectY = y - textHeight - bgPadding;
+        if (el.verticalAlign === "middle") rectY = y - (fontSize * 0.35) - textHeight / 2 - bgPadding;
+        if (el.verticalAlign === "bottom") rectY = y + (fontSize * 0.25) - textHeight - bgPadding;
 
         svgContent += `<rect x="${rectX}" y="${rectY}"
           width="${textWidth + bgPadding * 2}"
