@@ -1,7 +1,7 @@
 {
   "name": "@zyrab/domo-og",
-  "version": "0.1.5",
-  "description": "An OG (Open Graph) image generator with SVG templates.",
+  "version": "0.2.0",
+  "description": "An OG (Open Graph) image generator config based SVG templates and WASM engine.",
   "main": "src/index.js",
   "type": "module",
   "keywords": [
@@ -22,13 +22,9 @@
   },
   "files": [
     "src/",
-    "bin/",
+    "fonts/",
+    "LICENSE-RESVG.md",
     "README.md"
-  ],
-  "os": [
-    "darwin",
-    "linux",
-    "win32"
   ],
   "engines": {
     "node": ">=18.0.0"
