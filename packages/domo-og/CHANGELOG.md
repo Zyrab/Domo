@@ -1,8 +1,17 @@
 # Changelog
 
+## [0.2.1] - 2026-03-14 Patch
+
+### Fixed
+
+**Fix:** Resolved a module import issue where the WASM file path could fail under certain package managers. The path is now resolved using `createRequire().resolve()` to ensure the correct location of `@resvg/resvg-wasm/index_bg.wasm` is detected regardless of the package manager (npm, pnpm, yarn) or node_modules layout.
+
+---
+
 ## [0.2.0] - 2026-03-13 Major
 
 ### Changed
+
 - **WASM Engine:** Switched from native `resvg` binaries to `@resvg/resvg-wasm` for cross-platform compatibility without OS-specific downloads.
 - **Templating:** Revamped the templating system to use config objects instead of raw string SVGs.
 - **Image Fetching:** Fetching remote images securely defaults to `Domo-OG-Builder/1.0` User-Agent. Provides clearer errors when 403/401 restrictions are encountered, instructing users to allow this User-Agent on their servers.

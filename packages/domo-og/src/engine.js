@@ -2,6 +2,7 @@ import { Resvg, initWasm } from "@resvg/resvg-wasm";
 import { readFile, readdir } from "fs/promises";
 import { fileURLToPath } from "url";
 import { dirname, join, extname } from "path";
+import { createRequire } from "module";
 import fs from "fs";
 import { fetchAsBuffer } from "./fetchers.js";
 
@@ -12,12 +13,9 @@ async function initEngine() {
   if (isWasmInitialized) return;
 
   try {
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = dirname(__filename);
-
-    const wasmPath = join(__dirname, "../node_modules/@resvg/resvg-wasm/index_bg.wasm");
+    const require = createRequire(import.meta.url);
+    const wasmPath = require.resolve("@resvg/resvg-wasm/index_bg.wasm");
     const wasmBuffer = await readFile(wasmPath);
-
     await initWasm(wasmBuffer);
     isWasmInitialized = true;
   } catch (error) {
@@ -62,9 +60,11 @@ async function getFontBuffer(fontSource, defaultFontDir) {
 
   throw new Error(
     "[Domo-OG] Critical Error: No font file found! The WASM engine requires a .ttf, .otf, or .woff file to draw text. " +
-    "Provide a 'fontPath' URL/path, place a font inside " +
-    defaultFontDir +
-    ", or ensure " + fallbackFontPath + " exists.",
+      "Provide a 'fontPath' URL/path, place a font inside " +
+      defaultFontDir +
+      ", or ensure " +
+      fallbackFontPath +
+      " exists.",
   );
 }
 
