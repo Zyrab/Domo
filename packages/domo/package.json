@@ -1,17 +1,19 @@
 {
   "name": "@zyrab/domo",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Minimalist DOM builder and chaining-friendly micro-framework with router support.",
-  "main": "./src/domo.js",
+  "main": "./src/index.js",
   "type": "module",
   "exports": {
-    "import": "./src/domo.js",
-    "default": "./src/domo.js"
+    "import": "./src/index.js",
+    "default": "./src/index.js"
   },
   "author": "Zyrab",
   "license": "MIT",
   "files": [
-    "src/"
+    "src/",
+    "README.md",
+    "LICENSE.md"
   ],
   "keywords": [
     "dom",
