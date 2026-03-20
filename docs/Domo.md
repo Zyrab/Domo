@@ -5,7 +5,7 @@ Fluent, chainable DOM builder. Helps you create, modify, and manage elements in 
 **Example:**
 
 ```js
-import { Domo } from "@zyrab/domo";
+import Domo from "@zyrab/domo";
 
 const list = Domo("ul")
   .cls("item-list")
@@ -208,7 +208,7 @@ Domo("button")
     (e) => {
       console.log("Button clicked!", e.target);
     },
-    { once: true }
+    { once: true },
   )
   .build();
 ```
