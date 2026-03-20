@@ -39,13 +39,12 @@ export async function handleRoute(params, renderLayout) {
     // Render the component content
     const content = await component(props);
 
-    const embededScript = writeJs(content, outDir, path);
-
+    const bundlePath = await writeJs(content, outDir);
     const ogImage = await tryGenerateOgImage(meta, outDir, path);
 
     const fontPaths = normalizeAssets([fonts, assets.fonts]);
     const stylePaths = normalizeAssets([styles, assets.styles]);
-    const scriptPaths = normalizeAssets([embededScript, scripts, assets.scripts]);
+    const scriptPaths = normalizeAssets([bundlePath, scripts, assets.scripts]);
 
     const html = await renderLayout(content, {
       scripts: scriptPaths,
