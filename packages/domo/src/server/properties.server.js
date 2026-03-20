@@ -70,8 +70,10 @@ class PropertiesServer extends BaseServer {
    * @param {object} obj
    * @returns {this}
    */
-  state(obj) {
-    this.element._attr["data-domo-state"] = JSON.stringify(obj);
+  state(state = {}) {
+    Object.entries(state).forEach(([key, val]) => {
+      this.element._state[key] = val;
+    });
     return this;
   }
 }
