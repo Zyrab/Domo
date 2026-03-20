@@ -20,7 +20,7 @@ class BuilderServer extends ChildrenServer {
       .join(";");
 
     const attrs = Object.entries(this.element._attr).map(([k, v]) =>
-      v === true ? k : `${k}="${String(v).replace(/"/g, "&quot;")}"`
+      v === true ? k : `${k}="${String(v).replace(/"/g, "&quot;")}"`,
     );
 
     const data = Object.entries(this.element._data).map(([k, v]) => `data-${k}="${String(v).replace(/"/g, "&quot;")}"`);
