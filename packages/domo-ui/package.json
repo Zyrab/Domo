@@ -1,0 +1,32 @@
+{
+  "name": "@zyrab/domo-ui",
+  "version": "0.1.2",
+  "description": "SVG-aware DOM builder for Domo. Provides correct namespace handling and fluent chaining for SVG elements.",
+  "main": "./domo-svg.js",
+  "type": "module",
+  "exports": {
+    "import": "./domo-svg.js",
+    "default": "./domo-svg.js"
+  },
+  "author": "Zyrab",
+  "license": "MIT",
+  "files": [
+    "./domo-svg.js"
+  ],
+  "keywords": [
+    "domo",
+    "svg",
+    "builder",
+    "dom",
+    "namespace",
+    "zyrab",
+    "ssg",
+    "virtual-dom"
+  ],
+  "dependencies": {
+    "@zyrab/domo": "workspace:*"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
