@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.6.0] - 2026-03-20 (Internal Testing)
+
+### Added
+
+- **Global Runtime Architecture**: The client-side library (`domo.runtime.js`) is now bundled as an IIFE with a global `Domo` namespace. This prevents redundant code duplication across multiple island bundles.
+- **Production-Ready Package Resolution**: Replaced relative pathing with `createRequire` resolution. The builder now correctly locates `@zyrab/domo` within `node_modules` across different package managers (NPM, PNPM, Bun).
+- **External Dependency Mapping**: Introduced an esbuild plugin to "externalize" Domo imports within Islands. This ensures that Component source code can still use `import Domo from 'domo'` for IDE support and linting, but the final bundle skips the import and references the global `window.Domo` instead.
+
+### Changed
+
+- **Island Bundling Strategy**: Islands are now wrapped in a hydration script that detects the global `Domo` instance before mounting, significantly reducing the footprint of individual `.island.js` files.
+- **Minification**: Enabled production minification by default for all generated assets (`runtime`, `events`, and `islands`).
+
+### Internal
+
+- **Testing Mode**: This version is currently in **Testing Mode**. Internal path resolution is being verified for compatibility with monorepo symlinks and flattened `node_modules` structures.
+- **Optimized Deduplication**: Updated `bundleIslands` to use content-based hashing for deduplication, ensuring that identical components across different routes share a single cached JS file.
+
+---
+
 ## [0.5.4] - 2026-03-13
 
 ### Changed

@@ -1,6 +1,6 @@
 {
   "name": "@zyrab/domo-ssg",
-  "version": "0.5.4",
+  "version": "0.6.0",
   "description": "A Static Site Generator (SSG) for Domo-based projects.",
   "main": "src/index.js",
   "type": "module",
@@ -26,11 +26,16 @@
     "@zyrab/domo-og": "workspace:*",
     "@zyrab/domo-router": "workspace:^"
   },
+  "devDependencies": {
+    "esbuild": "^0.20.0",
+    "@zyrab/domo": "workspace:^"
+  },
   "publishConfig": {
     "access": "public"
   },
   "files": [
     "src/",
-    "README"
+    "templates",
+    "README.md"
   ]
 }
