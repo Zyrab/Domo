@@ -5,15 +5,15 @@
 ### Added
 
 - **Dual-Entry Modular System**: Complete refactor into environment-specific builds.
-    - `DomoClient`: Pure native DOM logic for the browser.
-    - `DomoServer`: Metadata Collector for SSG/SSR environments.
+  - `DomoClient`: Pure native DOM logic for the browser.
+  - `DomoServer`: Metadata Collector for SSG/SSR environments.
 - **Metadata Collection**:
-    - `_events`: Grouped event metadata for extraction by `@zyrab/domo-ssg`.
-    - `_refs`: Captures function references for hydration bridge logic.
-    - `_island`: Automatic detection of interactive components (Scenario 3 tagging).
+  - `_events`: Grouped event metadata for extraction by `@zyrab/domo-ssg`.
+  - `_refs`: Captures function references for hydration bridge logic.
+  - `_island`: Automatic detection of interactive components (Scenario 3 tagging).
 - **New Methods**:
-    - `.state(obj)`: Serializes complex state into `data-domo-state` (Server) or local WeakMap (Client).
-    - `_getOrSetId()`: Internal helper for stable, hash-based element identifiers.
+  - `.state(obj)`: Serializes complex state into `data-domo-state` (Server) or local WeakMap (Client).
+  - `_getOrSetId()`: Internal helper for stable, hash-based element identifiers.
 - **SVG Intelligence**: `DomoSVG` is now fully environment-aware via polymorphic inheritance.
 
 ### Changed
@@ -108,7 +108,6 @@ Refactored internal .parent() method to be consistent with chaining behavior.
 
 - Deferred `<main>` element creation until `router.mount()` is called.  
   This avoids `document is not defined` errors during SSR or SSG environments like `jsdom`.
-
 
 ---
 
