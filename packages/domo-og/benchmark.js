@@ -1,4 +1,4 @@
-import { generateOgImage } from "./packages/domo-og/src/index.js";
+import { generateOgImage } from "./src/index.js";
 import { performance } from "perf_hooks";
 import os from "os";
 import fs from "fs";
