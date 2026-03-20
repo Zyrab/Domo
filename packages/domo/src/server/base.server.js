@@ -1,3 +1,4 @@
+import { fileURLToPath } from "url";
 /**
  * @class BaseServer
  * @description Foundational class for Server-side (Virtual) Domo elements.
@@ -29,7 +30,22 @@ class BaseServer {
       _events: [],
       _refs: [],
       _island: false,
+      _state: {},
+      __file: null,
     };
+  }
+
+  /**
+   * Manually mark this element/component as an island.
+   * This signals the SSG to bundle the Domo client runtime.
+   */
+  island(enabled = true) {
+    this.element._island = enabled;
+    this._getOrSetId();
+    if (enabled) {
+      this.element.__file = this._getCallerFile(2); // Captures the component file path
+    }
+    return this;
   }
 
   /**
@@ -40,7 +56,8 @@ class BaseServer {
   ref(callback) {
     if (typeof callback === "function") {
       this.element._refs.push({
-        name: callback.name || "anonymous",
+        name: meta._name || callback.name || "anonymous",
+        path: meta._source || null, // The absolute path s
         handler: callback,
       });
       // Ensure element has a stable ID if it has a ref
@@ -65,6 +82,39 @@ class BaseServer {
     const id = `d-${hash}`;
     this.element._attr["data-domo-id"] = id;
     return id;
+  }
+  /**
+   * Gets the file path of the caller in the stack trace.
+   * @param {number} depth - How many steps back to look (default 2: the caller of the caller)
+   */
+  _getCallerFile(depth = 2) {
+    const originalPrepare = Error.prepareStackTrace;
+    Error.prepareStackTrace = (_, stack) => stack;
+    const stack = new Error().stack;
+    Error.prepareStackTrace = originalPrepare;
+
+    if (!stack || !stack[depth]) return null;
+
+    const filename = stack[depth].getFileName();
+
+    // Clean up "file://" prefixes for Windows/ESM compatibility
+    if (filename && filename.startsWith("file://")) {
+      return fileURLToPath(filename);
+    }
+    return filename;
+  }
+  _getExternalPath(fn, currentFile) {
+    // If the function has no name and is very short, it's likely an inline arrow fn
+    // However, the most reliable way in Node is checking the stack
+    const caller = getCallerFile(3); // Adjust depth based on where this is called
+
+    // Logic: If we can't find a source, or the source is the same as the
+    // component currently being built, we treat it as "inline".
+    if (!caller || caller === currentFile) {
+      return null;
+    }
+
+    return caller;
   }
 }
 
