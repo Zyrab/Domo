@@ -1,5 +1,5 @@
 import DomoClientFactory, { DomoClient } from "./client/domo.client.js";
-import DomoServerFactory, { DomoServer } from "./domo.server.js";
+import DomoServerFactory, { DomoServer } from "./server/domo.server.js";
 
 const isServer = typeof document === "undefined";
 
