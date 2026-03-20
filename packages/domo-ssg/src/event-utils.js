@@ -1,177 +1,208 @@
-// src/event-utils.js
+import { writeFileSync, mkdirSync, existsSync, rmSync, readFileSync } from "fs";
+import { join, dirname, relative } from "path";
+import { fileURLToPath, pathToFileURL } from "url";
+import { build } from "esbuild";
+import { generateElementScript, getHash } from "./event-extraction.js";
 
-import { writeFileSync, mkdirSync, existsSync } from "fs";
-import { join } from "path";
-import { createHash } from "crypto";
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const require = createRequire(import.meta.url);
 
-export function generateScriptContent(events) {
-  return events
-    .map(({ id, event, handlers }) => {
-      const varSet = new Set();
-      const logicLines = [];
-      const closureFunctions = [];
-      let matchCounter = 0;
+const DOMO_CLIENT_PACKAGE = "@zyrab/domo/client";
+let DOMO_CLIENT_SOURCE;
 
-      for (const { type, selector, handler } of handlers) {
-        const fnSource = handler.toString();
-        const { name, body } = destructureFunction(fnSource);
-        const vars = extractExposedVariables(body);
-        vars.forEach((v) => varSet.add(v));
-
-        if (type === "closest") {
-          const matchVar = `match${++matchCounter}`;
-          logicLines.push(`const ${matchVar} = e.target.closest("${selector}");`);
-
-          if (name) {
-            logicLines.push(`if (${matchVar}) ${name}(e, ${matchVar});`);
-            closureFunctions.push(fnSource);
-          } else {
-            const adjustedBody = body.replace(/\btarget\b/g, matchVar);
-            logicLines.push(`if (${matchVar}) {\n${indent(adjustedBody, 2)}\n}`);
-          }
-        } else if (type === "match") {
-          const matchExpr = `e.target.matches("${selector}")`;
-
-          if (name) {
-            logicLines.push(`if (${matchExpr}) ${name}(e, e.target);`);
-            closureFunctions.push(fnSource);
-          } else {
-            const adjustedBody = body.replace(/\btarget\b/g, "e.target");
-            logicLines.push(`if (${matchExpr}) {\n${indent(adjustedBody, 2)}\n}`);
-          }
-        } else if (type === "direct") {
-          logicLines.push(body);
-        }
-      }
-
-      const varsStr = [...varSet].join("\n");
-      const handlerBody = `function(e) {\n${indent(logicLines.join("\n"), 1)}\n}`;
-      const closures = closureFunctions.length ? `\n\n${closureFunctions.join("\n\n")}` : "";
-
-      return `${
-        varsStr ? varsStr + "\n\n" : ""
-      }document.getElementById("${id}").addEventListener("${event}", ${handlerBody});${closures}`;
-    })
-    .join("\n\n\n");
+try {
+  // This works across different package managers
+  DOMO_CLIENT_SOURCE = require.resolve(DOMO_CLIENT_PACKAGE);
+} catch (e) {
+  // Fallback for local dev if not linked
+  DOMO_CLIENT_SOURCE = join(__dirname, "../../domo/src/client/domo.client.js");
 }
+const cache = {
+  runtime: null,
+  events: new Map(), // hash -> file
+  islands: new Map(), // hash -> file
+};
 
-export function collectEvents(node, out = []) {
+/**
+ * Plugin to convert imports of 'domo' into the global 'Domo' variable
+ */
+const makeDomoExternalPlugin = {
+  name: "domo-external",
+  setup(build) {
+    // Intercept any import relating to domo
+    build.onResolve({ filter: /^domo$|^@zyrab\/domo/ }, (args) => {
+      return { path: args.path, external: true };
+    });
+  },
+};
+
+/**
+ * Traverses the Domo tree to find all elements with events or islands.
+ */
+export function collectMetadata(node, out = { events: [], islands: [] }) {
   if (!node || typeof node !== "object") return out;
+
   const el = node.element;
-  if (Array.isArray(el._events) && el._events.length > 0) {
-    out.push(...el._events);
+
+  if ((el?._events?.length > 0 || el?._refs?.length > 0) && !el?._island) {
+    out.events.push({
+      id: el._attr["data-domo-id"] || el._attr["id"],
+      events: el._events || [],
+      states: el._state || {},
+      refs: el._refs || [],
+    });
   }
 
-  if (Array.isArray(el._child)) {
+  if (el?._island) {
+    out.islands.push({
+      id: el._attr["data-domo-id"] || el._attr["id"],
+      path: el.__file,
+    });
+  }
+
+  if (Array.isArray(el?._child)) {
     for (const child of el._child) {
-      collectEvents(child, out);
+      collectMetadata(child, out);
     }
   }
 
   return out;
 }
 
-function extractExposedVariables(source) {
-  const lines = source.split("\n");
-  const injected = [];
+/**
+ * Bundle runtime (once)
+ */
+async function bundleRuntime(outputDir) {
+  if (cache.runtime) return cache.runtime;
 
-  for (const line of lines) {
-    const trimmed = line.trim();
+  const file = "domo.runtime.js";
+  const out = join(outputDir, "js", file);
 
-    if (trimmed === "") continue;
+  await build({
+    entryPoints: [DOMO_CLIENT_SOURCE],
+    bundle: true,
+    minify: false,
+    format: "iife",
+    globalName: "Domo",
+    outfile: out,
+    platform: "browser",
+  });
 
-    if (trimmed.startsWith("// @ssg-let")) {
-      const decl = trimmed.replace("// @ssg-let", "").replace(/;$/, "").trim();
-      injected.push(`let ${decl};`);
-    } else if (trimmed.startsWith("// @ssg-const")) {
-      const decl = trimmed.replace("// @ssg-const", "").replace(/;$/, "").trim();
-      injected.push(`const ${decl};`);
-    } else if (!trimmed.startsWith("//")) {
-      break; // stop at first non-comment code line
-    }
-  }
-
-  return injected;
+  cache.runtime = file;
+  return file;
 }
 
-function destructureFunction(fnSource) {
-  const funcMatch = fnSource.match(/^function\s*([a-zA-Z0-9_$]*)\s*\([^)]*\)\s*\{([\s\S]*)\}$/);
-  if (funcMatch) {
-    const [, name, body] = funcMatch;
-    return { name: name.trim(), body: body.trim() };
-  }
+/**
+ * Bundle event logic
+ */
+async function bundleEvents(metadata, jsDir, tempDir) {
+  if (metadata.events.length === 0) return null;
 
-  const arrowMatch = fnSource.match(/^\(?[a-zA-Z0-9_,\s]*\)?\s*=>\s*\{([\s\S]*)\}$/);
-  if (arrowMatch) {
-    return { name: "", body: arrowMatch[1].trim() };
-  }
+  const raw = metadata.events
+    .map(({ id, events, states, refs }) => generateElementScript(id, events, states, refs))
+    .join("\n\n");
 
-  return { name: "", body: "" };
+  const hash = getHash(raw);
+  if (cache.events.has(hash)) return cache.events.get(hash);
+
+  const file = `${hash}.events.js`;
+  const entry = join(tempDir, `${hash}.entry.js`);
+
+  writeFileSync(entry, raw, "utf8");
+
+  await build({
+    entryPoints: [entry],
+    bundle: true,
+    minify: false,
+    format: "iife",
+    outfile: join(jsDir, file),
+    platform: "browser",
+  });
+
+  rmSync(entry);
+
+  cache.events.set(hash, file);
+  return file;
 }
 
-function indent(str, level = 1) {
-  const pad = "  ".repeat(level);
-  return str
-    .split("\n")
-    .map((line) => pad + line)
-    .join("\n");
-}
+/**
+ * Bundle islands (deduped by CONTENT, not path)
+ */
+async function bundleIslands(metadata, jsDir, tempDir) {
+  const results = [];
+  const islandsToBundle = metadata.islands.filter((i) => i.path);
 
-function normalizeEventLogic(events) {
-  const blocks = [];
+  await Promise.all(
+    islandsToBundle.map(async (island) => {
+      const { path: filePath, id } = island;
+      const content = readFileSync(filePath, "utf8");
+      const hash = getHash(content);
 
-  for (const { handlers } of events) {
-    for (const { handler } of handlers) {
-      const fnSource = handler.toString();
-      const { body } = destructureFunction(fnSource);
-      const injected = extractExposedVariables(body);
+      if (cache.islands.has(hash)) {
+        results.push({ path: filePath, file: cache.islands.get(hash) });
+        return;
+      }
 
-      blocks.push({
-        injected: injected.join("\n"),
-        body: normalizeCode(body),
+      const file = `${hash}.island.js`;
+      const entryPath = join(tempDir, `${hash}.island.entry.js`);
+
+      // wrapper: hydrate island at the correct element
+      const wrapper = `
+            import Island from "${filePath.replace(/\\/g, "/")}";
+
+            (function() {
+              const el = document.querySelector('[data-domo-id="${id}"]');
+              if (el) {
+                const instance = Island();
+                if (instance && instance._isDomo) {
+                  const built = instance.build();
+                  el.replaceWith(built);
+                }
+              }
+            })();
+            `;
+
+      writeFileSync(entryPath, wrapper, "utf8");
+
+      await build({
+        entryPoints: [entryPath],
+        bundle: true,
+        minify: false,
+        format: "iife",
+        outfile: join(jsDir, file),
+        platform: "browser",
+        plugins: [makeDomoExternalPlugin],
       });
-    }
-  }
 
-  // Sort to make sure logic is order-independent
-  blocks.sort((a, b) => (a.body + a.injected).localeCompare(b.body + b.injected));
+      rmSync(entryPath);
+      cache.islands.set(hash, file);
+      results.push({ path: filePath, file });
+    }),
+  );
 
-  return blocks.map(({ injected, body }) => `${injected}\n${body}`).join("\n");
+  return results;
 }
+/**
+ * Main orchestrator
+ */
+export async function writeJs(content, outputDir) {
+  const metadata = collectMetadata(content);
 
-function normalizeCode(code) {
-  return code
-    .split("\n")
-    .map((line) => line.trim())
-    .filter((line) => line && !line.startsWith("//"))
-    .join("\n");
-}
+  const hasInteractivity = metadata.events.length > 0 || metadata.islands.length > 0;
 
-function hashContent(content) {
-  return createHash("sha1").update(content).digest("hex").slice(0, 8); // short hash like '2fa4b1ab'
-}
-
-const generatedCache = new Map(); // hash → filename
-
-export function writeJs(constent, outputDir) {
-  const events = collectEvents(constent);
-  if (events.length <= 0) return;
+  if (!hasInteractivity) return null;
 
   const jsDir = join(outputDir, "js");
-  if (!existsSync(jsDir)) mkdirSync(jsDir);
+  const tempDir = join(outputDir, ".domo_temp");
 
-  const normalized = normalizeEventLogic(events);
-  const hash = hashContent(normalized);
+  if (!existsSync(jsDir)) mkdirSync(jsDir, { recursive: true });
+  if (!existsSync(tempDir)) mkdirSync(tempDir, { recursive: true });
 
-  let fileName;
-  if (generatedCache.has(hash)) {
-    fileName = generatedCache.get(hash);
-  } else {
-    fileName = `${hash}.js`;
-    const jsContent = generateScriptContent(events);
-    writeFileSync(join(jsDir, fileName), jsContent, "utf8");
-    generatedCache.set(hash, fileName);
-  }
+  const [runtime, events, islands] = await Promise.all([
+    bundleRuntime(outputDir),
+    bundleEvents(metadata, jsDir, tempDir),
+    bundleIslands(metadata, jsDir, tempDir),
+  ]);
 
-  return join(fileName);
+  return [runtime, events, ...islands.map((i) => i.file)].filter(Boolean);
 }
