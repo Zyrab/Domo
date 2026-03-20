@@ -1,4 +1,7 @@
-import { DomoClass } from "../domo/src/domo.js"; // Assuming this path points to the main DomoClass export
+import { DomoClient, DomoServer } from "../domo/src/index.js";
+
+const isServer = typeof document === "undefined";
+const BaseClass = isServer ? DomoServer : DomoClient;
 
 /**
  * @class DomoSVG
@@ -7,7 +10,7 @@ import { DomoClass } from "../domo/src/domo.js"; // Assuming this path points to
  * of SVG (Scalable Vector Graphics) elements, ensuring correct SVG namespace handling.
  * Only accepts valid SVG tag names.
  */
-class DomoSVG extends DomoClass {
+class DomoSVG extends BaseClass {
   /**
    * Creates an instance of DomoSVG.
    * @param {string} [tag="svg"] - The SVG tag name for the element to create (e.g., 'svg', 'path', 'circle').
@@ -18,7 +21,7 @@ class DomoSVG extends DomoClass {
     super(tag);
     // In a browser environment, perform the SVG tag validation immediately.
     // In a virtual (SSR) environment, this check is less critical here as it's just building an object.
-    if (typeof document !== "undefined" && !this.isSVGTag(tag)) {
+    if (!isServer && !this.isSVGTag(tag)) {
       throw new Error(`Invalid SVG tag: ${tag}`);
     }
   }
@@ -62,6 +65,7 @@ class DomoSVG extends DomoClass {
    * @returns {SVGElement} The created SVG element.
    */
   el(tag) {
+    if (isServer) return super.el?.(tag);
     // Only create with NS if it's an SVG tag. Fallback to regular DOM creation if not (though constructor validates this).
     return this.isSVGTag(tag) ? document.createElementNS("http://www.w3.org/2000/svg", tag) : super.el(tag); // Fallback to regular DOM creation
   }
@@ -84,7 +88,7 @@ class DomoSVG extends DomoClass {
       if (key.startsWith("on")) return; // Skip event attributes
       if (value === null) return; // Skip null values
 
-      if (this._virtual) {
+      if (isServer) {
         this.element._attr[key] = value;
       } else {
         // Use setAttributeNS with null namespace for most SVG attributes
@@ -97,16 +101,8 @@ class DomoSVG extends DomoClass {
 
 /**
  * A factory function to create a new `DomoSVG` element instance.
- * This is the recommended way to start building SVG elements, avoiding the need for the `new` keyword.
  * @param {string} [el="svg"] - The SVG tag name for the element to create (e.g., 'svg', 'circle', 'path').
  * @returns {DomoSVG} A new DomoSVG instance, ready for method chaining.
- * @example
- * // Create a basic SVG container:
- * const mySVG = DSVG('svg').attr({ width: 100, height: 100 });
- *
- * // Create a circle inside an SVG:
- * const myCircle = DSVG('circle').attr({ cx: 50, cy: 50, r: 20, fill: 'blue' });
- * mySVG.child(myCircle).appendTo(document.body);
  */
 function DSVG(el = "svg") {
   return new DomoSVG(el);
@@ -117,8 +113,6 @@ export default DSVG;
 
 /**
  * The `DomoSVG` class itself.
- * Exported for scenarios where direct class access or extension is required,
- * though the `DSVG` factory function is preferred for standard usage.
  * @type {DomoSVG}
  */
 export { DomoSVG };
