@@ -1,4 +1,4 @@
-import Domo from "../../packages/domo/src/domo.js";
+import Domo from "../../packages/domo/src/index.js";
 import Router from "../../packages/domo-router/src/core.js";
 import createSvgIcons from "../components/svg-icons.js";
 
@@ -19,6 +19,7 @@ export default function Home() {
 
   return Domo("section")
     .id("section-home")
+    .state({ toggled })
     .onClosest("click", {
       "#home-button-1": handleClick,
       "#home-button": handleError,

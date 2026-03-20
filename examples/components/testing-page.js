@@ -1,4 +1,4 @@
-import Domo from "../../packages/domo/src/domo.js";
+import Domo from "../../packages/domo/src/index.js";
 
 export default function testPage(props) {
   const propKeys = Object.keys(props);

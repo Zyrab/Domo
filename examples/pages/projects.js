@@ -1,4 +1,4 @@
-import Domo from "../../packages/domo/src/domo.js";
+import Domo from "../../packages/domo/src/index.js";
 import Router from "../../packages/domo-router/src/core.js";
 import { loadJson } from "../load-json.js";
 export default async function createProjects() {
@@ -39,12 +39,12 @@ export default async function createProjects() {
               if (!link) return;
               Router.goTo("/projects/" + link.dataset.link);
             },
-            { ssg: false }
+            { ssg: false },
           )
           .child([
             Domo("h3").txt(i.title).css({ margin: "0 0 8px", fontSize: "18px", color: "#333" }),
             Domo("p").txt(i.description).css({ margin: 0, fontSize: "14px", color: "#666" }),
-          ])
-      )
+          ]),
+      ),
     );
 }

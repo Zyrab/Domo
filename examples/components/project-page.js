@@ -1,4 +1,4 @@
-import Domo from "../../packages/domo/src/domo.js";
+import Domo from "../../packages/domo/src/index.js";
 import Router from "../../packages/domo-router/src/core.js";
 import { loadJson } from "../load-json.js";
 
@@ -15,7 +15,7 @@ export default async function createProjectPage(params) {
         if (!link) return;
         Router.goTo(`/projects/${params.id}/` + link.dataset.link);
       },
-      { ssg: false }
+      { ssg: false },
     )
     .css(styles.section)
     .child([
@@ -32,8 +32,8 @@ export default async function createProjectPage(params) {
                 .data({ link: page })
                 .attr({ href: `/projects/${params.id}/${page}` })
                 .css(styles.navLink)
-                .txt(`Test ${page}`)
-            )
+                .txt(`Test ${page}`),
+            ),
           ),
           Domo("div").txt(`Last updated: ${data?.updated}`).css(styles.updated),
         ]),

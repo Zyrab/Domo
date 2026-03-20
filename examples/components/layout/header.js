@@ -1,4 +1,4 @@
-import Domo from "../../../packages/domo/src/domo.js";
+import Domo from "../../../packages/domo/src/index.js";
 import Router from "../../../packages/domo-router/src/core.js";
 
 export default function createHeader() {
@@ -31,8 +31,8 @@ export default function createHeader() {
               .cls("nav-link")
               .txt(label)
               .data({ link })
-              .attr({ href: link })
-          )
+              .attr({ href: link }),
+          ),
         ),
     ])
     .on(
@@ -46,7 +46,7 @@ export default function createHeader() {
         Router.goTo(link?.dataset.link);
         link.style.color = "red";
       },
-      { ssg: false }
+      { ssg: false },
     )
     .build();
 }

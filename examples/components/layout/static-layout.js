@@ -25,7 +25,7 @@ export async function renderLayout(content, data) {
       file.preload
         ? `<link rel="preload" as="script" href="/js/${file.href}">
           <script defer src="/js/${file.href}"></script>`
-        : `<script defer src="/js/${file.href || file}"></script>`
+        : `<script defer src="/js/${file.href || file}"></script>`,
     )
     .join("\n");
 
@@ -33,7 +33,7 @@ export async function renderLayout(content, data) {
     .map((style) =>
       style.preload
         ? `<link rel="preload" href="/css/${style.href}" as="style" onload="this.rel='stylesheet'">`
-        : `<link rel="stylesheet" href="/css/${style.href || style}">`
+        : `<link rel="stylesheet" href="/css/${style.href || style}">`,
     )
     .join("\n");
 
@@ -41,7 +41,7 @@ export async function renderLayout(content, data) {
     .map((font) =>
       font.preload
         ? `<link rel="preload" href="/assets/fonts/${font.href}" as="font" type="font/woff2" crossorigin="anonymous">`
-        : `<link rel="stylesheet" href="/assets/fonts/${font.href || font}">`
+        : `<link rel="stylesheet" href="/assets/fonts/${font.href || font}">`,
     )
     .join("\n");
 

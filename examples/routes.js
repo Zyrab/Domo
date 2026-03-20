@@ -1,6 +1,7 @@
 import createHeader from "./components/layout/header.js";
 
 import Home from "./pages/home.js";
+import Island from "./pages/island.js";
 import About from "./pages/about.js";
 import Contacts from "./pages/contacts.js";
 import createProjects from "./pages/projects.js";
@@ -25,8 +26,13 @@ const layouts = {
   },
 };
 export const routes = {
-  layouts,
+  // layouts,
   // --- Static routes ---
+  "/island": {
+    component: Island,
+
+    meta: { title: "Island", description: "Testing if silanding works" },
+  },
   "/": {
     component: Home,
     fonts: ["Routidan.woff2"],
@@ -49,45 +55,45 @@ export const routes = {
     meta: { title: "Contacts", description: "Contacts page", theme: "light" },
   },
 
-  // --- Static route with multiple assets ---
-  "/assets-test": {
-    component: Home,
-    styles: [{ href: "style-main.css", preload: true }, { href: "extra.css" }],
-    scripts: ["extra.js", "analytics.js"],
-    fonts: ["Font1.woff2", "Font2.woff2"],
-    meta: { title: "Assets Test", description: "Assets-heavy route" },
-  },
+  // // --- Static route with multiple assets ---
+  // "/assets-test": {
+  //   component: Home,
+  //   styles: [{ href: "style-main.css", preload: true }, { href: "extra.css" }],
+  //   scripts: ["extra.js", "analytics.js"],
+  //   fonts: ["Font1.woff2", "Font2.woff2"],
+  //   meta: { title: "Assets Test", description: "Assets-heavy route" },
+  // },
 
-  // --- Dynamic routes ---
-  "/projects": {
-    component: createProjects,
-    styles: [{ href: "projects.css", preload: true }],
-    meta: {
-      title: "Projects Default s",
-      description: "List of projects",
-      canonical: "/projects-heyyeh",
-      generateOgImage: true,
-    },
+  // // --- Dynamic routes ---
+  // "/projects": {
+  //   component: createProjects,
+  //   styles: [{ href: "projects.css", preload: true }],
+  //   meta: {
+  //     title: "Projects Default s",
+  //     description: "List of projects",
+  //     canonical: "/projects-heyyeh",
+  //     generateOgImage: true,
+  //   },
 
-    // First-level dynamic route
-    "/:id": {
-      routeParams: async () => await loadJson("dist/data/projects.json"), // Array of { id, title, ... }
-      component: createProjectPage,
-      meta: {
-        title: "Project Detail",
-        generateOgImage: true,
-        template: ogConfig,
-      },
+  //   // First-level dynamic route
+  //   "/:id": {
+  //     routeParams: async () => await loadJson("dist/data/projects.json"), // Array of { id, title, ... }
+  //     component: createProjectPage,
+  //     meta: {
+  //       title: "Project Detail",
+  //       generateOgImage: true,
+  //       template: ogConfig,
+  //     },
 
-      // Second-level dynamic route
-      "/:item": {
-        outlet: true,
-        routeParams: async (parent) => await loadJson(`dist/data/${parent}-item.json`), // Array of { item, title, ... }
-        component: testPage,
-        meta: { title: "Project Item Detail", generateOgImage: true, template: ogConfig },
-      },
-    },
-  },
+  //     // Second-level dynamic route
+  //     "/:item": {
+  //       outlet: true,
+  //       routeParams: async (parent) => await loadJson(`dist/data/${parent}-item.json`), // Array of { item, title, ... }
+  //       component: testPage,
+  //       meta: { title: "Project Item Detail", generateOgImage: true, template: ogConfig },
+  //     },
+  //   },
+  // },
 
   // --- Deep nested dynamic (3 levels) ---
   // "/blog": {
@@ -170,14 +176,14 @@ export const routes = {
   // },
 
   // --- Meta-only route (no component) ---
-  "/meta-only": {
-    meta: { title: "Meta Only", description: "No component here" },
-    styles: [{ href: "meta.css" }],
-  },
+  // "/meta-only": {
+  //   meta: { title: "Meta Only", description: "No component here" },
+  //   styles: [{ href: "meta.css" }],
+  // },
 
   // --- Catch-all route ---
-  "*": {
-    component: Error,
-    meta: { title: "404 Error", description: "Page not found" },
-  },
+  // "*": {
+  //   component: Error,
+  //   meta: { title: "404 Error", description: "Page not found" },
+  // },
 };

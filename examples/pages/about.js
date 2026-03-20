@@ -1,4 +1,4 @@
-import Domo from "../../packages/domo/src/domo.js";
+import Domo from "../../packages/domo/src/index.js";
 
 export default function About() {
   let visible = true;
@@ -15,7 +15,12 @@ export default function About() {
     .css(styles.container)
     .child([
       Domo("h2").txt("About Us").css(styles.heading),
-      Domo("button").id("about-button").txt("Show/Hide Info").on("click", toggleVisibility).css(styles.button),
+      Domo("button")
+        .id("about-button")
+        .txt("Show/Hide Info")
+        .state({ visible })
+        .on("click", toggleVisibility)
+        .css(styles.button),
       Domo("p")
         .id("about-info")
         .txt("Welcome to the About Page. This is a mock description for demo purposes.")

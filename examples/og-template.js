@@ -11,12 +11,13 @@ export const ogConfig = {
       type: "text",
       content: "@zyrab/domo-og",
       horizontalAlign: "left",
-      verticalAlign: "top",
+      verticalAlign: "middle",
       fontSize: 25,
       color: "#FFFFFF",
       backgroundColor: "#000000",
-      bgPadding: 10,
-      padding: 4,
+      bgPadding: 25,
+      padding: 0,
+      borderRadius: 55,
     },
     {
       type: "text",
@@ -32,8 +33,8 @@ export const ogConfig = {
       src: "https://raw.githubusercontent.com/Zyrab/Domo/d7c1f19eb992897c4540b30a9f684db9e595ab0b/assets/logo.png",
       horizontalAlign: "right",
       verticalAlign: "bottom",
-      width: 100,
       height: 100,
+      padding: 50,
     },
     {
       type: "text",
@@ -210,6 +211,43 @@ export const testOgConfig = {
       fontSize: 18,
       width: 250,
       color: "#ff6666",
+    },
+  ],
+};
+
+export const blogConfig = {
+  background: {
+    type: "image",
+    src: "src/assets/preview-images/blog-bg.webp",
+  },
+  elements: [
+    {
+      type: "text",
+      content: "{{title}}",
+      horizontalAlign: "left",
+      verticalAlign: "middle",
+      fontSize: 72,
+      color: "#FFFFFF",
+      padding: 80,
+      width: 700,
+    },
+    {
+      type: "image",
+      src: "{{author_image}}",
+      horizontalAlign: "right",
+      verticalAlign: "middle",
+      padding: 60,
+      width: 240,
+      height: 240,
+    },
+    {
+      type: "text",
+      content: "{{author_name}}",
+      horizontalAlign: "right",
+      verticalAlign: "bottom",
+      padding: 80,
+      fontSize: 28,
+      color: "#E9FA00",
     },
   ],
 };
