@@ -20,7 +20,9 @@ class BaseClient {
   constructor(el = "div") {
     this.element = document.createElement(String(el || "div").toLowerCase());
   }
-
+  island(enabled = false) {
+    return this;
+  }
   /**
    * In browser context, passes the actual DOM element to the callback.
    * @param {function(HTMLElement): void} callback
