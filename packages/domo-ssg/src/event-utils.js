@@ -1,8 +1,11 @@
 import { writeFileSync, mkdirSync, existsSync, rmSync, readFileSync } from "fs";
-import { join, dirname, relative } from "path";
+import { join, dirname, resolve } from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 import { build } from "esbuild";
+import { createRequire } from "module";
 import { generateElementScript, getHash } from "./event-extraction.js";
+import { registry } from "./Registry.js";
+import { formatComponentName } from "./utils.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
@@ -24,14 +27,16 @@ const cache = {
 };
 
 /**
- * Plugin to convert imports of 'domo' into the global 'Domo' variable
+ * Converts a function name to your file naming convention based on strict patterns.
+ * @param {string} funcName - e.g., "createHeader", "createPreviewPage", "copyCode"
+ * @returns {string} - e.g., "header", "preview-page", "handle-copy-code"
  */
-const makeDomoExternalPlugin = {
-  name: "domo-external",
+const rewriteDomoPlugin = {
+  name: "rewrite-domo",
   setup(build) {
-    // Intercept any import relating to domo
-    build.onResolve({ filter: /^domo$|^@zyrab\/domo/ }, (args) => {
-      return { path: args.path, external: true };
+    build.onResolve({ filter: /^@zyrab\/domo$|^domo$/ }, (args) => {
+      // Points the browser to your pre-bundled runtime
+      return { path: "/js/domo.runtime.js", external: true };
     });
   },
 };
@@ -53,13 +58,22 @@ export function collectMetadata(node, out = { events: [], islands: [] }) {
     });
   }
 
-  if (el?._island) {
-    out.islands.push({
-      id: el._attr["data-domo-id"] || el._attr["id"],
-      path: el.__file,
-    });
-  }
+  if (el?._island && el?.__island) {
+    const rawName = el.__island.name; // e.g., "createPreviewPage"
+    const fileKey = formatComponentName(rawName); // "preview-page"
 
+    // Look up the exact file path from your singleton
+    const filePath = registry.getRoute(fileKey);
+
+    if (!filePath) {
+      console.warn(`[Domo-SSG] Could not find file for island component: ${rawName}`);
+    } else {
+      out.islands.push({
+        id: el._attr["data-domo-id"] || el._attr["id"],
+        path: filePath,
+      });
+    }
+  }
   if (Array.isArray(el?._child)) {
     for (const child of el._child) {
       collectMetadata(child, out);
@@ -81,9 +95,8 @@ async function bundleRuntime(outputDir) {
   await build({
     entryPoints: [DOMO_CLIENT_SOURCE],
     bundle: true,
-    minify: false,
-    format: "iife",
-    globalName: "Domo",
+    minify: true,
+    format: "esm",
     outfile: out,
     platform: "browser",
   });
@@ -113,9 +126,13 @@ async function bundleEvents(metadata, jsDir, tempDir) {
   await build({
     entryPoints: [entry],
     bundle: true,
-    minify: false,
-    format: "iife",
+    minify: true,
+    format: "esm",
     outfile: join(jsDir, file),
+    packages: "external",
+
+    plugins: [rewriteDomoPlugin], // Injects our Domo rewrite
+
     platform: "browser",
   });
 
@@ -125,62 +142,76 @@ async function bundleEvents(metadata, jsDir, tempDir) {
   return file;
 }
 
-/**
- * Bundle islands (deduped by CONTENT, not path)
- */
 async function bundleIslands(metadata, jsDir, tempDir) {
-  const results = [];
   const islandsToBundle = metadata.islands.filter((i) => i.path);
+  if (islandsToBundle.length === 0) return [];
 
-  await Promise.all(
-    islandsToBundle.map(async (island) => {
-      const { path: filePath, id } = island;
-      const content = readFileSync(filePath, "utf8");
-      const hash = getHash(content);
+  const entryPoints = {};
 
-      if (cache.islands.has(hash)) {
-        results.push({ path: filePath, file: cache.islands.get(hash) });
-        return;
+  // Create wrappers for the islands
+  for (const island of islandsToBundle) {
+    const { path: filePath, id } = island;
+    const content = readFileSync(filePath, "utf8");
+    const hash = getHash(content);
+
+    const entryPath = join(tempDir, `${hash}.entry.js`);
+    const absolutePath = resolve(process.cwd(), filePath).replace(/\\/g, "/");
+
+    const wrapper = `
+      import Island from "${absolutePath}";
+
+      const el = document.querySelector('[data-domo-id="${id}"]');
+      if (el) {
+        const instance = Island();
+        if (instance && instance._isDomo) {
+          el.appendChild(instance.build());
+        } else if (instance instanceof DocumentFragment || instance instanceof HTMLElement) {
+          el.appendChild(instance);
+        }
       }
+    `;
 
-      const file = `${hash}.island.js`;
-      const entryPath = join(tempDir, `${hash}.island.entry.js`);
+    writeFileSync(entryPath, wrapper, "utf8");
 
-      // wrapper: hydrate island at the correct element
-      const wrapper = `
-            import Island from "${filePath.replace(/\\/g, "/")}";
+    // Outputs to: dist/js/islands/hash.js
+    entryPoints[`islands/${hash}`] = entryPath;
+  }
 
-            (function() {
-              const el = document.querySelector('[data-domo-id="${id}"]');
-              if (el) {
-                const instance = Island();
-                if (instance && instance._isDomo) {
-                  const built = instance.build();
-                  el.replaceWith(built);
-                }
-              }
-            })();
-            `;
+  // 2. The Modern esbuild Call
+  const result = await build({
+    entryPoints,
+    bundle: true,
+    splitting: true,
+    minify: true,
+    format: "esm",
+    outdir: jsDir,
 
-      writeFileSync(entryPath, wrapper, "utf8");
+    // --> THE MAGIC BULLET FOR NPM PACKAGES <--
+    packages: "external",
 
-      await build({
-        entryPoints: [entryPath],
-        bundle: true,
-        minify: false,
-        format: "iife",
-        outfile: join(jsDir, file),
-        platform: "browser",
-        plugins: [makeDomoExternalPlugin],
-      });
+    plugins: [rewriteDomoPlugin], // Injects our Domo rewrite
 
-      rmSync(entryPath);
-      cache.islands.set(hash, file);
-      results.push({ path: filePath, file });
-    }),
-  );
+    // Tells esbuild how to name the shared files so it looks like your project
+    // instead of random chunk strings
+    chunkNames: "components/[name]-[hash]",
 
-  return results;
+    metafile: true,
+    platform: "browser",
+  });
+
+  // Clean up temp files
+  Object.values(entryPoints).forEach((entryPath) => rmSync(entryPath));
+
+  // Extract generated paths for injection
+  const allGeneratedPaths = Object.keys(result.metafile.outputs).map((filePath) => {
+    const relativeToDist = filePath.replace(/\\/g, "/").split("/").slice(1).join("/");
+    let path = `/${relativeToDist}`;
+
+    // 3. Remove "js/" specifically if it appears immediately after the leading slash
+    // This transforms "/js/main.js" -> "/main.js"
+    return path.replace(/^\/js\//, "/");
+  });
+  return allGeneratedPaths.filter((path) => path.endsWith(".js"));
 }
 /**
  * Main orchestrator
@@ -204,5 +235,5 @@ export async function writeJs(content, outputDir) {
     bundleIslands(metadata, jsDir, tempDir),
   ]);
 
-  return [runtime, events, ...islands.map((i) => i.file)].filter(Boolean);
+  return [runtime, events, ...islands].filter(Boolean);
 }
