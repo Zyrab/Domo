@@ -1,6 +1,7 @@
 // src/file-utils.js
 import fs from "fs";
 import path from "path";
+import { existsSync, cpSync } from "fs";
 
 /**
  * Ensures that the directory for a given file path exists.
@@ -44,5 +45,22 @@ export function cleanOutputDir(outputDir, exclude) {
     }
   } else {
     fs.mkdirSync(outputDir, { recursive: true });
+  }
+}
+
+/**
+ * Recursively copies a folder from source to destination.
+ */
+export function copyStaticFolder(srcPath, destPath) {
+  if (!existsSync(srcPath)) {
+    return; // If the folder doesn't exist, just silently skip it
+  }
+
+  try {
+    // cpSync copies the whole folder and its contents synchronously
+    cpSync(srcPath, destPath, { recursive: true });
+    console.log(`[Domo-SSG] Copied static folder: ${srcPath} -> ${destPath}`);
+  } catch (error) {
+    console.error(`[Domo-SSG] Failed to copy ${srcPath}:`, error);
   }
 }
