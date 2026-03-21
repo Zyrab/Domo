@@ -13,6 +13,7 @@ export default function Contacts() {
             .attr({ type: "text", name: "username", placeholder: "Enter your name" })
             .css(styles.input)
             .on("input", (e) => {
+              e.preventDefault();
               const val = e.target.value.trim();
               document.getElementById("contact-preview").textContent = val
                 ? `Hello, ${val}!`
