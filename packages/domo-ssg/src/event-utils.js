@@ -205,7 +205,7 @@ async function bundleIslands(metadata, jsDir, tempDir) {
   // Extract generated paths for injection
   const allGeneratedPaths = Object.keys(result.metafile.outputs).map((filePath) => {
     const relativeToDist = filePath.replace(/\\/g, "/").split("/").slice(1).join("/");
-    let path = `/${relativeToDist}`;
+    let path = relativeToDist;
 
     // 3. Remove "js/" specifically if it appears immediately after the leading slash
     // This transforms "/js/main.js" -> "/main.js"
