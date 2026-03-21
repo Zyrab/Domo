@@ -10,6 +10,7 @@ export async function loadConfig() {
 
   const defaultConfig = {
     outDir: "./dist",
+    scanDir: "./src",
     routesFile: "./routes.js",
     layout: "./layout.js",
     lang: "en",
