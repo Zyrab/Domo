@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.7.1] - 2026-03-21
+
+### Fixed
+
+- **Critical Build Failure**: Resolved `ReferenceError: join is not defined` in `packages/domo-ssg/src/index.js` by adding the missing `node:path` import. This fix restores the SSG build process which was broken in the previous release.
+
+---
+
 ---
 
 ## [0.7.0] - 2026-03-21 (Internal Testing)
