@@ -64,3 +64,25 @@ export function copyStaticFolder(srcPath, destPath) {
     console.error(`[Domo-SSG] Failed to copy ${srcPath}:`, error);
   }
 }
+
+export function scanRoutes(dir) {
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+
+  const routes = {};
+
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+
+    if (entry.isDirectory()) {
+      Object.assign(routes, scanRoutes(fullPath));
+    } else {
+      if (!entry.name.endsWith(".js")) continue;
+
+      const fileName = path.basename(entry.name, ".js");
+
+      routes[fileName] = fullPath;
+    }
+  }
+
+  return routes;
+}
