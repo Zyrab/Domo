@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.7.3] - 2026-03-22
+
+### Fixed
+
+- **Regex Island path**: Island path was incorectly prcesed by regex.
+
+---
+
 ## [0.7.2] - 2026-03-21
 
 ### Fixed
