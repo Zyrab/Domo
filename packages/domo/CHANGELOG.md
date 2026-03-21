@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.5.0] - 2026-03-21
+
+### Added
+
+- **Functional Island Hydration**: Upgraded `.island()` from a boolean tag to a component-aware method.
+  - **Server-side**: Now accepts a UI component function, capturing the entry point and forwarding the path to the SSG collector for `esbuild` bundling.
+  - **Client-side**: Automatically attaches the component to the parent as a standard child method for immediate interactivity.
+- **Hydration ID Refinement**: Enhanced `_getOrSetId()` to focus exclusively on `data-domo-id` stamping, ensuring stable element matching during the hydration handoff.
+
+### Changed
+
+- **Architectural Cleanup**: Removed internal path detection using `Error.stack` within `DomoServer`. Path mapping is now handled externally by the SSG layer for better performance and reliability.
+- **Server Logic Optimization**: Streamlined the metadata collection process by delegating environment-specific path resolution to the core SSG build process.
+
+### Fixed
+
+- **Path Resolution Errors**: Eliminated potential failures and overhead associated with manual stack trace parsing during server-side rendering.
+
+---
+
 ## [1.4.0] - 2026-03-19
 
 ### Added

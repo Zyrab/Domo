@@ -1,5 +1,30 @@
 # Changelog
 
+---
+
+## [0.7.0] - 2026-03-21 (Internal Testing)
+
+### Added
+
+- **Asset Pipeline & Static Copying**: Introduced a new `assetsDir` configuration for mapping multiple source directories (e.g., `src/assets`, `src/styles`) to custom build destinations. Added `copyStaticFolder` utility for robust, recursive asset synchronization.
+- **Strict Naming Conventions**: Implemented `formatComponentName` to enforce a bridge between function names and file system registry:
+  - **UI Components**: `createNavbar()` maps to `navbar.js`.
+  - **Event Handlers**: `handleClick()` maps to `handle-handle-click.js`.
+- **Centralized Build Registry**: Added a `BuildRegistry` class to manage and resolve route paths across the entire build process, ensuring component-to-file mapping is consistent.
+
+### Changed
+
+- **Advanced Event Extraction**: Re-engineered the event handling logic to support hydration for all attachment types (Refs and Islands). It now correctly groups events and bundles imported functions.
+- **Smart Island Hydration**: Improved bundling logic to detect and extract only necessary files for islands. This significantly reduces output size compared to a full SPA bundle while maintaining interactivity.
+- **Enhanced Configuration Loader**: Refactored `loadConfig` to use `pathToFileURL`, resolving pathing issues with ESM imports and improving reliability across different operating systems.
+- **Refactored Entry Point**: Updated `src/index.js` to coordinate the new registry, asset copying, and route traversal sequence.
+
+### Technical Note
+
+- Functions not following the `create[Name]` or `handle-` conventions will now be stringified and embedded as anonymous/in-line functions rather than being bundled as separate, cacheable island files.
+
+---
+
 ## [0.6.0] - 2026-03-20 (Internal Testing)
 
 ### Added
