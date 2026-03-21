@@ -1,6 +1,7 @@
 // domo.config.js
 export default {
   outDir: "./dist",
+  scanDir: "./examples",
   routesFile: "./examples/routes.js",
   layout: "./examples/components/layout/static-layout.js",
   author: "Zyrab this works",

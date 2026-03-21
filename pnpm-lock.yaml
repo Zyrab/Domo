@@ -38,9 +38,6 @@ importers:
 
   packages/domo-ssg:
     dependencies:
-      '@zyrab/domo':
-        specifier: workspace:^
-        version: link:../domo
       '@zyrab/domo-og':
         specifier: workspace:*
         version: link:../domo-og
@@ -48,11 +45,20 @@ importers:
         specifier: workspace:^
         version: link:../domo-router
     devDependencies:
+      '@zyrab/domo':
+        specifier: workspace:^
+        version: link:../domo
       esbuild:
         specifier: ^0.20.0
         version: 0.20.2
 
   packages/domo-svg:
+    dependencies:
+      '@zyrab/domo':
+        specifier: workspace:*
+        version: link:../domo
+
+  packages/domo-ui:
     dependencies:
       '@zyrab/domo':
         specifier: workspace:*

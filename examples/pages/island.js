@@ -66,7 +66,6 @@ export default function Island() {
   }
 
   return Domo("section")
-    .island()
     .state({ toggled, count, currentMode })
     .onClosest("click", {
       "#toggle-btn": handleToggle,
