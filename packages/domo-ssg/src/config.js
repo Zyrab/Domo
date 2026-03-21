@@ -15,6 +15,10 @@ export async function loadConfig() {
     layout: "./layout.js",
     lang: "en",
     author: "Zyrab",
+    assetsDir: [
+      { current: "src/assets", final: "assets" },
+      { current: "src/styles", final: "styles" },
+    ],
     exclude: ["css", "js", "assets", "robots.txt", "admin"],
     baseUrl: "http://localhost:3000",
   };
