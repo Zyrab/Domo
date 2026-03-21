@@ -20,7 +20,8 @@ class BaseClient {
   constructor(el = "div") {
     this.element = document.createElement(String(el || "div").toLowerCase());
   }
-  island(enabled = false) {
+  island(component, enabled = true) {
+    this.element.appendChild(this._handleElementInstance(component()));
     return this;
   }
   /**
