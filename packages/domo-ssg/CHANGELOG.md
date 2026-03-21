@@ -1,12 +1,21 @@
 # Changelog
 
+## [0.7.2] - 2026-03-21
+
+### Fixed
+
+- **Ref Hydration Logic**: Resolved an issue where local (non-registry) `ref` functions were incorrectly injected.
+  - Fixed "ghosting" where function bodies were dumped into the bundle as unused expressions.
+  - Corrected the logic to prioritize **IIFE inlining** for local functions, ensuring `el` is correctly scoped and passed to the handler.
+  - Prevented the "Top-level return" error by ensuring all inlined ref bodies are wrapped in an asynchronous functional scope.
+
+---
+
 ## [0.7.1] - 2026-03-21
 
 ### Fixed
 
 - **Critical Build Failure**: Resolved `ReferenceError: join is not defined` in `packages/domo-ssg/src/index.js` by adding the missing `node:path` import. This fix restores the SSG build process which was broken in the previous release.
-
----
 
 ---
 
