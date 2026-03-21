@@ -107,31 +107,23 @@ export function generateElementScript(id, events = [], states = {}, refs = []) {
       }
     });
 
-    const handlerBody = `async function(e) { e.pre\n${indent(logicLines.join("\n"), 1)}\n}`;
+    const handlerBody = `async function(e) {\n${indent(logicLines.join("\n"), 1)}\n}`;
     listeners.push(`document.querySelector('[data-domo-id="${id}"]').addEventListener("${event}", ${handlerBody});`);
   });
 
-  // 2. Process Refs (Now using the exact same smart lookup!)
+  // 2. Process Refs - Wrapped in IIFE to allow top-level returns and async
   const refLogics = refs
     .map((r) => {
       const { funcName, resolvedPath, fnSource, body } = resolveDependency(r);
 
-      // Track imports/closures just like events
       if (resolvedPath) {
         if (!imports.has(resolvedPath)) imports.set(resolvedPath, new Set());
         imports.get(resolvedPath).add(funcName);
-      } else if (funcName) {
-        closureFunctions.push(fnSource);
+        return `{\n  const el = document.querySelector('[data-domo-id="${id}"]');\n  if (el) ${funcName}(el);\n}`;
       }
 
-      // Output the Ref logic
-      if (resolvedPath || funcName) {
-        // If it's a named/imported function, pass the element to it: myRefFunction(el)
-        return `{\n  const el = document.querySelector('[data-domo-id="${id}"]');\n  if (el) ${funcName}(el);\n}`;
-      } else {
-        // If anonymous, inline the body
-        return `{\n  const el = document.querySelector('[data-domo-id="${id}"]');\n  if (el) {\n${indent(body, 4)}\n  }\n}`;
-      }
+      // Anonymous Ref Logic wrapped in async IIFE
+      return `{\n  const el = document.querySelector('[data-domo-id="${id}"]');\n  if (el) {\n    (async () => {\n${indent(body || fnSource, 6)}\n    })();\n  }\n}`;
     })
     .join("\n");
 
