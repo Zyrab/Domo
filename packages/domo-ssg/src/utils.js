@@ -40,3 +40,33 @@ export async function tryGenerateOgImage(routeMeta, ogOutputPath, path) {
     }
   }
 }
+
+export function formatComponentName(funcName) {
+  if (!funcName) return "";
+
+  // Helper to turn camelCase or PascalCase into kebab-case
+  const toKebab = (str) => {
+    return str
+      .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
+      .toLowerCase()
+      .replace(/^-/, ""); // Catch accidental leading dashes
+  };
+
+  // Rule 1: UI Components (Start with "create")
+  if (funcName.startsWith("create")) {
+    const strippedName = funcName.replace(/^create/, "");
+    return toKebab(strippedName);
+  }
+
+  // Rule 2: Handlers (Everything else gets a "handle-" prefix)
+  else {
+    const baseName = toKebab(funcName);
+
+    // Just a safety check in case you occasionally name the function "handleSomething"
+    if (baseName.startsWith("handle-")) {
+      return baseName;
+    }
+
+    return `handle-${baseName}`;
+  }
+}
