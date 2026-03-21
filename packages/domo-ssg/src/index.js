@@ -5,6 +5,7 @@ import { cleanOutputDir, copyStaticFolder, scanRoutes } from "./file-utils.js";
 import { generateSitemap } from "./sitemap.js";
 import { buildRoutes } from "./route-traversal.js";
 import { registry } from "./Registry.js";
+import { join } from "path";
 
 async function main() {
   const config = await loadConfig();
@@ -33,7 +34,6 @@ main().catch((error) => {
 
 // import { writeFileSync } from "fs";
 // import { build } from "esbuild";
-// import { join } from "path";
 
 // // Your existing plugin to cleanly handle Domo
 // const rewriteDomoPlugin = {
