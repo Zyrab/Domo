@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.8.0] - 2026-05-18
+
+### Added
+
+- **Anonymous/Inline Handler Autowiring**: Implemented `scanBodyForImports` to statically analyze anonymous and inline event handler bodies for registry-known function calls, automatically importing their module dependencies to guarantee full browser-bundle support.
+- **Robust Layout Asset Merging**: Overhauled the asset normalization and injection pipeline to cleanly merge, flatten, and deduplicate route-specific scripts, styles, and fonts with global configurations.
+
+### Fixed
+
+- **Conditional Runtime Bundling**: Prevented the heavy client-side `domo.runtime.js` from being generated or loaded unless actual interactive islands are present on the page.
+- **Dynamic Route Cache Optimization**: Implemented stable ID normalization (`normalizeForHash`) during event script hashing. Volatile random element IDs are normalized to positional placeholders during hash generation, ensuring identical components on dynamic routes share a single cached `.events.js` bundle.
+- **Direct Event Handler Inlining**: Fully corrected direct event handler generation. Local named functions and anonymous handlers are now correctly destructured and their bodies inlined directly into event listeners, preventing "unresolved reference" browser-side crashes.
+- **Robust Brace-Depth Parser**: Upgraded `destructureFunction` to use a character-by-character bracket-matching depth counter, safely parsing complex function bodies with nested braces, string literals, and trailing whitespaces.
+- **Sentinel Ignored Names**: Guarded against the `"anonymous"` fallback sentinel string from `events.server.js` being treated as an importable identifier.
+
+---
+
 ## [0.7.3] - 2026-03-22
 
 ### Fixed

@@ -1,17 +1,55 @@
 import Router from "@zyrab/domo-router";
 
-export function normalizeAssets(arr) {
-  if (!arr) return [];
-  const flatArray = Array.isArray(arr) ? arr.flat() : [arr];
+/**
+ * Normalizes a mixed list of asset descriptors (strings, objects, nested arrays)
+ * into a flat, deduplicated array of { href, ...rest } objects.
+ *
+ * Accepts any combination of:
+ *   - strings: "global.css"
+ *   - objects with href: { href: "global.css", preload: true }
+ *   - objects with src (legacy): { src: "script.js" }
+ *   - arrays of any of the above, at any nesting depth
+ *   - null / undefined (skipped)
+ *
+ * Deduplication: if the same href appears in both global assets and a route's
+ * specific assets, it is only included once (first occurrence wins).
+ */
+export function normalizeAssets(...groups) {
+  // Accept either normalizeAssets(a, b, c) or normalizeAssets([a, b, c])
+  const input = groups.length === 1 && Array.isArray(groups[0]) ? groups[0] : groups;
+
+  // Flatten everything to a single 1-D list, regardless of nesting depth
+  const flat = input.flat(Infinity);
+
+  const seen = new Set();
   const result = [];
 
-  for (const item of flatArray) {
-    if (!item) continue;
-    if (typeof item === "string") result.push({ href: item });
-    else if (typeof item === "object" && item.href) result.push(item);
-    else if (typeof item === "object" && !item.href) {
-      if (item.src) result.push({ ...item, href: item.src });
+  for (const item of flat) {
+    if (item === null || item === undefined) continue;
+
+    let normalized;
+
+    if (typeof item === "string") {
+      if (!item) continue;
+      normalized = { href: item };
+    } else if (typeof item === "object") {
+      if (item.href) {
+        normalized = item;
+      } else if (item.src) {
+        // Legacy { src } shape — promote to { href }
+        const { src, ...rest } = item;
+        normalized = { ...rest, href: src };
+      } else {
+        continue; // object with no usable path
+      }
+    } else {
+      continue;
     }
+
+    // Deduplicate by href — first occurrence (usually route-specific) wins
+    if (seen.has(normalized.href)) continue;
+    seen.add(normalized.href);
+    result.push(normalized);
   }
 
   return result;

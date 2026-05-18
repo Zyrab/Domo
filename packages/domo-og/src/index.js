@@ -44,12 +44,15 @@ export async function generateOgImage(options) {
     ensureDir(path.join(ogOutputPath, "assets/og-images"));
     outputDirEnsured = true;
   }
+
   const fallbackFontFolder = path.join(ogOutputPath, "assets/fonts");
+
   try {
     const pngBuffer = await renderToPng(finalSvgContent, {
       fontPath: fontPathToUse,
       defaultFontDir: fallbackFontFolder,
     });
+
     fs.writeFileSync(pngPath, pngBuffer);
 
     manifest[key] = {

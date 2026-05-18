@@ -1,6 +1,11 @@
 import Domo from "../../packages/domo/src/index.js";
 
 export default function Contacts() {
+  const handleInput = (e) => {
+    e.preventDefault();
+    const val = e.target.value.trim();
+    document.getElementById("contact-preview").textContent = val ? `Hello, ${val}!` : "Your name will appear here.";
+  };
   return Domo("section")
     .css(styles.container)
     .child([
@@ -12,13 +17,7 @@ export default function Contacts() {
             .id("contact-input")
             .attr({ type: "text", name: "username", placeholder: "Enter your name" })
             .css(styles.input)
-            .on("input", (e) => {
-              e.preventDefault();
-              const val = e.target.value.trim();
-              document.getElementById("contact-preview").textContent = val
-                ? `Hello, ${val}!`
-                : "Your name will appear here.";
-            }),
+            .on("input", handleInput),
           Domo("button").txt("Submit").attr({ type: "submit" }).css(styles.button),
         ])
         .on("submit", (e) => {

@@ -24,7 +24,9 @@ export async function fetchAsBuffer(source) {
 
       if (!response.ok) {
         if (response.status === 403 || response.status === 401) {
-          throw new Error(`[Domo-OG] HTTP ${response.status}: ${response.statusText}. Access to the remote image might be restricted. Ensure the remote server allows the "Domo-OG-Builder/1.0" User-Agent.`);
+          throw new Error(
+            `[Domo-OG] HTTP ${response.status}: ${response.statusText}. Access to the remote image might be restricted. Ensure the remote server allows the "Domo-OG-Builder/1.0" User-Agent.`,
+          );
         }
         throw new Error(`[Domo-OG] HTTP ${response.status}: ${response.statusText}`);
       }
@@ -69,6 +71,7 @@ export async function fetchAsBuffer(source) {
     throw new Error(`[Domo-OG] Failed to load source '${source}'. Reason: ${error.message}`);
   }
 }
+
 export async function fetchImageAsBase64(source) {
   const { buffer, mimeType } = await fetchAsBuffer(source);
   const base64String = buffer.toString("base64");

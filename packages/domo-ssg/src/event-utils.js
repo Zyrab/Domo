@@ -22,9 +22,23 @@ try {
 }
 const cache = {
   runtime: null,
-  events: new Map(), // hash -> file
+  events: new Map(), // normalizedHash -> file
   islands: new Map(), // hash -> file
 };
+
+/**
+ * Replaces data-domo-id values with positional placeholders so that two
+ * pages rendered from the same component (with different random IDs) produce
+ * the same hash and reuse the same bundled events file. (Bug 2 fix)
+ */
+function normalizeForHash(source) {
+  let counter = 0;
+  const idMap = new Map();
+  return source.replace(/data-domo-id="([^"]+)"/g, (_, id) => {
+    if (!idMap.has(id)) idMap.set(id, `__ID_${counter++}__`);
+    return `data-domo-id="${idMap.get(id)}"`;
+  });
+}
 
 /**
  * Converts a function name to your file naming convention based on strict patterns.
@@ -115,7 +129,12 @@ async function bundleEvents(metadata, jsDir, tempDir) {
     .map(({ id, events, states, refs }) => generateElementScript(id, events, states, refs))
     .join("\n\n");
 
-  const hash = getHash(raw);
+  // Normalize IDs before hashing — dynamic routes that share the same component
+  // and handlers but have different random data-domo-id values will now produce
+  // the same hash and reuse the cached event file. (Bug 2 fix)
+  const normalized = normalizeForHash(raw);
+  const hash = getHash(normalized);
+
   if (cache.events.has(hash)) return cache.events.get(hash);
 
   const file = `${hash}.events.js`;
@@ -131,7 +150,7 @@ async function bundleEvents(metadata, jsDir, tempDir) {
     outfile: join(jsDir, file),
     packages: "external",
 
-    plugins: [rewriteDomoPlugin], // Injects our Domo rewrite
+    plugins: [rewriteDomoPlugin],
 
     platform: "browser",
   });
@@ -229,8 +248,11 @@ export async function writeJs(content, outputDir) {
   if (!existsSync(jsDir)) mkdirSync(jsDir, { recursive: true });
   if (!existsSync(tempDir)) mkdirSync(tempDir, { recursive: true });
 
+  const hasIslands = metadata.islands.length > 0;
+
   const [runtime, events, islands] = await Promise.all([
-    bundleRuntime(outputDir),
+    // Only bundle the client runtime when there are actual islands (R4)
+    hasIslands ? bundleRuntime(outputDir) : Promise.resolve(null),
     bundleEvents(metadata, jsDir, tempDir),
     bundleIslands(metadata, jsDir, tempDir),
   ]);

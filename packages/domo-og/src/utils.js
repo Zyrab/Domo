@@ -44,33 +44,48 @@ export function injectData(input, data) {
 
 export function calculateLayout(el, canvasWidth, canvasHeight) {
   const padding = el.padding || 0;
+  // Initialize with the numeric value if it's a number
+  let py1 = 0,
+    px1 = 0,
+    py2 = 0,
+    px2 = 0;
+
+  if (typeof padding === "number") {
+    py1 = px1 = py2 = px2 = padding;
+  } else if (typeof padding === "string") {
+    const p = padding.trim().split(/\s+/).map(Number);
+    py1 = p[0] || 0;
+    px2 = p.length > 1 ? p[1] : py1; // Right
+    py2 = p.length > 2 ? p[2] : py1; // Bottom
+    px1 = p.length > 3 ? p[3] : px2; // Left
+  }
 
   let x;
   if (el.type === "image") {
     const w = el.width || 100;
-    if (el.horizontalAlign === "left") x = padding;
+    if (el.horizontalAlign === "left" || !el.horizontalAlign) x = px1;
     else if (el.horizontalAlign === "center") x = (canvasWidth - w) / 2;
-    else if (el.horizontalAlign === "right") x = canvasWidth - w - padding;
+    else if (el.horizontalAlign === "right") x = canvasWidth - w - px2;
     else x = el.x ?? 0;
   } else {
-    if (el.horizontalAlign === "left") x = padding;
+    if (el.horizontalAlign === "left" || !el.horizontalAlign) x = px1;
     else if (el.horizontalAlign === "center") x = canvasWidth / 2;
-    else if (el.horizontalAlign === "right") x = canvasWidth - padding;
+    else if (el.horizontalAlign === "right") x = canvasWidth - px2;
     else x = el.x ?? 0;
   }
 
   let y;
   if (el.type === "image") {
     const h = el.height || 100;
-    if (el.verticalAlign === "top") y = padding;
+    if (el.verticalAlign === "top" || !el.verticalAlign) y = py1;
     else if (el.verticalAlign === "middle") y = (canvasHeight - h) / 2;
-    else if (el.verticalAlign === "bottom") y = canvasHeight - h - padding;
+    else if (el.verticalAlign === "bottom") y = canvasHeight - h - py2;
     else y = el.y ?? 0;
   } else if (el.type === "text") {
     const fontSize = el.fontSize || 32;
-    if (el.verticalAlign === "top") y = padding + fontSize;
-    else if (el.verticalAlign === "middle") y = canvasHeight / 2 + (fontSize * 0.35);
-    else if (el.verticalAlign === "bottom") y = canvasHeight - padding - (fontSize * 0.25);
+    if (el.verticalAlign === "top" || !el.verticalAlign) y = py1 + fontSize;
+    else if (el.verticalAlign === "middle") y = canvasHeight / 2 + fontSize * 0.35;
+    else if (el.verticalAlign === "bottom") y = canvasHeight - py2 - fontSize * 0.25;
     else y = el.y ?? fontSize;
   } else {
     y = el.y ?? 0;

@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.2] - 2026-05-18 Patch
+
+### Added
+
+- **Multi-directional Padding Parsing**: Added support for standard CSS-style padding shorthand strings (e.g. `"10px 20px 30px"`) in `calculateLayout`, allowing dynamic OpenGraph images to specify per-side spacing easily.
+
+### Fixed
+
+- **Padding Coordinate Alignment**: Overhauled text and image coordinate alignment to correctly map and apply distinct top/bottom/left/right padding values (`px1`, `px2`, `py1`, `py2`) instead of a single uniform value.
+
+---
+
 ## [0.2.1] - 2026-03-14 Patch
 
 ### Fixed

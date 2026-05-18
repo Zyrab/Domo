@@ -23,8 +23,10 @@ async function initEngine() {
     throw error;
   }
 }
+
 async function getFontBuffer(fontSource, defaultFontDir) {
   if (cachedFontBuffer) return cachedFontBuffer;
+
   if (fontSource) {
     try {
       const { buffer } = await fetchAsBuffer(fontSource);

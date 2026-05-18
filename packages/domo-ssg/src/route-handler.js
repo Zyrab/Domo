@@ -31,7 +31,7 @@ export function joinPaths(...segments) {
  */
 
 export async function handleRoute(params, renderLayout) {
-  const { outDir, baseUrl, lang, author, theme, assets } = getConfig();
+  const { outDir, baseUrl, lang, author, theme, assets = {} } = getConfig();
   const { path, props = {}, component, scripts = [], styles = [], fonts = [], meta = {} } = params;
   try {
     Router.setInfo(path, props);
@@ -42,9 +42,11 @@ export async function handleRoute(params, renderLayout) {
     const bundlePath = await writeJs(content, outDir);
     const ogImage = await tryGenerateOgImage(meta, outDir, path);
 
-    const fontPaths = normalizeAssets([fonts, assets.fonts]);
-    const stylePaths = normalizeAssets([styles, assets.styles]);
-    const scriptPaths = normalizeAssets([bundlePath, scripts, assets.scripts]);
+    // Merge order: route-specific first, then global assets.
+    // normalizeAssets deduplicates by href so overlap is safe.
+    const fontPaths = normalizeAssets(fonts, assets.fonts);
+    const stylePaths = normalizeAssets(styles, assets.styles);
+    const scriptPaths = normalizeAssets(bundlePath, scripts, assets.scripts);
 
     const html = await renderLayout(content, {
       scripts: scriptPaths,

@@ -28,11 +28,11 @@ const layouts = {
 export const routes = {
   // layouts,
   // --- Static routes ---
-  "/island": {
-    component: Island,
+  // "/island": {
+  //   component: Island,
 
-    meta: { title: "Island", description: "Testing if silanding works" },
-  },
+  //   meta: { title: "Island", description: "Testing if silanding works" },
+  // },
   "/": {
     component: Home,
     fonts: ["Routidan.woff2"],
@@ -65,35 +65,35 @@ export const routes = {
   // },
 
   // // --- Dynamic routes ---
-  // "/projects": {
-  //   component: createProjects,
-  //   styles: [{ href: "projects.css", preload: true }],
-  //   meta: {
-  //     title: "Projects Default s",
-  //     description: "List of projects",
-  //     canonical: "/projects-heyyeh",
-  //     generateOgImage: true,
-  //   },
+  "/projects": {
+    component: createProjects,
+    styles: [{ href: "projects.css", preload: true }],
+    meta: {
+      title: "Projects Default s",
+      description: "List of projects",
+      canonical: "/projects-heyyeh",
+      generateOgImage: true,
+    },
 
-  //   // First-level dynamic route
-  //   "/:id": {
-  //     routeParams: async () => await loadJson("dist/data/projects.json"), // Array of { id, title, ... }
-  //     component: createProjectPage,
-  //     meta: {
-  //       title: "Project Detail",
-  //       generateOgImage: true,
-  //       template: ogConfig,
-  //     },
+    // First-level dynamic route
+    "/:id": {
+      routeParams: async () => await loadJson("dist/data/projects.json"), // Array of { id, title, ... }
+      component: createProjectPage,
+      meta: {
+        title: "Project Detail",
+        generateOgImage: true,
+        template: ogConfig,
+      },
 
-  //     // Second-level dynamic route
-  //     "/:item": {
-  //       outlet: true,
-  //       routeParams: async (parent) => await loadJson(`dist/data/${parent}-item.json`), // Array of { item, title, ... }
-  //       component: testPage,
-  //       meta: { title: "Project Item Detail", generateOgImage: true, template: ogConfig },
-  //     },
-  //   },
-  // },
+      // Second-level dynamic route
+      "/:item": {
+        outlet: true,
+        routeParams: async (parent) => await loadJson(`dist/data/${parent}-item.json`), // Array of { item, title, ... }
+        component: testPage,
+        meta: { title: "Project Item Detail", generateOgImage: true, template: ogConfig },
+      },
+    },
+  },
 
   // --- Deep nested dynamic (3 levels) ---
   // "/blog": {
