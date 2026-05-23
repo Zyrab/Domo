@@ -47,7 +47,9 @@ class PropertiesClient extends BaseClient {
     if (typeof force === "boolean") {
       force ? this.element.setAttribute(attrName, "") : this.element.removeAttribute(attrName);
     } else {
-      this.element.hasAttribute(attrName) ? this.element.removeAttribute(attrName) : this.element.setAttribute(attrName, "");
+      this.element.hasAttribute(attrName)
+        ? this.element.removeAttribute(attrName)
+        : this.element.setAttribute(attrName, "");
     }
     return this;
   }

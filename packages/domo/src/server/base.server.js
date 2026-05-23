@@ -41,7 +41,7 @@ class BaseServer {
    */
   island(component, enabled = true) {
     this.element._island = enabled;
-    this._getOrSetId();
+    this._getOrSetId(component.name);
 
     if (enabled) {
       this.element.__island = component;
@@ -65,25 +65,32 @@ class BaseServer {
       });
 
       // Ensure element has a stable ID if it has a ref
-      this._getOrSetId();
+      this._getOrSetId(callback);
     }
     return this;
   }
-
   /**
    * Generates or retrieves a stable, hash-based ID for metadata association.
    * @protected
    * @returns {string} The data-domo-id.
    */
-  _getOrSetId() {
+  _getOrSetId(handler) {
     const existing = this.element._attr["data-domo-id"];
-    if (existing) {
-      return existing;
-    }
-    const hash = Math.random().toString(36).substring(2, 7);
+    if (existing) return existing;
+
+    let funcName = handler.name || handler.toString();
+    const hash = this._fastHash(funcName);
     const id = `d-${hash}`;
     this.element._attr["data-domo-id"] = id;
     return id;
+  }
+
+  _fastHash(str) {
+    let hash = 5381;
+    for (let i = 0; i < str.length; i++) {
+      hash = (hash * 33) ^ str.charCodeAt(i);
+    }
+    return (hash >>> 0).toString(36);
   }
 }
 

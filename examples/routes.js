@@ -51,6 +51,8 @@ export const routes = {
   },
   "/contacts": {
     component: Contacts,
+    styles: [{ href: "projects.css", preload: true }, "test.css"],
+
     scripts: ["contact.js"],
     meta: { title: "Contacts", description: "Contacts page", theme: "light" },
   },
@@ -64,7 +66,7 @@ export const routes = {
   //   meta: { title: "Assets Test", description: "Assets-heavy route" },
   // },
 
-  // // --- Dynamic routes ---
+  // --- Dynamic routes ---
   "/projects": {
     component: createProjects,
     styles: [{ href: "projects.css", preload: true }],
