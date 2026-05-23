@@ -112,11 +112,18 @@ async function bundleEvents(metadata, jsDir, tempDir) {
     .map(({ id, events, states, refs }) => generateElementScript(id, events, states, refs))
     .join("\n\n");
 
-  if (cache.events.has(id)) return cache.events.get(id);
+  const idSignature = metadata.events.map((e) => e.id).join("|");
 
-  const file = `${id}.events.js`;
-  const entry = join(tempDir, `${id}.entry.js`);
+  let numericalHash = 5381;
+  for (let i = 0; i < idSignature.length; i++) {
+    numericalHash = (numericalHash * 33) ^ idSignature.charCodeAt(i);
+  }
+  const fileHash = (numericalHash >>> 0).toString(36);
 
+  if (cache.events.has(fileHash)) return cache.events.get(fileHash);
+
+  const file = `${fileHash}.events.js`;
+  const entry = join(tempDir, `${fileHash}.entry.js`);
   writeFileSync(entry, raw, "utf8");
 
   await build({
@@ -134,7 +141,7 @@ async function bundleEvents(metadata, jsDir, tempDir) {
 
   rmSync(entry);
 
-  cache.events.set(id, file);
+  cache.events.set(fileHash, file);
   return file;
 }
 

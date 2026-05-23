@@ -58,7 +58,6 @@ class EventsServer extends ClassesServer {
       existing = { id, event, handlers: [] };
       evArr.push(existing);
     }
-    console.log("testing", existing);
     existing.handlers.push({
       type,
       name: meta._name || handler.name || "anonymous",
