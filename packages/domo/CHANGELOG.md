@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.5.1] - 2026-03-21
+
+### Fixed
+
+- `domo-id` is now set deterministicly instead of random id, it uses the handler name or function body to set an id
+
+---
+
 ## [1.5.0] - 2026-03-21
 
 ### Added

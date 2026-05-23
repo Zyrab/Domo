@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.8.1] - 2026-05-23
+
+### Refactored
+
+- Removed `domo-id` hashing and handling on ssg side. `domo-id` is set deterministicly on `domo.server` now
+
+---
+
 ## [0.8.0] - 2026-05-18
 
 ### Added
