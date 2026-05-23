@@ -17,6 +17,7 @@ import Router from "@zyrab/domo-router";
 export function normalizeAssets(...groups) {
   // Accept either normalizeAssets(a, b, c) or normalizeAssets([a, b, c])
   const input = groups.length === 1 && Array.isArray(groups[0]) ? groups[0] : groups;
+  // console.log(groups);
 
   // Flatten everything to a single 1-D list, regardless of nesting depth
   const flat = input.flat(Infinity);
@@ -61,13 +62,7 @@ export async function tryGenerateOgImage(routeMeta, ogOutputPath, path) {
 
   try {
     const { generateOgImage: generate } = await import("@zyrab/domo-og");
-
-    const ogPath = generate({
-      ...routeMeta,
-      ogOutputPath,
-      slug,
-      routeKey: path,
-    });
+    const ogPath = generate({ ...routeMeta, ogOutputPath, slug, routeKey: path });
 
     return ogPath;
   } catch (err) {

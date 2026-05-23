@@ -1,4 +1,3 @@
-// src/file-utils.js
 import fs from "fs";
 import path from "path";
 import { existsSync, cpSync } from "fs";
@@ -50,11 +49,12 @@ export function cleanOutputDir(outputDir, exclude) {
 
 /**
  * Recursively copies a folder from source to destination.
+ * @param {string} srcPath - The file to copy.
+ * @param {string[]} destPath - A path to put copied file in.
  */
 export function copyStaticFolder(srcPath, destPath) {
-  if (!existsSync(srcPath)) {
-    return; // If the folder doesn't exist, just silently skip it
-  }
+  // If the folder doesn't exist, just silently skip it
+  if (!existsSync(srcPath)) return;
 
   try {
     // cpSync copies the whole folder and its contents synchronously
@@ -65,6 +65,10 @@ export function copyStaticFolder(srcPath, destPath) {
   }
 }
 
+/**
+ * Recursively Scans the folders in a directory given and returns structure file with component export names and file paths.
+ * @param {string} dir - The drectory to scan.
+ */
 export function scanRoutes(dir) {
   const entries = fs.readdirSync(dir, { withFileTypes: true });
 

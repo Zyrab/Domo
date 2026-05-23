@@ -27,20 +27,6 @@ const cache = {
 };
 
 /**
- * Replaces data-domo-id values with positional placeholders so that two
- * pages rendered from the same component (with different random IDs) produce
- * the same hash and reuse the same bundled events file. (Bug 2 fix)
- */
-function normalizeForHash(source) {
-  let counter = 0;
-  const idMap = new Map();
-  return source.replace(/data-domo-id="([^"]+)"/g, (_, id) => {
-    if (!idMap.has(id)) idMap.set(id, `__ID_${counter++}__`);
-    return `data-domo-id="${idMap.get(id)}"`;
-  });
-}
-
-/**
  * Converts a function name to your file naming convention based on strict patterns.
  * @param {string} funcName - e.g., "createHeader", "createPreviewPage", "copyCode"
  * @returns {string} - e.g., "header", "preview-page", "handle-copy-code"
@@ -62,7 +48,6 @@ export function collectMetadata(node, out = { events: [], islands: [] }) {
   if (!node || typeof node !== "object") return out;
 
   const el = node.element;
-
   if ((el?._events?.length > 0 || el?._refs?.length > 0) && !el?._island) {
     out.events.push({
       id: el._attr["data-domo-id"] || el._attr["id"],
@@ -78,7 +63,6 @@ export function collectMetadata(node, out = { events: [], islands: [] }) {
 
     // Look up the exact file path from your singleton
     const filePath = registry.getRoute(fileKey);
-
     if (!filePath) {
       console.warn(`[Domo-SSG] Could not find file for island component: ${rawName}`);
     } else {
@@ -124,21 +108,14 @@ async function bundleRuntime(outputDir) {
  */
 async function bundleEvents(metadata, jsDir, tempDir) {
   if (metadata.events.length === 0) return null;
-
   const raw = metadata.events
     .map(({ id, events, states, refs }) => generateElementScript(id, events, states, refs))
     .join("\n\n");
 
-  // Normalize IDs before hashing — dynamic routes that share the same component
-  // and handlers but have different random data-domo-id values will now produce
-  // the same hash and reuse the cached event file. (Bug 2 fix)
-  const normalized = normalizeForHash(raw);
-  const hash = getHash(normalized);
+  if (cache.events.has(id)) return cache.events.get(id);
 
-  if (cache.events.has(hash)) return cache.events.get(hash);
-
-  const file = `${hash}.events.js`;
-  const entry = join(tempDir, `${hash}.entry.js`);
+  const file = `${id}.events.js`;
+  const entry = join(tempDir, `${id}.entry.js`);
 
   writeFileSync(entry, raw, "utf8");
 
@@ -157,7 +134,7 @@ async function bundleEvents(metadata, jsDir, tempDir) {
 
   rmSync(entry);
 
-  cache.events.set(hash, file);
+  cache.events.set(id, file);
   return file;
 }
 
@@ -237,10 +214,10 @@ async function bundleIslands(metadata, jsDir, tempDir) {
  */
 export async function writeJs(content, outputDir) {
   const metadata = collectMetadata(content);
-
   const hasInteractivity = metadata.events.length > 0 || metadata.islands.length > 0;
 
   if (!hasInteractivity) return null;
+  // console.log(metadata);
 
   const jsDir = join(outputDir, "js");
   const tempDir = join(outputDir, ".domo_temp");

@@ -86,7 +86,6 @@ function destructureFunction(fnSource) {
   return { name: funcName, body: null };
 }
 
-
 /**
  * Analyzes ANY handler (event or ref) and figures out
  * if it needs to be imported, inlined as a closure, or stringified.
@@ -139,15 +138,61 @@ function resolveDependency(handlerObj) {
  * so esbuild can resolve it in the browser bundle.
  */
 const JS_BUILTINS = new Set([
-  "if", "for", "while", "switch", "function", "async", "await", "return",
-  "const", "let", "var", "new", "typeof", "instanceof", "void", "delete",
-  "console", "document", "window", "navigator", "location", "history",
-  "JSON", "Object", "Array", "String", "Number", "Boolean", "Symbol",
-  "Promise", "Math", "Date", "Error", "Map", "Set", "WeakMap", "WeakSet",
-  "parseInt", "parseFloat", "isNaN", "isFinite", "encodeURIComponent",
-  "decodeURIComponent", "setTimeout", "setInterval", "clearTimeout",
-  "clearInterval", "requestAnimationFrame", "fetch", "localStorage",
-  "sessionStorage", "CustomEvent", "Event", "URL", "URLSearchParams",
+  "if",
+  "for",
+  "while",
+  "switch",
+  "function",
+  "async",
+  "await",
+  "return",
+  "const",
+  "let",
+  "var",
+  "new",
+  "typeof",
+  "instanceof",
+  "void",
+  "delete",
+  "console",
+  "document",
+  "window",
+  "navigator",
+  "location",
+  "history",
+  "JSON",
+  "Object",
+  "Array",
+  "String",
+  "Number",
+  "Boolean",
+  "Symbol",
+  "Promise",
+  "Math",
+  "Date",
+  "Error",
+  "Map",
+  "Set",
+  "WeakMap",
+  "WeakSet",
+  "parseInt",
+  "parseFloat",
+  "isNaN",
+  "isFinite",
+  "encodeURIComponent",
+  "decodeURIComponent",
+  "setTimeout",
+  "setInterval",
+  "clearTimeout",
+  "clearInterval",
+  "requestAnimationFrame",
+  "fetch",
+  "localStorage",
+  "sessionStorage",
+  "CustomEvent",
+  "Event",
+  "URL",
+  "URLSearchParams",
 ]);
 
 function scanBodyForImports(body) {
@@ -196,7 +241,7 @@ export function generateElementScript(id, events = [], states = {}, refs = []) {
         if (funcName) {
           // Re-wrap arrow expressions as a proper named function declaration
           const decl = fnSource.trim().startsWith("function")
-            ? fnSource                                          // already a declaration
+            ? fnSource // already a declaration
             : `function ${funcName}(...args) { return (${fnSource})(...args); }`;
           closureFunctions.push(decl);
         } else {
@@ -216,10 +261,10 @@ export function generateElementScript(id, events = [], states = {}, refs = []) {
           for (const n of names) imports.get(p).add(n);
         }
         if (autoImports.size === 0 && (body || fnSource)) {
-          console.warn(
-            `[Domo-SSG] Inlining handler on "${id}" (event: "${event}") as best-effort.\n` +
-            `  Any captured local variables (e.g. loop state) won't be available at runtime.`
-          );
+          // console.warn(
+          //   `[Domo-SSG] Inlining handler on "${id}" (event: "${event}") as best-effort.\n` +
+          //   `  Any captured local variables (e.g. loop state) won't be available at runtime.`
+          // );
         }
       }
 

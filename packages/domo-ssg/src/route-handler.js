@@ -47,7 +47,6 @@ export async function handleRoute(params, renderLayout) {
     const fontPaths = normalizeAssets(fonts, assets.fonts);
     const stylePaths = normalizeAssets(styles, assets.styles);
     const scriptPaths = normalizeAssets(bundlePath, scripts, assets.scripts);
-
     const html = await renderLayout(content, {
       scripts: scriptPaths,
       styles: stylePaths,
